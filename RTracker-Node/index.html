@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#user-submit').click(function () {
+                var payload = {
+                    Employee_Id: $('#Employee_Id').val(),
+					Employee_Name: $('#Employee_Name').val(),
+					Design_At_Joining: $('#Design_At_Joining').val(),
+					Joining_Date: $('#Joining_Date').val(),
+					DoB_Official: $('#DoB_Official').val(),
+					DoB_Actual: $('#DoB_Actual').val(),
+					Gender: $('#Gender').val(),
+					Blood_Group: $('#Blood_Group').val(),
+					Marital_Status: $('#Marital_Status').val(),
+					Contact_No: $('#Contact_No').val(),
+					PAN: $('#PAN').val(),
+					UAN_ID: $('#UAN_ID').val(),
+					Aadhar_No: $('#Aadhar_No').val(),
+					employeecol: $('#employeecol').val()
+                };
+
+                $.ajax({
+                    url: "http://localhost:3100/users",
+                    type: "POST",
+                    contentType: "application/json",
+                    processData: false,
+                    data: JSON.stringify(payload),
+                    complete: function (data) {
+
+                        $('#output').html(data.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+  </head>
+  <body>
+    <h3>Enter a username to enter into the database:</h3>
+    <input id="Employee_Id" type="text" placeholder="Employee id" /> <BR /> <BR />
+	<input id="Employee_Name" type="text" placeholder="Employee name" /> <BR /> <BR />
+	<input id="Design_At_Joining" type="text" placeholder="Designation at joining" /> <BR /> <BR />
+	<input id="Joining_Date" type="date" placeholder="Joining Date" /> <BR /> <BR />
+	<input id="DoB_Official" type="date" placeholder=" DOB Official" /> <BR /> <BR />
+	<input id="DoB_Actual" type="date" placeholder="DOB actual" /> <BR /> <BR />
+	<input id="Gender" type="text" placeholder="gender" /> <BR /> <BR />
+	<input id="Blood_Group" type="text" placeholder="blood group" /> <BR /> <BR />
+	<input id="Marital_Status" type="text" placeholder="marital status"/> <BR /> <BR />
+	<input id="Contact_No" type="text" placeholder="contact no" /> <BR /> <BR />
+	<input id="PAN" type="text" placeholder="pan no" /> <BR /> <BR />
+	<input id="UAN_ID" type="text" placeholder="UAN id" /> <BR /> <BR />
+	<input id="Aadhar_No" type="text" placeholder="Aadhar no" /> <BR /> <BR />
+	<input id="employeecol" type="text" placeholder="employee col" /> <BR /> <BR />
+    <input id="user-submit" type="submit" />
+    <p id="output"></p>
+  </body>
+</html>

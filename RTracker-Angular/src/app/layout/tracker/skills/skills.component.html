@@ -1,0 +1,106 @@
+<div class="tracker-section">
+    <h6 class="text-muted-header">Employee Profile</h6>
+    <div class="horizontal-pipe-line"></div>
+
+	<div class="tabs-details-container">
+		<div class="tabs-list">
+            <div class="row mt-3">
+                <div class="col-sm-6 col-md-12">
+                    <ul role="tablist" class="nav nav-tabs justify-content-start">
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/basic', employeeid]" href="javascript:void(0)" >
+                                BASIC INFORMATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/bank', employeeid]" href="javascript:void(0)">
+                               BANK INFORMATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/family', employeeid]" href="javascript:void(0)">
+                               FAMILY / RELATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/passport', employeeid]" href="javascript:void(0)">
+                               PASSPORT / VISA
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/education', employeeid]" href="javascript:void(0)">
+                               EDUCATION / CERTIFICATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/experience', employeeid]" href="javascript:void(0)">
+                               EXPERIENCE
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active"  href="javascript:void(0)">
+                               SKILLS
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/history', employeeid]" href="javascript:void(0)">
+                               HISTORY
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/resign', employeeid]" href="javascript:void(0)">
+                               RESIGN
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="family-or-relative tab-content">
+                        <div class="tab-info tab-pane active">
+
+                        <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-default pull-right btn-cus-grey" [hidden]="hideEditButton" (click)="showForm(0)"> Add Skill </button>
+                                </div>
+                            </div>
+                            <div class="col-md-12 cus-background" [hidden]="!hideForm(0)">
+                                <skill-detail [empId]="employeeid"></skill-detail>
+                            </div>
+                            <table class="table table-bordered table-striped cus-table">
+                                <thead class="thead-inverse">
+                                    <tr>
+                                        <th> # </th>
+                                        <th> Skill Technology </th>
+                                        <th> Expertise Level </th>
+                                        <th> Experience </th>
+                                        <th> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <ng-template ngFor let-skill [ngForOf]="skillsDetails" let-i="index">
+                                        <tr class="row-{{ i }}">
+                                            <td> {{ i + 1 }} </td>
+                                            <td> {{ skill.Map_Skills_Name }} </td>
+                                            <td> {{ skill.Skill_Level_Name }} </td>
+                                            <td> {{ skill.Skill_Exp_Years }} years {{ skill.Skill_Exp_Months }} months </td>
+                                            <td [hidden]="hideForm(i)"> <i class="fa fa-pencil" (click)="showEditForm(i)"></i> </td>
+                                            <td [hidden]="!hideForm(i)"> <i class="fa fa-times" (click)="cancelEditForm()"></i> </td>
+                                        </tr>
+                                        <tr [hidden]="!hideForm(i)">
+                                            <td colspan="8">
+                                                <skills-form [skillDetail]="skill"></skills-form>
+                                            </td>
+                                        </tr>
+                                    </ng-template>
+                                </tbody>
+                            </table>
+
+
+                   </div>
+
+                   </div>
+
+                </div>
+            </div>
+
+		</div>
+	</div>
+</div>

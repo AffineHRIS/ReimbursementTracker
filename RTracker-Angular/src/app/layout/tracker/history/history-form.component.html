@@ -1,0 +1,84 @@
+<form #histForm="ngForm" (ngSubmit)="onSubmit(histForm.value)" novalidate class="tab-info tab-content">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> Designation <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="Current_Designation" [ngModel]="histDetails.Current_Designation" required>
+                            <option value="">-- Designation --</option>
+                            <option *ngFor="let desg of dataStream.designations" value="{{ desg.Designation_Id }}">
+                               {{ desg.Designation_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> Start Date <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" name="Company_History_Start_date" [ngModel]="histDetails.Company_History_Start_date | date: 'yyyy-MM-dd'" >
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> Location <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="Current_Location" [ngModel]="histDetails.Current_Location" required>
+                            <option value="Bangalore_Cessna"> BANGALORE CESSNA </option>
+                            <option value="Bangalore_HSR"> BANGALORE HSR </option>
+                            <option value="US"> US </option>
+                            <option value="Client"> Client </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 "> Rating <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8 ">
+                        <select class="form-control" name="Rating" [ngModel]="histDetails.Rating" required>
+                            <option value="0"> -NA- </option>
+                            <option value="1"> Poor </option>
+                            <option value="2"> Average </option>
+                            <option value="3"> Excellent </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> Project <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <select class="form-control" name="Project_Id" [ngModel]="histDetails.Project_Id" required>
+                            <option *ngFor="let proj of dataStream.projects" value="{{ proj.Project_Id }}">
+                                {{ proj.Project_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> End Date <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" name="Company_History_End_date" [ngModel]="histDetails.Company_History_End_date | date: 'yyyy-MM-dd'" >
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> CTC <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <input type="number" min="0" step=".01" class="form-control" name="Current_CTC" [ngModel]="histDetails.Current_CTC" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-default btn-primary save pull-right " type="submit"> Save </button>
+</form>

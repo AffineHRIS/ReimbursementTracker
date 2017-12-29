@@ -1,0 +1,159 @@
+<div class="tracker-section">
+    <h6 class="text-muted-header">Employee Profile</h6>
+    <div class="horizontal-pipe-line"></div>
+
+	<div class="tabs-details-container">
+		<div class="tabs-list">
+            <div class="row mt-3">
+                <div class="col-sm-6 col-md-12">
+                    <ul role="tablist" class="nav nav-tabs justify-content-start">
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/basic', employeeid]" href="javascript:void(0)" >
+                                BASIC INFORMATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/bank', employeeid]" href="javascript:void(0)">
+                               BANK INFORMATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/family', employeeid]" href="javascript:void(0)">
+                               FAMILY / RELATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/passport', employeeid]" href="javascript:void(0)">
+                               PASSPORT / VISA
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/education', employeeid]" href="javascript:void(0)">
+                               EDUCATION / CERTIFICATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="javascript:void(0)">
+                               EXPERIENCE
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/skills', employeeid]" href="javascript:void(0)">
+                               SKILLS
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/history', employeeid]" href="javascript:void(0)">
+                               HISTORY
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/resign', employeeid]" href="javascript:void(0)">
+                               RESIGN
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="experience-details tab-content">
+                        <div class="tab-info tab-pane active">
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-default pull-right btn-cus-grey" [hidden]="hideEditButton" (click)="showForm(0)"> Add Experience </button>
+                                </div>
+                            </div>
+
+                        <div class="col-md-12 cus-background" [hidden]="!hideForm(0)">
+                              <past-work-experience [empId]="employeeid"></past-work-experience>
+                        </div>
+                        <div class="clear clearfix"> </div>
+
+                        <table class="table table-bordered table-striped cus-table">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th> # </th>
+                                    <th> Company </th>
+                                    <th> Designation </th>
+                                    <th> Location </th>
+                                    <th> Start Date </th>
+                                    <th> End Date </th>
+                                    <th> Duration </th>
+                                    <th> Skills </th>
+                                    <th> Action </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <ng-template ngFor let-exp [ngForOf]="experienceDetailsInArray" let-i="index">
+                                    <tr class="row-{{ i }}">
+                                        <td> {{ i + 1 }} </td>
+                                        <td> {{ exp.Organst_Name }} </td>
+                                        <td>
+                                            {{ exp.Previous_Destination }}
+                                        </td>
+                                        <td> {{ exp.Location }} </td>
+                                        <td> {{ exp.Joining_Date | date: 'dd-MMM-y' }} </td>
+                                        <td> {{ exp.Leaving_Date | date: 'dd-MMM-y' }} </td>
+                                        <td> {{ exp.ExpDiff }} </td>
+                                        <td> {{ exp.Skills_Used }} </td>
+                                        <td [hidden]="hideForm(i)"> <i class="fa fa-pencil" (click)="showEditForm(i)"></i> </td>
+                                        <td [hidden]="!hideForm(i)"> <i class="fa fa-times" (click)="cancelEditForm()"></i> </td>
+                                    </tr>
+                                    <tr [hidden]="!hideForm(i)">
+                                        <td colspan="8">
+                                            <experience-form [expDetails]="exp"></experience-form>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </tbody>
+                        </table>
+
+                        <div class="row no-mar no-pad">
+                            <div class="col-4">
+                                <div class="row green-bg">
+                                    <div class="col-4">
+                                        <span class="label item">Prior Experience</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="colon item">:</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="value item">{{otherDetails.experiences.prior}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row green-bg">
+                                    <div class="col-4">
+                                        <span class="label item">Affine Experience</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="colon item">:</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="value item">{{otherDetails.experiences.affine}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="row green-bg">
+                                    <div class="col-4">
+                                        <span class="label item">Total Experience</span>
+                                    </div>
+                                    <div class="col-1">
+                                        <span class="colon item">:</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span class="value item">{{otherDetails.experiences.total}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+		</div>
+	</div>
+</div>

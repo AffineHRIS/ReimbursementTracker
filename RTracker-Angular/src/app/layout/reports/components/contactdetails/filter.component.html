@@ -1,0 +1,44 @@
+
+<form [formGroup]="filterValue" (ngSubmit)="onSubmit()" novalidate class="tab-info tab-content">
+  <div formArrayName="filterValues" class="well well-lg">
+    <div *ngFor="let address of filterValues.controls; let i=index" [formGroupName]="i" >
+      <!-- The repeated work experience template -->
+      <div class="row filter-group">
+          <div class="col-md-1">
+              <h6 class="tab-h6"> Filter {{i + 1}}</h6>
+          </div>
+          <div class="col-md-3">
+              <select class="form-control" name="filterName" formControlName="filterName">
+                  <option value="" selected> Column </option>
+                  <option value="Residential_Address_1"> Residential address </option>
+                  <option value="Permanent_Address_1"> Permanent address </option>
+              </select>
+          </div>
+          <div class="col-md-2">
+              <select class="form-control" name="filterType" formControlName="filterType">
+                  <option value="" selected> Condition </option>
+                  <option value="="> = </option>
+                  <option value="<"> < </option>
+                  <option value="<="> <= </option>
+                  <option value=">"> > </option>
+                  <option value=">="> >= </option>
+              </select>
+          </div>
+          <div class="col-md-3">
+              <input type="text" class="form-control" name="filterValue" placeholder="Value" formControlName="filterValue" />
+          </div>
+          <div class="col-md-1 align-right">
+              <i class="fa fa-times rm-work-exp" aria-hidden="true" (click)="removeFilter()" title="Remove Filter {{i + 1}}"></i>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-10">
+      <div class="row">
+          <div class="col-md-5"> <button (click)="addFilter()" type="button" class="btn btn-secondary"> Add Filter </button> </div>
+          <div class="col-md-7">
+            <button class="btn btn-default btn-primary save pull-right" type="submit"> Apply </button>
+          </div>
+      </div>
+  </div>
+</form>

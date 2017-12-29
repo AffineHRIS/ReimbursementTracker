@@ -1,0 +1,26 @@
+<div class="admin-section" [@routerTransition]>
+    <h6 class="text-muted-header"> Admin </h6>
+    <div class="horizontal-pipe-line"></div>
+    <div class="tabs-details-container">
+        <div class="tabs-list">
+            <ngb-tabset>
+                <ngb-tab>
+                    <ng-template ngbTabTitle>EMPLOYEE</ng-template>
+                    <ng-template ngbTabContent>
+                        <div class="col-md-3 nav-link-column">
+                            <h6 class="text-muted-sub-header"> Core Actions </h6>
+                            <div class="horizontal-pipe-line"></div>
+                            <div class="nav-link-actions">
+                                <div class="nav-link-box">
+                                    <a [routerLink]="['/addemployee']" href="javascript:void(0)" class="nav-link-action">
+                                        <span class="nav-link-text">{{ 'addemployee' | translate }}</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
+            </ngb-tabset>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,45 @@
+<form [formGroup]="formDetails" (ngSubmit)="onSubmit()" novalidate class="tab-info tab-content">
+  <div formArrayName="formArray" class="well well-lg">
+    <div *ngFor="let address of formArray.controls; let i=index" [formGroupName]="i" >
+      <!-- The repeated work experience template -->
+      <div class="row">
+          <div class="col-md-4">
+              <h6 class="tab-h6"> Certification {{i + 1}}</h6>
+          </div>
+          <div class="col-md-3">
+              <i class="fa fa-times rm-work-exp" aria-hidden="true" (click)="removeForm()" title="Remove Form {{i + 1}}"></i>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-4">
+            <label class="col-md-12"> Title <span class="pull-right"> : </span> </label>
+            <div class="col-md-12">
+              <input type="text" class="form-control" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="col-md-12"> Institute <span class="pull-right"> : </span> </label>
+            <div class="col-md-12">
+              <input type="text" class="form-control" />
+            </div>
+          </div>
+          <div class="col-md-4">
+            <label class="col-md-12"> Certification Details <span class="pull-right"> : </span> </label>
+            <div class="col-md-12">
+              <input type="text" class="form-control" />
+            </div>
+          </div>
+      </div>
+      <!-- End of the repeated work experience template -->
+    </div>
+
+  </div>
+  <div class="row button-group">
+      <div class="col-md-6 align-left">
+          <button (click)="addForm()" type="button" class="btn btn-secondary">Add Certification</button>
+      </div>
+      <!-- <div class="col-md-6 align-right">
+          <button class="btn btn-default btn-primary save" type="submit"> Save </button>
+      </div> -->
+  </div>
+</form>

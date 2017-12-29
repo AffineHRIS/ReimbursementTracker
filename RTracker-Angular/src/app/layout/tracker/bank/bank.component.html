@@ -1,0 +1,220 @@
+<div class="tracker-section">
+    <h6 class="text-muted-header">Employee Profile</h6>
+    <div class="horizontal-pipe-line"></div>
+
+	<div class="tabs-details-container">
+		<div class="tabs-list">
+            <div class="row mt-3">
+                <div class="col-sm-6 col-md-12">
+                    <ul role="tablist" class="nav nav-tabs justify-content-start">
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/basic', employeeid]" href="javascript:void(0)" >
+                                BASIC INFORMATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="javascript:void(0)">
+                               BANK INFORMATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/family', employeeid]" href="javascript:void(0)">
+                               FAMILY / RELATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/passport', employeeid]" href="javascript:void(0)">
+                               PASSPORT / VISA
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/education', employeeid]" href="javascript:void(0)">
+                               EDUCATION / CERTIFICATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/experience', employeeid]" href="javascript:void(0)">
+                               EXPERIENCE
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/skills', employeeid]" href="javascript:void(0)">
+                               SKILLS
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/history', employeeid]" href="javascript:void(0)">
+                               HISTORY
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/resign', employeeid]" href="javascript:void(0)">
+                               RESIGN
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="bank-details tab-content">
+                        <div class="tab-info tab-pane active">
+
+                            <form novalidate #f="ngForm" (ngSubmit)="save(f.value)" class="tab-info tab-content">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-4"> Employee ID <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-6">
+                                                    <input type="text" name="Employee_Id" [(ngModel)]="bankDetails.Employee_Id" #empId="ngModel" class="form-control" [disabled]="disableInputs" required readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-4"> Bank Name <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-6">
+                                                    <select class="form-control" [disabled]="disableInputs" name="Bank_Name" #bankName="ngModel" [(ngModel)]="bankDetails.Bank_Name" required>
+                                                        <option value="">-- Bank --</option>
+                                                        <option *ngFor="let bank of dataStream.banks" value="{{ bank.Map_Bank_Id }}">
+                                                            {{ bank.Map_Bank_Name }}
+                                                        </option>
+                                                    </select>
+                                                    <div *ngIf="bankName.invalid && (bankName.touched)" class="alert alert-danger">
+                                                        <div *ngIf="bankName.errors.required">
+                                                            Bank name is required.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-4"> Account Number <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" [disabled]="disableInputs" name="Bank_Account" [(ngModel)]="bankDetails.Bank_Account" #bankAcc="ngModel" required pattern="[0-9]{6,20}">
+                                                    <div *ngIf="bankAcc.invalid && (bankAcc.touched)" class="alert alert-danger">
+                                                        <div *ngIf="bankAcc.errors.required">
+                                                            Account number is required.
+                                                        </div>
+                                                        <div *ngIf="bankAcc.hasError('pattern')">
+                                                            Only digits are accepted.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-4"> IFSC Code <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" [disabled]="disableInputs" name="IFSC_Code" [(ngModel)]="bankDetails.IFSC_Code" #ifscCode="ngModel" required pattern="[A-Za-z]{4}(0)[A-Za-z0-9]{6}">
+                                                    <div *ngIf="ifscCode.invalid && (ifscCode.touched)" class="alert alert-danger">
+                                                        <div *ngIf="ifscCode.errors.required">
+                                                            IFSC code is required.
+                                                        </div>
+                                                        <div *ngIf="ifscCode.hasError('pattern')">
+                                                            Specify a valid IFSC code.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-4"> Start Date <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-6">
+                                                    <input type="date" class="form-control" [disabled]="disableInputs" name="Bank_Details_Start_Date"
+                                                    [ngModel]="bankDetails.Bank_Details_Start_Date | date: 'yyyy-MM-dd'" (ngModelChange)="bankDetails.Bank_Details_Start_Date=$event"
+                                                    #startDate="ngModel" required
+                                                    />
+                                                    <div *ngIf="startDate.invalid && (startDate.touched)" class="alert alert-danger">
+                                                        <div *ngIf="startDate.errors.required">
+                                                            Start date is required.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-4"> PAN Number <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" [disabled]="disableInputs" name="PAN" [(ngModel)]="bankDetails.PAN" #PAN_NO="ngModel" pattern="[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}" required>
+                                                    <div *ngIf="PAN_NO.invalid && (PAN_NO.touched)" class="alert alert-danger">
+                                                        <div *ngIf="PAN_NO.errors.required">
+                                                            PAN number is required.
+                                                        </div>
+                                                        <div *ngIf="PAN_NO.hasError('pattern')">
+                                                            Specify a valid PAN number.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-4"> Aadhar Number <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" [disabled]="disableInputs" name="Aadhar_No" [(ngModel)]="bankDetails.Aadhar_No" #UID="ngModel" pattern="\d{12}" required>
+                                                    <div *ngIf="UID.invalid && (UID.touched)" class="alert alert-danger">
+                                                        <div *ngIf="UID.errors.required">
+                                                            Aadhar number is required.
+                                                        </div>
+                                                        <div *ngIf="UID.hasError('pattern')">
+                                                            Specify a valid Aadhar number.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-4"> UAN Number <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" [disabled]="disableInputs" name="UAN_ID" [(ngModel)]="bankDetails.UAN_ID" #UAN="ngModel" pattern="\d{12}">
+                                                    <div *ngIf="UAN.invalid && (UAN.touched)" class="alert alert-danger">
+                                                        <div *ngIf="UAN.errors.required">
+                                                            UAN number is required.
+                                                        </div>
+                                                        <div *ngIf="UAN.hasError('pattern')">
+                                                            Specify a valid UAN number.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-4"> PF Number <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" [disabled]="disableInputs" name="PF_NO" [(ngModel)]="bankDetails.PF_No" #PF_Num="ngModel" pattern="[A-Za-z0-9\/]+">
+                                                    <div *ngIf="PF_Num.invalid && (PF_Num.touched)" class="alert alert-danger">
+                                                        <div *ngIf="PF_Num.errors.required">
+                                                            PF number is required.
+                                                        </div>
+                                                        <div *ngIf="PF_Num.hasError('pattern')">
+                                                            Specify a valid PF number.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 align-right">
+                                      <hr />
+                                        <button class="btn btn-default btn-primary edit" type="edit" [hidden]="hideEditButton" (click)="enableEdit()"> Edit </button>
+                                        <button class="btn btn-default btn-primary save" type="submit" [hidden]="hideSaveButton" [disabled]="allowSave(f.value)"> Save </button>
+                                        <button class="btn btn-default btn-secondary cancel" type="reset" [hidden]="hideCancelButton" (click)="cancelEdit()"> Cancel </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+		</div>
+	</div>
+</div>

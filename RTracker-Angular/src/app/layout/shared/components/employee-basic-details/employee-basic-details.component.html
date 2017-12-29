@@ -1,0 +1,533 @@
+<form novalidate #f="ngForm" (ngSubmit)="save(f.value)" class="tab-info tab-content">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5"> Employee ID <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6" *ngIf="!newEmpAddition">
+                        <input type="text" name="Employee_Id" [(ngModel)]="basicDetails.Employee_Id" #name="ngModel" class="form-control" [disabled]="disableInputs" required [disabled]="true" readonly>
+                    </div>
+                    <div class="col-md-3" *ngIf="newEmpAddition">
+                        <select class="form-control" name="Employee_No_Series" #name="ngModel" [(ngModel)]="Employee_No_Series" required>
+                            <option value="AAIN"> AAIN </option>
+                        </select>
+                    </div>
+                    <div class="col-md-3" *ngIf="newEmpAddition">
+                        <input type="text" name="Employee_Number" [(ngModel)]="Employee_Number" #Emp_Num="ngModel" class="form-control" pattern="[0-9]{4,}" minlength ="4" placeholder="4 digits" required>
+                        <div *ngIf="Emp_Num.invalid && (Emp_Num.touched)" class="alert alert-danger">
+                            <div *ngIf="Emp_Num.errors.required">
+                                Employee Number is required.
+                            </div>
+                            <div *ngIf="Emp_Num.hasError('pattern')">
+                                At least 4 digits are required.
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <h6 class="cus-h6"> Employee Details </h6>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5"> Employee Name <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" [disabled]="disableInputs" name="Employee_Name" [(ngModel)]="basicDetails.Employee_Name" #Emp_Name="ngModel" pattern="[a-zA-Z ]+" required>
+                        <div *ngIf="Emp_Name.invalid && (Emp_Name.touched)" class="alert alert-danger">
+                            <div *ngIf="Emp_Name.errors.required">
+                                Employee Name is required.
+                            </div>
+                            <div *ngIf="Emp_Name.hasError('pattern')">
+                                Only alphabet and spaces are allowed.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 "> Official Date of Birth <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input type="date" class="form-control" [disabled]="disableInputs" name="Dob_Official" [ngModel]="basicDetails.Dob_Official | date: 'yyyy-MM-dd'" (ngModelChange)="basicDetails.Dob_Official=$event" #Off_DOB="ngModel" min='1947-08-15' max='1999-12-31' required />
+                        <div *ngIf="Off_DOB.invalid && (Off_DOB.touched)" class="alert alert-danger">
+                            <div *ngIf="Off_DOB.errors.required">
+                                Official date of birth is required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 "> Actual Date of Birth <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input type="date" class="form-control" [disabled]="disableInputs" name="Dob_Actual" [ngModel]="basicDetails.Dob_Actual | date: 'yyyy-MM-dd'" (ngModelChange)="basicDetails.Dob_Actual=$event" #ACT_DOB="ngModel" min='1947-08-15' max='1999-12-31' required />
+                        <div *ngIf="ACT_DOB.invalid && (ACT_DOB.touched)" class="alert alert-danger">
+                            <div *ngIf="ACT_DOB.errors.required">
+                                Actual date of birth is required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 "> Gender <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <select class="form-control" [disabled]="disableInputs" name="Gender" #name="ngModel" [(ngModel)]="basicDetails.Gender" required>
+                            <option value="Male"> Male </option>
+                            <option value="Female"> Female </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 "> Date of Joining <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input type="date" class="form-control" [disabled]="disableInputs" name="Joining_Date" [ngModel]="basicDetails.Joining_Date | date: 'yyyy-MM-dd'" (ngModelChange)="basicDetails.Joining_Date=$event" #Join_Date="ngModel" min="1947-08-15" max="{{today}}" required />
+                        <div *ngIf="Join_Date.invalid && (Join_Date.touched)" class="alert alert-danger">
+                            <div *ngIf="Join_Date.errors.required">
+                                Joining Date is required.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 pull"> Designation at Joining <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <select class="form-control" [disabled]="disableInputs" name="Design_At_Joining" #name="ngModel" [(ngModel)]="basicDetails.Design_At_Joining" required>
+                            <option *ngFor="let desg of dataStream.designations" value="{{ desg.Designation_Id }}">
+                                {{ desg.Designation_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <h6 class="cus-h6"> Hiring Details </h6>
+
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 pull"> Source of Hire Type <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6">
+                        <select class="form-control" [disabled]="disableInputs" name="Source_of_Hire" #SOH="ngModel" [(ngModel)]="basicDetails.Source_of_Hire" #v (change)="sourceHire(v.value)" required>
+                            <option value="Portal"> Portal </option>
+                            <option value="Reference"> Reference </option>
+                            <option value="Vendor"> Vendor </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5"> Source of Hire Name <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6">
+                        <input class="form-control mr-sm-2" [disabled]="disableInputs && !referenceName" type="text" placeholder="Employee Name / ID" list="employees" name="Source_Of_Hire_Name" [(ngModel)]="basicDetails.Source_Of_Hire_Name" #SourceOfHireName="ngModel" [hidden]="referenceName" />
+                        <input class="form-control mr-sm-2" [disabled]="disableInputs && !vendorName" type="text" placeholder="Enter Vendor Name" name="Source_Of_Hire_Name" [(ngModel)]="basicDetails.Source_Of_Hire_Name" #SourceOfHireName="ngModel" autocomplete="off" [hidden]="vendorName" />
+                        <input class="form-control mr-sm-2" [disabled]="disableInputs && !portalName" type="text" placeholder="Enter Portal Name" name="Source_Of_Hire_Name" [(ngModel)]="basicDetails.Source_Of_Hire_Name" #SourceOfHireName="ngModel" autocomplete="off" [hidden]="portalName" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 "> Probation Period <span class="pull-right"> : </span> </label>
+                    <div class="col-md-4 no-pad-right">
+                        <select class="form-control cus-align" [disabled]="disableInputs" name="Probation_Period" #name="ngModel" [(ngModel)]="basicDetails.Probation_Period" required>
+                            <option value="0"> 0 </option>
+                            <option value="1"> 1 </option>
+                            <option value="2"> 2 </option>
+                            <option value="3"> 3 </option>
+                            <option value="4"> 4 </option>
+                            <option value="5"> 5 </option>
+                            <option value="6"> 6 </option>
+                        </select> <span class="size"> Month(s) </span>
+                    </div>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5"> HR SPOC <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input class="form-control mr-sm-2" [disabled]="disableInputs" type="text" placeholder="HR SPOC" list="employees" name="HR_SPOC" [(ngModel)]="basicDetails.HR_SPOC" #name="ngModel" required />
+                    </div>
+                </div>
+            </div>
+            <h6 class="cus-h6"> Contact Details</h6>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 "> Email <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6">
+                        <input type="email" class="form-control" [disabled]="disableInputs" name="Email_ID" [(ngModel)]="basicDetails.Email_ID" #Email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" required="required">
+                        <div *ngIf="Email.invalid && (Email.touched)" class="alert alert-danger">
+                            <div *ngIf="Email.errors.required">
+                                Email is required.
+                            </div>
+                            <div *ngIf="Email.hasError('pattern')">
+                                Enter a valid email address.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 "> Contact No <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input type="text" name="Contact_No" [(ngModel)]="basicDetails.Contact_No" #Cont_No="ngModel" class="form-control" [disabled]="disableInputs" pattern="(7|8|9)\d{9}" required>
+                        <div *ngIf="Cont_No.invalid && Cont_No.touched" class="alert alert-danger">
+                            <div *ngIf="Cont_No.errors.required">
+                                Contact Number is required.
+                            </div>
+                            <div *ngIf="Cont_No.hasError('pattern')">
+                                Specify a 10 digit mobile number only.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 "> Alternate Contact No <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input type="text" name="Alt_Contact_No" [(ngModel)]="basicDetails.Alternate_Contact_No" #Alt_Cont_No="ngModel" class="form-control" [disabled]="disableInputs" pattern="(7|8|9)\d{9}">
+                        <div *ngIf="Alt_Cont_No.invalid && Alt_Cont_No.touched" class="alert alert-danger">
+                            <div *ngIf="Alt_Cont_No.errors.required">
+                                Alternate Contact Number is required.
+                            </div>
+                            <div *ngIf="Alt_Cont_No.hasError('pattern')">
+                                Specify a 10 digit mobile number only.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 "> Skype <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input type="text" name="Skype_ID" [(ngModel)]="basicDetails.Skype_ID" #name="ngModel" class="form-control" [disabled]="disableInputs" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 "> Blood Group <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <select class="form-control" [disabled]="disableInputs" name="Blood_Group" #name="ngModel" [(ngModel)]="basicDetails.Blood_Group" required>
+                            <option value="A+"> A+ </option>
+                            <option value="A-"> A- </option>
+                            <option value="B+"> B+ </option>
+                            <option value="B-"> B- </option>
+                            <option value="O+"> O+ </option>
+                            <option value="O-"> O- </option>
+                            <option value="AB+"> AB+ </option>
+                            <option value="AB-"> AB- </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5 ">Emergency Contact No <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input type="text" name="Emergency_Contact_No" [(ngModel)]="basicDetails.Emergency_Contact_No" #ECont_No="ngModel" class="form-control" [disabled]="disableInputs" pattern="(7|8|9)\d{9}" required>
+                        <div *ngIf="ECont_No.invalid && (ECont_No.touched)" class="alert alert-danger">
+                            <div *ngIf="ECont_No.errors.required">
+                                Emergency contact number is required.
+                            </div>
+                            <div *ngIf="ECont_No.hasError('pattern')">
+                                Specify a 10 digit mobile number only.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5">Emergency Contact Name <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input type="text" name="Emergency_Contact_Name" [(ngModel)]="basicDetails.Emergency_Contact_Name" #ECont_Name="ngModel" class="form-control" [disabled]="disableInputs" pattern="[a-zA-Z ]+" required>
+                        <div *ngIf="ECont_Name.invalid && (ECont_Name.touched)" class="alert alert-danger">
+                            <div *ngIf="ECont_Name.errors.required">
+                                Emergency Contact Name is required.
+                            </div>
+                            <div *ngIf="ECont_Name.hasError('pattern')">
+                                Only alphabet and spaces are allowed.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-5"> Emergency Relation <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input type="text" name="Emergency_Contact_Relation" [(ngModel)]="basicDetails.Emergency_Contact_Relation" #ECont_Reln="ngModel" class="form-control" [disabled]="disableInputs" pattern="[a-zA-Z ]+" required>
+                        <div *ngIf="ECont_Reln.invalid && (ECont_Reln.touched)" class="alert alert-danger">
+                            <div *ngIf="ECont_Reln.errors.required">
+                                Emergency Contact Relation is required.
+                            </div>
+                            <div *ngIf="ECont_Reln.hasError('pattern')">
+                                Only alphabet and spaces are allowed.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-5">
+            <h6 class="cus-h6"> Project Details </h6>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 "> Reporting manager <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <input class="form-control mr-sm-2" [disabled]="disableInputs" type="text" placeholder="Reporting Manager" list="employees" name="Reporting_Manager" [(ngModel)]="basicDetails.Reporting_Manager" #name="ngModel" required />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group custom-overflow">
+                <div class="row">
+                    <label class="col-md-4 "> Project(s) <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <angular2-multiselect [data]="teamsList" [(ngModel)]="selectedTeams" [settings]="dropdownSettings" name="Team" #name="ngModel" ngDefaultControl></angular2-multiselect>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 "> Work Location <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <select class="form-control" [disabled]="disableInputs" name="Work_Location" #name="ngModel" [(ngModel)]="basicDetails.Work_Location" required>
+                            <option value="Bangalore_Cessna"> BANGALORE CESSNA </option>
+                            <option value="Bangalore_HSR"> BANGALORE HSR </option>
+                            <option value="US"> US </option>
+                            <option value="Client"> Client </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4" title="CTC in lakhs per annum"> CTC (LPA) <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6">
+                        <input type="number" min="0" step=".01" class="form-control" [disabled]="disableInputs" name="CTC" [(ngModel)]="basicDetails.CTC" #name="ngModel" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 "> Nationality <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <select class="form-control" [disabled]="disableInputs" name="Nationality" #name="ngModel" [(ngModel)]="basicDetails.Nationality" required>
+                            <option value="IN"> Indian </option>
+                            <option value="US"> United American </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 "> Religion <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <select class="form-control" [disabled]="disableInputs" name="Religion" #name="ngModel" [(ngModel)]="basicDetails.Religion" required>
+                            <option value="Hindu"> Hindu </option>
+                            <option value="Muslim"> Muslim </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group custom-overflow">
+                <div class="row">
+                    <label class="col-md-4 "> Language(s) Known <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6 ">
+                        <angular2-multiselect [data]="langsList" [(ngModel)]="selectedLangs" [settings]="dropdownSettings" name="Lang_Known" #name="ngModel" ngDefaultControl></angular2-multiselect>
+                    </div>
+                </div>
+            </div>
+            <h6 class="cus-h6"> Address Details </h6>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 "> Permanent Address <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" [disabled]="disableInputs" name="Address_Line_1_1" #addLine1="ngModel" [(ngModel)]="basicDetails.Address_Line_1_1" placeholder="House No. / Apartment Name" pattern="[A-Za-z0-9 -\/]+" required/>
+                        <div *ngIf="addLine1.invalid && (addLine1.touched)" class="alert alert-danger">
+                            <div *ngIf="addLine1.errors.required">
+                                This detail is required.
+                            </div>
+                            <div *ngIf="addLine1.hasError('pattern')">
+                                Only alphanumerics, /, - and whitespace characters are accepted.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pad-top-5">
+                    <label class="col-md-4 "></label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" [disabled]="disableInputs" name="Address_Line_2_1" #addLine2="ngModel" [(ngModel)]="basicDetails.Address_Line_2_1" placeholder="Street Name / Locality" pattern="[A-Za-z ]+" required/>
+                        <div *ngIf="addLine2.invalid && (addLine2.touched)" class="alert alert-danger">
+                            <div *ngIf="addLine2.errors.required">
+                                This detail is required.
+                            </div>
+                            <div *ngIf="addLine2.hasError('pattern')">
+                                Only alphabet and whitespace characters are accepted.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pad-top-5">
+                    <label class="col-md-4 "></label>
+                    <div class="col-md-6 ">
+                        <select class="form-control" [disabled]="disableInputs" name="Country_1" #name="ngModel" [(ngModel)]="basicDetails.Country_1" required>
+                            <option value="">-- Country --</option>
+                            <option *ngFor="let coun of dataStream.countries" value="{{ coun.Map_Country_Id }}">
+                                {{ coun.Map_Country_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pad-top-5">
+                    <label class="col-md-4 "></label>
+                    <div class="col-md-6 ">
+                        <select (change)="loadCities($event.target.value, 'cities1')" class="form-control" [disabled]="disableInputs" name="State_1" #name="ngModel" [(ngModel)]="basicDetails.State_1" required>
+                            <option value="">-- State --</option>
+                            <option *ngFor="let st of dataStream.states" value="{{ st.Map_State_Id }}">
+                                {{ st.Map_State_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pad-top-5">
+                    <label class="col-md-4 "></label>
+                    <div class="col-md-6">
+                        <select class="form-control" [disabled]="disableInputs" name="City_1" #name="ngModel" [(ngModel)]="basicDetails.City_1" required>
+                            <option value="">-- City --</option>
+                            <option *ngFor="let st of cities1" value="{{ st.Map_City_Id }}">
+                                {{ st.Map_City_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pad-top-5">
+                    <label class="col-md-4 "></label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" [disabled]="disableInputs" name="Zip_Code_1" #zip1="ngModel" [(ngModel)]="basicDetails.Zip_Code_1" placeholder="PIN Code" pattern="\d{6}" required/>
+                        <div *ngIf="zip1.invalid && (zip1.touched)" class="alert alert-danger">
+                            <div *ngIf="zip1.errors.required">
+                                PIN Code is required.
+                            </div>
+                            <div *ngIf="zip1.hasError('pattern')">
+                                Specify a valid 6 digit PIN code.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4 "> Present Address <span class="pull-right"> : </span> </label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" [disabled]="disableInputs" name="Address_Line_1_2" #addLine12="ngModel" [(ngModel)]="basicDetails.Address_Line_1_2" placeholder="House No. / Apartment Name" pattern="[A-Za-z0-9 -\/]+" required/>
+                        <div *ngIf="addLine12.invalid && (addLine12.touched)" class="alert alert-danger">
+                            <div *ngIf="addLine12.errors.required">
+                                This detail is required.
+                            </div>
+                            <div *ngIf="addLine12.hasError('pattern')">
+                                Only alphanumerics, /, - and whitespace characters are accepted.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pad-top-5">
+                    <label class="col-md-4 "></label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" [disabled]="disableInputs" name="Address_Line_2_2" #addLine22="ngModel" [(ngModel)]="basicDetails.Address_Line_2_2" placeholder="Street Name / Locality" pattern="[A-Za-z ]+" required/>
+                        <div *ngIf="addLine22.invalid && (addLine22.touched)" class="alert alert-danger">
+                            <div *ngIf="addLine22.errors.required">
+                                This detail is required.
+                            </div>
+                            <div *ngIf="addLine22.hasError('pattern')">
+                                Only alphabet and whitespace characters are accepted.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row pad-top-5">
+                    <label class="col-md-4 "></label>
+                    <div class="col-md-6">
+                        <select class="form-control" [disabled]="disableInputs" name="Country_2" #name="ngModel" [(ngModel)]="basicDetails.Country_2" required>
+                            <option value="">-- Country --</option>
+                            <option *ngFor="let coun of dataStream.countries" value="{{ coun.Map_Country_Id }}">
+                                {{ coun.Map_Country_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pad-top-5">
+                    <label class="col-md-4 "></label>
+                    <div class="col-md-6">
+                        <select (change)="loadCities($event.target.value, 'cities2')" class="form-control" [disabled]="disableInputs" name="State_2" #name="ngModel" [(ngModel)]="basicDetails.State_2" required>
+                            <option value="">-- State --</option>
+                            <option *ngFor="let st of dataStream.states" value="{{ st.Map_State_Id }}">
+                                {{ st.Map_State_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pad-top-5">
+                    <label class="col-md-4 "></label>
+                    <div class="col-md-6">
+                        <select class="form-control" [disabled]="disableInputs" name="City_2" #name="ngModel" [(ngModel)]="basicDetails.City_2" required>
+                            <option value="">-- City --</option>
+                            <option *ngFor="let st of cities2" value="{{ st.Map_City_Id }}">
+                                {{ st.Map_City_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row pad-top-5">
+                    <label class="col-md-4 "></label>
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" [disabled]="disableInputs" name="Zip_Code_2" #zip2="ngModel" [(ngModel)]="basicDetails.Zip_Code_2" placeholder="PIN Code" pattern="\d{6}" required/>
+                        <div *ngIf="zip2.invalid && (zip2.touched)" class="alert alert-danger">
+                            <div *ngIf="zip2.errors.required">
+                                PIN Code is required.
+                            </div>
+                            <div *ngIf="zip2.hasError('pattern')">
+                                Specify a valid 6 digit PIN code.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2" *ngIf="!newEmpAddition">
+            <img src="{{srcPath}}" alt="User image not uploaded." width="100%" class="user-addemployee" />
+            <iframe width="180" height="50" name="hidden_iframe" [hidden]="hideIframe"></iframe>
+            <form ngNoForm id="frmUploader" enctype="multipart/form-data" action="{{actionPath}}" method="post" target="hidden_iframe" [hidden]="!hideIframe">
+                <input type="file" name="imgUploader" (change)=previewImage($event) [hidden]="disableInputs" />
+                <button type="submit" name="submit" id="btnSubmit" value="Upload" [hidden]="disableInputs" (click)="updateImageStatus()">Upload</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 align-right">
+            <hr />
+            <button class="btn btn-default btn-primary edit" type="edit" [hidden]="hideEditButton" (click)="enableEdit()"> Edit </button>
+            <button class="btn btn-default btn-primary save" type="submit" [hidden]="hideSaveButton" [disabled]="allowSave(f.value)"> Save </button>
+            <button class="btn btn-default btn-secondary cancel" type="reset" [hidden]="hideCancelButton" (click)="cancelEdit()"> Cancel </button>
+        </div>
+    </div>
+</form>

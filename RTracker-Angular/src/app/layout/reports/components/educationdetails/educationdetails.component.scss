@@ -1,0 +1,80 @@
+.pagination:first-child {
+  width: 80% !important;
+  float: left !important;
+}
+.cus-table {
+    margin-top: 4px;
+    thead {
+        th {
+            font-size: 12px;
+            font-weight:bold;
+            text-align: center;
+            text-transform: uppercase;
+        }
+    }
+    tbody {
+        tr {
+            font-size: 12px;
+            text-align: center;
+        }
+    }
+}
+
+thead.thead-inverse.colspan-header th {
+    text-transform: uppercase;
+    font-size: 14px;
+}
+thead.thead-inverse th {
+    text-transform: uppercase;
+}
+
+.page-header {
+    background: rgba(0,0,0,0.1);
+    margin: 1px;
+    padding: 2px;
+    .form-control {
+        padding: 0.3rem 0.75rem;
+    }
+
+
+}
+
+
+.breadcrumbs {
+    font-weight: bold;
+    margin: 5px 10px 15px;
+    font-size: 14px;
+    color: #0275d8;
+    span.gt-symbol {
+        color: #0275d8;
+    }
+    span.bc-text.active {
+        color: #014c8c;
+    }
+}
+div.horizontal-pipe-line {
+    height: 2px;
+    background-color: #bbb;
+    opacity: 0.5;
+}
+.card-block {
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 0;
+}
+.search-label {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    width: auto;
+    padding: 5px 15px;
+    color: #000;
+    float: left;
+}
+.search-input {
+    width: 200px;
+    height: 30px;
+    font-size: 12px;
+    margin: 8px 0;
+    border-radius: 0;
+}

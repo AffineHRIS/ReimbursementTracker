@@ -1,0 +1,231 @@
+.tracker-section {
+    h6.text-muted-header {
+        color: #00b0e3;
+        font-weight: bold;
+        margin: 5px 10px 15px;
+        font-size: 14px;
+    }
+    div.horizontal-pipe-line {
+        height: 1px;
+        background-color: #bbb;
+        opacity: 0.5;
+    }
+}
+$green: #5a4545;
+$sky-blue : #24AEE4;
+table {
+    thead tr th {
+        font-size: 11px;
+        text-transform: uppercase;
+    }
+    tbody {
+        tr {
+            td {
+                font-size: 12px;
+                i.fa {
+                    cursor: pointer;
+                }
+                .id-name-select-match {
+                    -webkit-appearance: none;
+                    background: transparent;
+                    border: none;
+                }
+                select.form-control:disabled {
+                    background-color: transparent;
+                    border: none;
+                    -webkit-appearance: none;
+                    padding: 0;
+                    height: auto;
+                }
+            }
+        }
+    }
+}
+
+table.cus-table {
+    tr:nth-child(4n+1) {
+        background-color: #fff;
+    }
+}
+
+table.exp-table {
+    thead tr th {
+        text-transform: uppercase;
+    }
+    tr:last-child {
+        background-color: #8e8e8e;
+        color: #fff;
+    }
+    tr:last-child td:last-child {
+        background-color: #4c4c4c;
+        color: #fff;
+    }
+}
+
+
+$sky-blue : #24AEE4;
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+}
+.tab-info.tab-pane {
+    padding: 15px;
+}
+.tab-info.tab-content {
+    padding: 15px 15px 5px 15px;
+}
+.tab-info {
+    overflow: visible;
+    .form-group {
+      overflow:hidden;
+      margin: 0 0 0 10px;
+    }
+    .user-profile {
+      border:2px solid #ddd;
+    }
+    .align-center {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .btn-skyblue {
+      background: $sky-blue;
+      color:#fff;
+      margin:10px auto;
+    }
+    .align-right {
+      text-align: right;
+    }
+
+    label {
+        font-size: 12px;
+        font-weight: bold;
+        margin: 7px 0;
+    }
+    input.form-control {
+        font-size: 12px;
+        padding: 0rem 0.5rem;
+        height: 30px;
+    }
+    select.form-control {
+        font-size: 12px;
+        padding: 0rem 0.5rem;
+    }
+    input.form-control:disabled{
+        background-color: #fff;
+        border-color: #fff;
+        cursor: default;
+    }
+    textarea.form-control {
+        font-size: 12px;
+    }
+    textarea.form-control:disabled {
+        font-size: 12px;
+        background-color: #fff;
+        border-color: #fff;
+        resize: none;
+    }
+    .tab-h6 {
+        margin:10px;
+        font-size:14px;
+        color:$sky-blue;
+        font-weight: 600;
+    }
+    .asset-group {
+        border-top:5px solid $sky-blue;
+        background: #eeeeee;
+        padding:15px;
+    }
+    .no-margin-left {
+        margin-left:0px !important;
+    }
+    .control-label {
+        font-weight: bold;
+    }
+    button.cancel {
+        margin-right: 10px;
+    }
+
+    .label.item, .colon.item {
+        font-size: 12px;
+        font-weight: bold;
+    }
+    .value.item {
+        font-size: 12px;
+    }
+    .serial.item {
+        color: $sky-blue;
+    }
+    .alert {
+        position: absolute;
+        font-size: 12px;
+	    padding: 5px 10px;
+    }
+    .form-group .row > * {
+        position: unset;
+    }
+}
+
+
+$violet: #636177;
+$blue: #077da0;
+.family-or-relative.tab-content {
+
+    .tab-info[_ngcontent-c12] {
+        overflow: visible;
+        margin: 0px 15px 0 10px;
+        padding: 10px 0px 10px 10px;
+    }
+
+    .green-bg {
+        background-color: $green;
+        color: #fff;
+        padding: 10px;
+        margin-right: 10px;
+    }
+
+    .violet-back {
+        .violet-bg:first-child {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .violet-bg:last-child {
+            padding-bottom: 15px;
+        }
+    }
+    .violet-bg {
+        background-color: $violet;
+        color: #fff;
+        margin-right: 10px;
+        padding: 0 10px;
+    }
+
+    .blue-back {
+        .blue-bg:first-child {
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+        .blue-bg:last-child {
+            padding-bottom: 15px;
+        }
+    }
+    .blue-bg {
+        background-color: $blue;
+        color: #fff;
+        margin-right: 10px;
+        padding: 0 10px;
+    }
+    .border-bottom {
+        border-bottom: 1px dotted;
+    }
+}
+
+.cus-h6 {
+  margin: 0px 0px 10px -8px;
+  text-transform: uppercase;
+  font-size:12px;
+  color:$sky-blue;
+  font-weight: 600;
+}

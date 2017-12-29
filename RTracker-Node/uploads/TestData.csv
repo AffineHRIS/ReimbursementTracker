@@ -1,0 +1,44 @@
+﻿Name,Emp ID,Team,Designation_April'17,DOJ,Prior Exp,Affine Exp,Total Exp,Manager,Highest Education,Last Date,Source,College Name
+Dristi Chatterjee,AAIN0471,Product,Data Scientist,22-May-17,0,0.55,0.5,Swami,B Tech,,PPO,KIIT University
+Priyanka Kulshrestha,AAIN0475,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Anuja,B Tech,,Campus,NIT Surat
+Ankit Sharma,AAIN0476,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Anuja,B Tech,,Campus,NIT Surat
+Nilesh Agarwalla,AAIN0477,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Anuja,B Tech,,Campus,NIT Surat
+Vinay Patidar,AAIN0478,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Somya,Civil engineer,30-Jun-17,Campus,NIT Surat
+Vaibhav Bajaj,AAIN0479,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Supradeep,B Tech,,Campus,NIT Surat
+Gautham V Bhat,AAIN0480,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Kuldeep,B Tech,,Campus,NIT Trichy
+Divya Batra,AAIN0481,Delivery,Management Trainee,12-Jun-17,0,0.49,0.5,Shuddho,MBA,,Campus,NIT Trichy
+Pulkit Khandelwal,AAIN0482,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Supradeep,B Tech,,Campus,IIT Roorkee
+Nancy Jain,AAIN0483,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Supradeep,B Tech,,Campus,IIT Roorkee
+Eshaan Kulshreshtha,AAIN0484,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Supradeep,B Tech,,Campus,IIT Roorkee
+Ankit Kumar,AAIN0485,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Deepti,Integrated M Sc,,Campus,IIT Roorkee
+Nidhi Kumari,AAIN0486,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Somya,B Tech,21-Jun-17,Campus,IIT Roorkee
+John Jacob Attasseril,AAIN0487,Delivery,Management Trainee,12-Jun-17,0,0.49,0.5,Vaibhav,PGPB(MBA),,Campus,MISB Bicconi
+Parth Gera,AAIN0488,Delivery,Business Analyst,12-Jun-17,0,0.49,0.5,Supradeep,B Tech,,Campus,IIT Roorkee
+Devi Prasad Khatua,AAIN0494,Product,Data Scientist,03-Jul-17,0.0,0.43,0.4,Swami,B Tech,,PPO,KIIT University
+Ansuman Chand,AAIN0497,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Priyankar,B Tech,,Campus,NIT Silchar
+Arunav Saikia ,AAIN0498,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Anuja,B Tech,,Campus,NIT Silchar
+Mandovi Borthakur,AAIN0499,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Vivek,B Tech,,Campus,NIT Silchar
+Nimish Agarwal,AAIN0500,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Priyankar,B Tech,,Campus,NIT Jaipur
+Shibayan Saha,AAIN0501,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Deepti,B Tech,,Campus,NIT Jaipur
+Guncha Garg,AAIN0502,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Anuja,B Tech,,Campus,NIT Jaipur
+Gyandeep Kumar,AAIN0503,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Vivek,M.Tech(Dual Degree),30-Nov-17,Campus,IIT Kharagpur
+Ankur Garg,AAIN0504,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Vivek,B Tech,,Campus,IIT Bhubaneswar
+R Dilip Reddy,AAIN0505,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Priyankar,B Tech,,Campus,IIT Bhubaneswar
+M. Phanidhar,AAIN0506,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Supradeep,B Tech,,Campus,IIT Bhubaneswar
+Hitesh Kumar Kanwar,AAIN0507,Delivery,Data Scientist,17-Jul-17,0.0,0.39,0.4,Deepti,B Tech,,Campus,IIT Bhubaneswar
+Mounika Gajavilli ,AAIN0508,Delivery,Data Scientist,17-Jul-17,0.0,0.39,0.4,Supradeep,B Tech,,Campus,IIT Bhubaneswar
+Rayudu Pujitha ,AAIN0509,Delivery,Data Scientist,17-Jul-17,0.0,0.39,0.4,Anuja,B Tech,,Campus,IIT Bhubaneswar
+Gaurav Sharma,AAIN0510,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Anuja,M.Tech,,Campus,IIT Kharagpur
+Akhtar Kamran,AAIN0511,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Priyankar,M Sc,,Campus,IIT Kharagpur
+Tapobrata Behera,AAIN0512,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Deepti,B Tech,,Campus,IIT Kharagpur
+Racharla Karthikeya,AAIN0513,Delivery,Business Analyst,17-Jul-17,0.0,0.39,0.4,Anuja,B Tech,,Campus,IIT Kharagpur
+Mohit Menon,AAIN0523,Delivery,Business Analyst,21-Aug-17,0,0.30,0.3,Somya,B Tech,,Campus,BITS Goa
+Sourav Kumar Mishra,AAIN0524,Delivery,Business Analyst,21-Aug-17,0,0.30,0.3,Somya,B Tech,,Campus,NIT Rourkela
+Tuhina Basu,AAIN0525,Delivery,Business Analyst,21-Aug-17,0,0.30,0.3,Somya,B Tech,,Campus,University of Kolkata
+Sreeparna Chatterjee,AAIN0526,Delivery,Business Analyst,21-Aug-17,0,0.30,0.3,Somya,B Tech,,Campus,Presidency University
+Poulami Roy,AAIN0527,Delivery,Business Analyst,21-Aug-17,0,0.30,0.3,Somya,B Tech,,Campus,Presidency University
+Tiasha Dhar,AAIN0528,Delivery,Business Analyst,21-Aug-17,0,0.30,0.3,Somya,B Tech,,Campus,University of Kolkata
+Sreeja Mondal,AAIN0529,Delivery,Business Analyst,21-Aug-17,0,0.30,0.3,Somya,B Tech,,Campus,University of Kolkata
+Amaresh Kumar Sinha,AAIN0530,Delivery,Business Analyst,21-Aug-17,0,0.30,0.3,Somya,B Tech,20-Oct-17,Campus,NIT Jamshedpur
+Ritesh Kumar,AAIN0531,Delivery,Business Analyst,21-Aug-17,0,0.30,0.3,Somya,B Tech,,Campus,NIT Jamshedpur
+Prayashi Bohra,AAIN0543,Delivery,Business Analyst,27-Nov-17,0.0,0.0,0.0,Shuddho,B Tech,,Referral,Referral

@@ -1,0 +1,68 @@
+<form #expForm="ngForm" (ngSubmit)="onSubmit(expForm.value)" novalidate class="tab-info tab-content">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> Company <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="Organst_Name" [ngModel]="expDetails.Organst_Name">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> From <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" name="Joining_Date" [ngModel]="expDetails.Joining_Date | date: 'yyyy-MM-dd'" >
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> Location <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" name="Location" [ngModel]="expDetails.Location" >
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> Designation <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <input class="form-control mr-sm-2" type="text" name="Previous_Destination" [ngModel]="expDetails.Previous_Destination" placeholder="Designations"
+                        list="Designation" autocomplete="off" />
+                        <datalist id="Designation">
+                          <option *ngFor="let desg of dataStream.designations" value="{{ desg.Designation_Name }}">
+                             {{ desg.Designation_Name }}
+                          </option>
+                        </datalist>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> To <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <input type="date" class="form-control" name="Leaving_Date" [ngModel]="expDetails.Leaving_Date | date: 'yyyy-MM-dd'" >
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-md-4"> Skills Used <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <textarea class="form-control" name="Skills_Used" [ngModel]="expDetails.Skills_Used" > </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="row">
+        <div class="col-md-12 align-right pull-right">
+
+        </div>
+    </div> -->
+    <button class="btn btn-default btn-primary save pull-right " type="submit"> Save </button>
+</form>

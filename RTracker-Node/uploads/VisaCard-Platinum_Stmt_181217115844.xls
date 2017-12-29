@@ -1,0 +1,737 @@
+
+
+
+
+
+
+<html>
+<head>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+<META HTTP-EQUIV="expires" CONTENT="Tue, 11 Nov 1980 01:00:00 GMT">
+<style>
+td.ar {  font-family: Arial, Helvetica, sans-serif; font-size: 12px}
+td.ar3 {  font-family: Arial, Helvetica, sans-serif; font-size: 14px; font-weight: bold}
+td.arb {  font-family: Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold}
+td.vr2b {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold}
+td.ar1 {  font-family: Arial, Helvetica, sans-serif; font-size: 10px}
+</style>
+<script language="javascript" src="/infojsp/includes/activepath.js"></script>
+<script language="JavaScript" src="/infojsp/includes/validationfunction.js"></script>
+<script language="javascript">
+function citiServlet(keyValue){
+   startdate=document.forms[0].hidStartDummy.value
+   if(startdate=='Not Billed'){
+      document.forms[0].action="/infojsp/GenException/notbilled.htm"
+      document.forms[0].method="get"
+      document.forms[0].submit()
+   }else{
+
+         if(startdate.substring(3,5)=="01"){
+         month="12"
+         year=eval(startdate.substring(6,startdate.length)-1)
+         }else if(startdate.substring(3,4)=="0"){
+         month="0"+eval(startdate.substring(4,5)-1)
+         year=startdate.substring(6,startdate.length)
+         }else{
+           month=eval(startdate.substring(3,5)-1)
+          year=startdate.substring(6,startdate.length)
+         }
+        document.forms[0].dt.value = year+month
+        document.forms[0].hidaccinfo.value=formatAccount(document.forms[0].hidaccinfo.value);
+        document.forms[0].action="/servlets/DCGOutputServlet";
+        document.forms[0].method="post"
+        document.forms[0].codeType.value=keyValue
+        document.forms[0].submit();
+   }
+}
+function whatdownload(downloadstmt)
+{
+   document.forms[0].action="AcctDetCreditCardServlet";
+
+   if(downloadstmt=='VIEW')
+   {
+        document.forms[0].hidView.value="VIEW";
+        document.forms[0].hidService.value="-2";
+        startdate=document.forms[0].hidStartDummy.value
+        if(startdate=='Not Billed'){
+          document.forms[0].action="/infojsp/GenException/notbilled.htm"
+          document.forms[0].method="get"
+        }else{
+           document.forms[0].hidStartDate.value=startdate.substring(6,startdate.length)+startdate.substring(3,5)+"01"
+           document.forms[0].hidEndDate.value=startdate.substring(6,startdate.length)+startdate.substring(3,5)+startdate.substring(0,2)
+        }
+   }
+   if(downloadstmt=='DOWNLOAD')
+   {     
+        trnDate = document.forms[0].hidTrnDate.value;
+        if ( trnDate.indexOf("-") >= 0){
+        document.forms[0].hidTrnDate.value=trnDate.substring(6,trnDate.length)+trnDate.substring(3,5)+trnDate.substring(0,2);
+        }
+        openWin("You are about to download a file from a secure site.\nIf you are using a shared computer, please ensure that others do not have access \nto your confidential information.","/infojsp/");
+        document.forms[0].hidView.value="DOWNLOAD";
+        document.forms[0].hidService.value="-1";
+   }
+   document.forms[0].submit();
+}
+function creditpay(){
+                document.forms[0].action="/infojsp/creditcardpayment/CCPaymentUserInput.jsp"    //mention the name of the servlet
+                document.forms[0].submit()
+}
+var strUserClass="";
+var strAllCards="";
+
+var NS6 = (document.getElementById&&!document.all) ? true : false;
+if(NS6){
+        strUserClass=CBOL_CHK_top.topUserClass;
+        strAllCards=CBOL_CHK_top.topAllCards;
+}
+else{
+if(top.CBOL){
+        strUserClass=top.CBOL.topUserClass;
+        strAllCards=top.CBOL.topAllCards;
+}else{
+        strUserClass=top.CONTROL.cbol.topUserClass;
+        strAllCards=top.CONTROL.cbol.topAllCards;
+}
+}
+function whatLeft(arg1){
+ if(arg1=="ODD"){
+            if(strUserClass=="5213")
+                    document.forms[0].action="/infojsp/payanyone/demanddraft/ccdemanddraftrequest.jsp";
+            else if((strUserClass=="5218") || (strUserClass=="5227")){
+                    document.forms[0].action="/servlets/DCGInputServlet";
+                    document.forms[0].Key.value="PTDR_AC";
+            }
+            else
+                    document.forms[0].action="/infojsp/payanyone/demanddraft/demanddraftrequest.jsp";
+  }else if(arg1=="PUB"){
+        document.forms[0].action="/infojsp/viewandpay/viewandpay.jsp";
+  }else if(arg1=="CLI"){
+        document.forms[0].Key.value="CSCL_IN";
+        document.forms[0].action="/servlets/DCGInputServlet";
+  }else if(arg1=="RLC"){
+        document.forms[0].Key.value="CSRL_S1";
+        document.forms[0].action="/servlets/DCGInputServlet";
+  }else if(arg1=="CAE"){
+        document.forms[0].Key.value="CSAD_S1";
+        document.forms[0].action="/servlets/DCGInputServlet";
+  }else if(arg1=="CTP"){
+        document.forms[0].Key.value="CSTP_S0";
+        document.forms[0].action="/servlets/DCGInputServlet";
+  }else if(arg1=="RAP"){
+        document.forms[0].Key.value="APIN_S1";
+        document.forms[0].action="/servlets/DCGInputServlet";
+  }else if(arg1=="SYC"){
+        document.forms[0].Key.value="CSSY_SI";
+        document.forms[0].action="/servlets/DCGInputServlet";
+  }else if(arg1=="VPR"){
+        document.forms[0].action="/servlets/DCGInputServlet";
+        document.forms[0].Key.value="PTPR_S1";
+  }else if(arg1=="SCD"){
+        if (strAllCards == null) strAllCards = formatAccount(document.forms[0].hidaccinfo.value);
+        document.forms[0].eaccno.value=strAllCards;
+        document.forms[0].codeType.value="CSSC_D1";
+        document.forms[0].action="/servlets/DCGOutputServlet";
+  }else if(arg1=="ACD"){
+        document.forms[0].Key.value="CSAC_S1"
+        document.forms[0].action="/servlets/DCGInputServlet"
+  }else if(arg1=="EMI"){
+         document.forms[0].action="/servlet/EMIServlet";
+  }else if(arg1=="SON"){
+        document.forms[0].method="get"
+       
+        document.forms[0].action="/IbsJsps/ston.jsp";
+       
+  }else if(arg1=="CAL"){
+         document.forms[0].action="/servlet/IntelliServlet";
+         document.forms[0].method="post"
+  }
+  else{
+        alert("Wrong selection");
+  }
+        document.forms[0].submit();
+}
+
+
+</script>
+
+</head>
+<body text="#000000" bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<form name="f1" method="post" >
+<input type="hidden" name="codeType" value=""/> 
+<input type="hidden" name="eaccno" value=""/>
+<input type="hidden" name="Key" value=""/>
+   <table width="605" cellpadding="0" cellspacing="1" border="0">
+   	   <tr> 
+         <td align="right"><img src="/infojsp/images/accsumhd.gif" width="605" height="18"/></td>
+       </tr>
+        <tr>
+         <td align="center" bgcolor="#006699" class="ar" ><b><font color="#FFFFFF"><span class="ar">
+		
+              VisaCard-Platinum Statement for the period: 26/10/2017 to 26/11/2017
+         
+
+             </font></span>
+             </b><span class="ar">
+             <font color="#FFFFFF">
+                    </font>
+             </span>
+         </td>
+         </tr>
+  </table>
+
+<table width="605" border="0" cellspacing="0" cellpadding="0" bordercolor="blue">
+<tr align="center"> 
+      <td valign="top"> 
+        <table width="430" border="0" cellspacing="0" cellpadding="0" bordercolor="blue">
+		  <tr>
+           <td colspan="4" >
+         <table width="375" align="left" border="0" cellspacing="0" cellpadding="0" bordercolor="blue">
+             <tr>
+             <td colspan="3" height="45" class="ar3">
+                <span class="ar3"><b>S,YOGESH                                </b></span>
+				<input type=hidden name=pststrep1 value=S,YOGESH                                >
+             <br/>
+             <span class="arb"><font color="#666666"><b>Card no. 4386 XXX0 XXXX 8369 </b>
+             </td>
+             <td colspan="1" >
+               <input type="hidden" name="hidaccinfo" value=4386 XXX0 XXXX 8369> </input>
+               <input type="hidden" name="dt" value="" ></input>
+             </td>
+          </tr>
+
+
+   
+          <tr>
+             <td class="ar" nowrap="yes">Credit Limit</td>
+             <td class="ar" align="center">INR </td>
+             <td class="ar" align="right">
+             
+                 1,87,000.00
+ 				 <input type=hidden name=pstcrelimit value=1,87,000.00>
+             
+             </td>
+          </tr>
+          <tr>
+             <td class="ar" nowrap="yes">Previous Balance</td>
+             <td class="ar" align="center">INR </td>
+             <td class="ar" align="right">
+             
+                 8,138.31
+				 <input type=hidden name=pstprevbal value=8,138.31>
+             
+             </td>
+          </tr>
+          <tr>
+             <td class="ar" nowrap="yes">Purchases & Charges</td>
+             <td class="ar" align="center">INR </td>
+             <td class="ar" align="right">
+             
+                 21,820.70
+				 <input type=hidden name=pstpurchr value=21,820.70>
+             
+             </td>
+          </tr>
+          <tr>
+             <td class="ar" nowrap="yes">Payments & Credits</td>
+             <td class="ar" align="center">INR </td>
+             <td class="ar" align="right">
+             
+                 10,556.52
+				 <input type=hidden name=pstpaycredit value=10,556.52>
+             
+             </td>
+          </tr>
+          <tr>
+             <td class="ar" nowrap="yes">Cash Advance</td>
+             <td class="ar" align="center">INR </td>
+             <td class="ar" align="right">
+             
+                 0.00
+				 <input type=hidden name=pstcashadv value=0.00>
+             
+             </td>
+          </tr>
+          <tr>
+          <td height="12" colspan="7"><img height="1" width="450" src="/infojsp/images/a1grey.gif"></td>
+          </tr>
+		  <tr>
+		  <td class="vr2b" nowrap>
+		  <font color="#006699"><b>Payment Due Date:</b></font>
+		  </td>
+		  <td></td>
+		  <td class="ar" align="right"><font color="#006699"><b>
+             
+                 13/12/2017
+				 <input type=hidden name=pstpayduedt value='13/12/2017'>
+             
+			 </font>
+			 </b>
+             </td>
+
+          <td  colspan=1 class="vr2b" align=left nowrap="yes">
+          <font color="#006699"><b>&nbsp;&nbsp;Reward  points:</b></font>
+          </td>
+          </tr>
+
+		  <tr>
+<td class="ar" colspan="1" nowrap="yes">Total amount due</td>
+             <td class="ar" align="center">INR </td>
+             <td class="ar" align="right">
+             
+                 19,402.49
+				 <input type=hidden name=psttotalamtdue value=19,402.49>
+             
+             </td>
+
+			 <td class="ar" colspan="1" nowrap="yes">&nbsp;&nbsp;&nbsp;Opening Balance</td>
+             <td class="ar" align="right">
+             
+                 1,914.00
+				 <input type=hidden name=pstopenbal value=1,914.00>
+             
+             </td>
+          </tr>
+          <tr>
+		  <td class="ar" colspan="1" nowrap="yes">Minimum amount due </td>
+             <td class="ar" align="center">INR </td>
+             <td class="ar" align="right">
+             
+                 970.12
+				 <input type=hidden name=pstminamtdue value=970.12>
+             
+             </td>
+             <td class="ar" colspan="1">&nbsp;&nbsp;&nbsp;Earned</td>
+             <td class="ar" align="right">
+             
+                 319.00
+				 <input type=hidden name=pstearned value=319.00>
+             
+             </td>
+			 </tr>
+          <tr>	
+		               <td class="ar" colspan="1" nowrap="yes">Available Credit Limit </td>
+             <td class="ar" align="center">INR </td>
+             <td class="ar" align="right">
+             
+                 1,67,496.00
+				 <input type=hidden name=pstavacreditlimit value=1,67,496.00>
+             
+             </td>		  	
+            <td class="ar" colspan="1">&nbsp;&nbsp;&nbsp;Redeemed</td>
+             <td class="ar" align="right">
+             
+                 0.00
+				 <input type=hidden name=pstredeemed value=0.00>
+             
+             </td>
+          </tr>
+          <tr>	
+             <td class="ar" colspan="1" nowrap="yes">Available Cash Limit </td>
+             <td class="ar" align="center">INR </td>
+             <td class="ar" align="right">
+             
+                 18,700.00
+				 <input type=hidden name=pstavacashlimit value=18,700.00>
+             
+             </td>
+             <td class="ar" colspan="1">&nbsp;&nbsp;&nbsp;Closing Balance</td>
+             <td class="ar" align="right">
+             
+                 2,233.00
+				 <input type=hidden name=pstclobal value=2,233.00>
+             
+             </td>
+          </tr>
+
+		  
+		 
+
+
+     
+         </table>
+        </td>
+       </tr>
+<tr>
+         <td colspan="4">
+   
+          <table border="0" width="450" cellspacing="1" cellpadding="0">
+          <tr>
+          <td height="12" colspan="7"><img height="1" width="450" src="/infojsp/images/a1grey.gif"></td>
+          </tr>
+            <tr>
+              <td colspan="2" class="vr2b">
+                <font color="#006699">Transaction details
+                </font>
+              </td>
+              <td align="right" class="ar1">&#160;</td>
+            </tr>
+
+
+            <tr>
+              <td><img src="/infojsp/images/a1.gif" width="70" height="1"/></td>
+              <td><img src="/infojsp/images/a1.gif" width="300" height="1"/></td>
+              <td><img src="/infojsp/images/a1.gif" width="80" height="1"/></td>
+            </tr>
+            <tr>
+              <td bgcolor="#CCCCCC" align="center" class="ar"> <b> Date  </td>
+              <td bgcolor="#CCCCCC" align="center" class="ar">  <b> Description</b></td>
+              <td bgcolor="#CCCCCC" align="center" class="ar">  <b>  Amount </b></td>
+            </tr>
+            <input type="hidden" name="hidTrnamt" value=""></input>
+
+ 
+            <tr>
+<td class="ar" align=center>26/10/2017</td>
+<input type=hidden name=pstdt1 value=26/10/2017>
+
+<td class="ar" height=27>DISCOUNT ON FUEL PURC                 IN</td>
+<input type=hidden name=pstdesc1 value="DISCOUNT ON FUEL PURC                 IN">
+			
+	  <td class="ar" align=right><font color="#CC0000">2.19</td>
+<input type=hidden name=pstamt1 value=2.19>
+                     
+			<input name="pstreptcolor" type="hidden" value=Credit>
+			<input name="hidTrnamt" type="hidden" value="2.19       " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>26/10/2017</td>
+<input type=hidden name=pstdt1 value=26/10/2017>
+
+<td class="ar" height=27>LNB FILLING STATION                   IN</td>
+<input type=hidden name=pstdesc1 value="LNB FILLING STATION                   IN">
+			
+<td class="ar" align=right>326.00</td>
+<input type=hidden name=pstamt1 value=326.00>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="326.00     " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>31/10/2017</td>
+<input type=hidden name=pstdt1 value=31/10/2017>
+
+<td class="ar" height=27>RAMDEV SAGAR             BANGALORE    IN</td>
+<input type=hidden name=pstdesc1 value="RAMDEV SAGAR             BANGALORE    IN">
+			
+<td class="ar" align=right>360.00</td>
+<input type=hidden name=pstamt1 value=360.00>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="360.00     " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>03/11/2017</td>
+<input type=hidden name=pstdt1 value=03/11/2017>
+
+<td class="ar" height=27>PAYMENT RECD, THANK YOU</td>
+<input type=hidden name=pstdesc1 value="PAYMENT RECD, THANK YOU">
+			
+	  <td class="ar" align=right><font color="#CC0000">2000.00</td>
+<input type=hidden name=pstamt1 value=2000.00>
+                     
+			<input name="pstreptcolor" type="hidden" value=Credit>
+			<input name="hidTrnamt" type="hidden" value="2000.00    " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>03/11/2017</td>
+<input type=hidden name=pstdt1 value=03/11/2017>
+
+<td class="ar" height=27>LNB FILLING STATION                   IN</td>
+<input type=hidden name=pstdesc1 value="LNB FILLING STATION                   IN">
+			
+<td class="ar" align=right>285.00</td>
+<input type=hidden name=pstamt1 value=285.00>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="285.00     " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>04/11/2017</td>
+<input type=hidden name=pstdt1 value=04/11/2017>
+
+<td class="ar" height=27>RAMDEV SAGAR             BANGALORE    IN</td>
+<input type=hidden name=pstdesc1 value="RAMDEV SAGAR             BANGALORE    IN">
+			
+<td class="ar" align=right>470.00</td>
+<input type=hidden name=pstamt1 value=470.00>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="470.00     " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>04/11/2017</td>
+<input type=hidden name=pstdt1 value=04/11/2017>
+
+<td class="ar" height=27>V R ENTERPRISES          BANGALORE    IN</td>
+<input type=hidden name=pstdesc1 value="V R ENTERPRISES          BANGALORE    IN">
+			
+<td class="ar" align=right>126.00</td>
+<input type=hidden name=pstamt1 value=126.00>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="126.00     " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>04/11/2017</td>
+<input type=hidden name=pstdt1 value=04/11/2017>
+
+<td class="ar" height=27>DOMINOS PIZZA            BANGALORE    IN</td>
+<input type=hidden name=pstdesc1 value="DOMINOS PIZZA            BANGALORE    IN">
+			
+<td class="ar" align=right>298.96</td>
+<input type=hidden name=pstamt1 value=298.96>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="298.96     " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>04/11/2017</td>
+<input type=hidden name=pstdt1 value=04/11/2017>
+
+<td class="ar" height=27>RELIANCE TRENDS                       IN</td>
+<input type=hidden name=pstdesc1 value="RELIANCE TRENDS                       IN">
+			
+<td class="ar" align=right>1996.00</td>
+<input type=hidden name=pstamt1 value=1996.00>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="1996.00    " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>05/11/2017</td>
+<input type=hidden name=pstdt1 value=05/11/2017>
+
+<td class="ar" height=27>STAR BAZAAR              BANGALORE    IN</td>
+<input type=hidden name=pstdesc1 value="STAR BAZAAR              BANGALORE    IN">
+			
+<td class="ar" align=right>896.90</td>
+<input type=hidden name=pstamt1 value=896.90>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="896.90     " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>07/11/2017</td>
+<input type=hidden name=pstdt1 value=07/11/2017>
+
+<td class="ar" height=27>HPCL RKR FUEL STATION    BANGALORE    IN</td>
+<input type=hidden name=pstdesc1 value="HPCL RKR FUEL STATION    BANGALORE    IN">
+			
+<td class="ar" align=right>311.80</td>
+<input type=hidden name=pstamt1 value=311.80>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="311.80     " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>09/11/2017</td>
+<input type=hidden name=pstdt1 value=09/11/2017>
+
+<td class="ar" height=27>HPCL 0.75% CASHLESS IN   MUMBAI       IN</td>
+<input type=hidden name=pstdesc1 value="HPCL 0.75% CASHLESS IN   MUMBAI       IN">
+			
+	  <td class="ar" align=right><font color="#CC0000">2.25</td>
+<input type=hidden name=pstamt1 value=2.25>
+                     
+			<input name="pstreptcolor" type="hidden" value=Credit>
+			<input name="hidTrnamt" type="hidden" value="2.25       " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>11/11/2017</td>
+<input type=hidden name=pstdt1 value=11/11/2017>
+
+<td class="ar" height=27>KHAZANA JEWELLERY PVT    BANGALORE    IN</td>
+<input type=hidden name=pstdesc1 value="KHAZANA JEWELLERY PVT    BANGALORE    IN">
+			
+<td class="ar" align=right>1513.00</td>
+<input type=hidden name=pstamt1 value=1513.00>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="1513.00    " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>13/11/2017</td>
+<input type=hidden name=pstdt1 value=13/11/2017>
+
+<td class="ar" height=27>SI PAYMENT</td>
+<input type=hidden name=pstdesc1 value="SI PAYMENT">
+			
+	  <td class="ar" align=right><font color="#CC0000">406.92</td>
+<input type=hidden name=pstamt1 value=406.92>
+                     
+			<input name="pstreptcolor" type="hidden" value=Credit>
+			<input name="hidTrnamt" type="hidden" value="406.92     " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>13/11/2017</td>
+<input type=hidden name=pstdt1 value=13/11/2017>
+
+<td class="ar" height=27>PAYMENT RECD, THANK YOU</td>
+<input type=hidden name=pstdesc1 value="PAYMENT RECD, THANK YOU">
+			
+	  <td class="ar" align=right><font color="#CC0000">8138.31</td>
+<input type=hidden name=pstamt1 value=8138.31>
+                     
+			<input name="pstreptcolor" type="hidden" value=Credit>
+			<input name="hidTrnamt" type="hidden" value="8138.31    " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>14/11/2017</td>
+<input type=hidden name=pstdt1 value=14/11/2017>
+
+<td class="ar" height=27>DISCOUNT ON FUEL PURC                 IN</td>
+<input type=hidden name=pstdesc1 value="DISCOUNT ON FUEL PURC                 IN">
+			
+	  <td class="ar" align=right><font color="#CC0000">2.45</td>
+<input type=hidden name=pstamt1 value=2.45>
+                     
+			<input name="pstreptcolor" type="hidden" value=Credit>
+			<input name="hidTrnamt" type="hidden" value="2.45       " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>14/11/2017</td>
+<input type=hidden name=pstdt1 value=14/11/2017>
+
+<td class="ar" height=27>HPCL RKR FUEL STATION    BANGALORE    IN</td>
+<input type=hidden name=pstdesc1 value="HPCL RKR FUEL STATION    BANGALORE    IN">
+			
+<td class="ar" align=right>312.80</td>
+<input type=hidden name=pstamt1 value=312.80>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="312.80     " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>16/11/2017</td>
+<input type=hidden name=pstdt1 value=16/11/2017>
+
+<td class="ar" height=27>HPCL 0.75% CASHLESS IN   MUMBAI       IN</td>
+<input type=hidden name=pstdesc1 value="HPCL 0.75% CASHLESS IN   MUMBAI       IN">
+			
+	  <td class="ar" align=right><font color="#CC0000">2.26</td>
+<input type=hidden name=pstamt1 value=2.26>
+                     
+			<input name="pstreptcolor" type="hidden" value=Credit>
+			<input name="hidTrnamt" type="hidden" value="2.26       " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>20/11/2017</td>
+<input type=hidden name=pstdt1 value=20/11/2017>
+
+<td class="ar" height=27>DISCOUNT ON FUEL PURC                 IN</td>
+<input type=hidden name=pstdesc1 value="DISCOUNT ON FUEL PURC                 IN">
+			
+	  <td class="ar" align=right><font color="#CC0000">2.14</td>
+<input type=hidden name=pstamt1 value=2.14>
+                     
+			<input name="pstreptcolor" type="hidden" value=Credit>
+			<input name="hidTrnamt" type="hidden" value="2.14       " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>21/11/2017</td>
+<input type=hidden name=pstdt1 value=21/11/2017>
+
+<td class="ar" height=27>INSTAKART SERVICES PVT   BANGALORE    IN</td>
+<input type=hidden name=pstdesc1 value="INSTAKART SERVICES PVT   BANGALORE    IN">
+			
+<td class="ar" align=right>13999.00</td>
+<input type=hidden name=pstamt1 value=13999.00>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="13999.00   " >
+						</tr>
+        
+			 
+            <tr>
+<td class="ar" align=center>21/11/2017</td>
+<input type=hidden name=pstdt1 value=21/11/2017>
+
+<td class="ar" height=27>LNB FILLING STATION                   IN</td>
+<input type=hidden name=pstdesc1 value="LNB FILLING STATION                   IN">
+			
+<td class="ar" align=right>328.24</td>
+<input type=hidden name=pstamt1 value=328.24>
+       
+			<input name="pstreptcolor" type="hidden" value=Debit >
+			<input name="hidTrnamt" type="hidden" value="328.24     " >
+						</tr>
+        
+			
+			
+
+
+             
+            <tr>
+<td class="ar" align=center>21/11/2017</td>
+<input type=hidden name=pstfoot1 value=21/11/2017>
+
+<td class="ar" height=27>HYPERCITY RETAIL INDIA   BANGALORE    IN</td>
+<input type=hidden name=pstfoot2 value='HYPERCITY RETAIL INDIA   BANGALORE    IN'>
+			
+<td class="ar" align=right>597.00</td>
+<input type=hidden name=pstfoot3 value=597.00>
+       
+			<input name="pstfootcolor" type=hidden value=Debit >
+			<input name="hidTrnamt" type="hidden" value="21/11/2017" >
+						</tr>
+            
+
+            </table>
+          
+            </td>
+            </tr>
+          <tr>
+          <td height="12" colspan="7"><img height="1" width="450" src="/infojsp/images/a1grey.gif"></td>
+          </tr>
+</table>
+</td>
+</tr>
+</table>
+
+
+
+
+</form>
+</body>
+</html>

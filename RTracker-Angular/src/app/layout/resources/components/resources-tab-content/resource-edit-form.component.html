@@ -1,0 +1,86 @@
+<form #resForm="ngForm" novalidate class="tab-info tab-content" (ngSubmit)="onSubmit(resForm.value)">
+    <div class="row">
+        <div class="col-5">
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-3"> Accounts <span class="pull-right"> : </span> </label>
+                    <div class="col-8">
+                        <select class="form-control" name="Accounts" [ngModel]="resDetails.AccountIds" (change)="loadAccounts($event)" multiple required>
+                            <option *ngFor="let acc of dataStream.accounts" value="{{ acc.Account_Id }}">
+                                {{ acc.Account_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-3"> Deployable <span class="pull-right"> : </span> </label>
+                    <div class="col-8">
+                        <select class="form-control" name="Deployable" [ngModel]="resDetails.Deployable" required>
+                            <option value="YES"> Yes </option>
+                            <option value="NO"> No </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <label class="col-3"> Location <span class="pull-right"> : </span> </label>
+                    <div class="col-8">
+                        <select class="form-control" name="Location" [ngModel]="resDetails.Location" required>
+                            <option value="OFFSHORE"> Offshore </option>
+                            <option value="INDIA"> India </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-5">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <label class="col-3"> Projects <span class="pull-right"> : </span> </label>
+                    <div class="col-8">
+                        <select class="form-control" name="Projects" [ngModel]="resDetails.ProjectIds" multiple required>
+                            <option *ngFor="let proj of projectsList" value="{{ proj.Project_Id }}">
+                                {{ proj.Project_Name }}
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <label class="col-3"> Type <span class="pull-right"> : </span> </label>
+                    <div class="col-8">
+                        <select class="form-control" name="Type" [ngModel]="resDetails.Type" required>
+                            <option value="BILLED"> Billed </option>
+                            <option value="BUFFER"> Buffer </option>
+                            <option value="BLOCKED"> Blocked </option>
+                            <option value="NEW"> New </option>
+                            <option value="INTERNAL"> Internal </option>
+                            <option value="OVERHEAD"> Overhead </option>
+                            <option value="TRAINING"> Training </option>
+                            <option value="LEAVE"> Leave </option>
+                            <option value="PIP"> PIP </option>
+                            <option value="NOTICE"> Notice </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-1"></div>
+                    <label class="col-3"> Status / Remarks <span class="pull-right"> : </span> </label>
+                    <div class="col-8">
+                        <textarea class="form-control" name="Status" [ngModel]="resDetails.Status" placeholder="Optional"></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-default btn-primary save pull-right" type="submit"> Update </button>
+</form>

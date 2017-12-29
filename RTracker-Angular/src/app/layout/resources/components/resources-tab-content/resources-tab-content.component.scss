@@ -1,0 +1,16 @@
+.pad-10 {
+    padding: 10px;
+}
+
+table {
+    th {
+        font-size: 11px;
+        text-transform: uppercase;
+    }
+    td {
+        font-size: 12px;
+    }
+    tr:nth-child(even) {
+        background-color: #fff;
+    }
+}

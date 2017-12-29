@@ -1,0 +1,346 @@
+<div class="tracker-section">
+    <h6 class="text-muted-header">Employee Profile</h6>
+    <div class="horizontal-pipe-line"></div>
+
+	<div class="tabs-details-container">
+		<div class="tabs-list">
+            <div class="row mt-3">
+                <div class="col-sm-6 col-md-12">
+                    <ul role="tablist" class="nav nav-tabs justify-content-start">
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/basic', employeeid]" href="javascript:void(0)" >
+                                BASIC INFORMATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/bank', employeeid]" href="javascript:void(0)">
+                               BANK INFORMATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="javascript:void(0)">
+                               FAMILY / RELATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/passport', employeeid]" href="javascript:void(0)">
+                               PASSPORT / VISA
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/education', employeeid]" href="javascript:void(0)">
+                               EDUCATION / CERTIFICATION
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/experience', employeeid]" href="javascript:void(0)">
+                               EXPERIENCE
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/skills', employeeid]" href="javascript:void(0)">
+                               SKILLS
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/history', employeeid]" href="javascript:void(0)">
+                               HISTORY
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" [routerLink]="['/resign', employeeid]" href="javascript:void(0)">
+                               RESIGN
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="family-details tab-content">
+                        <div class="tab-info tab-pane active">
+                            <form #f="ngForm" (ngSubmit)="save(f.value)" class="tab-info tab-content">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-3"> Employee ID <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-5">
+                                                    <input type="text" name="Employee_Id" [(ngModel)]="familyDetails.Employee_Id" #name="ngModel" class="form-control" [disabled]="disableInputs" required readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6 class="cus-h6"> Family </h6>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <label class="col-md-3"> Father Name <span class="pull-right"> : </span> </label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" class="form-control" [disabled]="disableInputs" name="Father_Name" [(ngModel)]="familyDetails.Father_Name" #fatherName="ngModel" pattern="[a-zA-Z ]+" required>
+                                                            <div *ngIf="fatherName.invalid && (fatherName.touched)" class="alert alert-danger">
+                                                                <div *ngIf="fatherName.errors.required">
+                                                                    Father name is required.
+                                                                </div>
+                                                                <div *ngIf="fatherName.hasError('pattern')">
+                                                                    Only alphabet and spaces are allowed.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <label class="col-md-3"> Father Contact <span class="pull-right"> : </span> </label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="Father_Contact" [(ngModel)]="familyDetails.Father_Contact" #fatherContact="ngModel" class="form-control" [disabled]="disableInputs" pattern="(7|8|9)\d{9}">
+                                                            <div *ngIf="fatherContact.invalid && fatherContact.touched" class="alert alert-danger">
+                                                                <div *ngIf="fatherContact.errors.required">
+                                                                    Contact Number is required.
+                                                                </div>
+                                                                <div *ngIf="fatherContact.hasError('pattern')">
+                                                                    Specify a 10 digit mobile number only.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <label class="col-md-3"> Mother Name <span class="pull-right"> : </span> </label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" class="form-control" [disabled]="disableInputs" name="Mother_Name" [(ngModel)]="familyDetails.Mother_Name" #motherName="ngModel" pattern="[a-zA-Z ]+" required>
+                                                            <div *ngIf="motherName.invalid && (motherName.touched)" class="alert alert-danger">
+                                                                <div *ngIf="motherName.errors.required">
+                                                                    Mother name is required.
+                                                                </div>
+                                                                <div *ngIf="motherName.hasError('pattern')">
+                                                                    Only alphabet and spaces are allowed.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <label class="col-md-3"> Mother Contact <span class="pull-right"> : </span> </label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="Mother_Contact" [(ngModel)]="familyDetails.Mother_Contact" #motherContact="ngModel" class="form-control" [disabled]="disableInputs" pattern="(7|8|9)\d{9}">
+                                                            <div *ngIf="motherContact.invalid && motherContact.touched" class="alert alert-danger">
+                                                                <div *ngIf="motherContact.errors.required">
+                                                                    Contact Number is required.
+                                                                </div>
+                                                                <div *ngIf="motherContact.hasError('pattern')">
+                                                                    Specify a 10 digit mobile number only.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="row">
+                                                        <label class="col-md-3"> Marital Status <span class="pull-right"> : </span> </label>
+                                                        <div class="col-md-5">
+                                                            <select class="form-control" [disabled]="disableInputs" name="Marital_Status" #maritalStatus="ngModel" [(ngModel)]="Marital_Status" required>
+                                                                <option value="Single"> Single </option>
+                                                                <option value="Married"> Married </option>
+                                                            </select>
+                                                            <div *ngIf="maritalStatus.invalid && (maritalStatus.touched)" class="alert alert-danger">
+                                                                <div *ngIf="maritalStatus.errors.required">
+                                                                    Marital status is required.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" [hidden]="!isMarried()">
+                                                    <div class="row">
+                                                        <label class="col-md-3"> Spouse Name <span class="pull-right"> : </span> </label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" class="form-control" [disabled]="disableInputs" name="Spouse_Name" [(ngModel)]="familyDetails.Spouse_Name" #spouseName="ngModel" pattern="[a-zA-Z ]+">
+                                                            <div *ngIf="spouseName.invalid && (spouseName.touched)" class="alert alert-danger">
+                                                                <div *ngIf="spouseName.errors.required">
+                                                                    Spouse name is required.
+                                                                </div>
+                                                                <div *ngIf="spouseName.hasError('pattern')">
+                                                                    Only alphabet and spaces are allowed.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" [hidden]="!isMarried()">
+                                                    <div class="row">
+                                                        <label class="col-md-3"> Spouse Contact <span class="pull-right"> : </span> </label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" name="Spouse_Contact" [(ngModel)]="familyDetails.Spouse_Contact" #spouseContact="ngModel" class="form-control" [disabled]="disableInputs" pattern="(7|8|9)\d{9}">
+                                                            <div *ngIf="spouseContact.invalid && spouseContact.touched" class="alert alert-danger">
+                                                                <div *ngIf="spouseContact.errors.required">
+                                                                    Contact Number is required.
+                                                                </div>
+                                                                <div *ngIf="spouseContact.hasError('pattern')">
+                                                                    Specify a 10 digit mobile number only.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" [hidden]="!isMarried()">
+                                                    <div class="row">
+                                                        <label class="col-md-3"> No of Children <span class="pull-right"> : </span> </label>
+                                                        <div class="col-md-5">
+                                                            <select class="form-control" [disabled]="disableInputs" name="No_Of_Children" #noOfChildren="ngModel" [(ngModel)]="familyDetails.No_Of_Children" >
+                                                                <option value="0"> 0 </option>
+                                                                <option value="1"> 1 </option>
+                                                                <option value="2"> 2 </option>
+                                                                <option value="3"> 3 </option>
+                                                                <option value="4"> 4 </option>
+                                                                <option value="5"> 5 </option>
+                                                                <option value="6"> 6 </option>
+                                                                <option value="7"> 7 </option>
+                                                                <option value="8"> 8 </option>
+                                                                <option value="9"> 9 </option>
+                                                            </select>
+                                                            <div *ngIf="noOfChildren.invalid && (noOfChildren.touched)" class="alert alert-danger">
+                                                                <div *ngIf="noOfChildren.errors.required">
+                                                                    No of children is required.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" [hidden]="!isMarried()">
+                                                    <div class="row">
+                                                        <label class="col-md-3"> Is Spouse Employed <span class="pull-right"> : </span> </label>
+                                                        <div class="col-md-5">
+                                                            <select class="form-control" [disabled]="disableInputs" name="Is_Spouse_Employed" #spouseEmployed="ngModel" [(ngModel)]="familyDetails.Is_Spouse_Employed">
+                                                                <option value="No"> No </option>
+                                                                <option value="Yes"> Yes </option>
+                                                            </select>
+                                                            <div *ngIf="spouseEmployed.invalid && (spouseEmployed.touched)" class="alert alert-danger">
+                                                                <div *ngIf="spouseEmployed.errors.required">
+                                                                    Specify whether your spouse is employed or not.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group" [hidden]="!isSpouseEmployed() || !isMarried()">
+                                                    <div class="row">
+                                                        <label class="col-md-3"> Spouse's Employer Name <span class="pull-right"> : </span> </label>
+                                                        <div class="col-md-5">
+                                                            <input type="text" class="form-control" [disabled]="disableInputs" name="Spouse_Employer_Name" [(ngModel)]="familyDetails.Spouse_Employer_Name" #spouseEmpName="ngModel" pattern="[a-zA-Z \.]+">
+                                                            <div *ngIf="spouseEmpName.invalid && (spouseEmpName.touched)" class="alert alert-danger">
+                                                                <div *ngIf="spouseEmpName.errors.required">
+                                                                    Spouse's employer name is required.
+                                                                </div>
+                                                                <div *ngIf="spouseEmpName.hasError('pattern')">
+                                                                    Only alphabet, dot(.) and whitespace( ) characters are allowed.
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6 class="cus-h6"> Dependant 1</h6>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-3"> Name <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-5">
+                                                    <input type="text" class="form-control" [disabled]="disableInputs"  name="Relative_Name_1" [(ngModel)]="familyDetails.Relative_Name_1" #rel1Name="ngModel" pattern="[a-zA-Z ]+">
+                                                    <div *ngIf="rel1Name.invalid && (rel1Name.touched)" class="alert alert-danger">
+                                                        <div *ngIf="rel1Name.hasError('pattern')">
+                                                            Only alphabet and whitespace characters are allowed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-3"> Relation <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-5">
+                                                    <select class="form-control" [disabled]="disableInputs" name="Relation_Type_Name_1" #rel1Type="ngModel" [(ngModel)]="familyDetails.Relation_Type_Name_1">
+                                                        <option *ngFor="let rel of dataStream.relations" value="{{ rel.Map_Relative_Id }}">
+                                                            {{ rel.Map_Relative_Name }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h6 class="cus-h6"> Dependant 2</h6>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-3"> Name <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-5">
+                                                    <input type="text" class="form-control" [disabled]="disableInputs"  name="Relative_Name_2" [(ngModel)]="familyDetails.Relative_Name_2" #rel2Name="ngModel" pattern="[a-zA-Z ]+">
+                                                    <div *ngIf="rel2Name.invalid && (rel1Name.touched)" class="alert alert-danger">
+                                                        <div *ngIf="rel2Name.hasError('pattern')">
+                                                            Only alphabet and whitespace characters are allowed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-3"> Relation <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-5">
+                                                    <select class="form-control" [disabled]="disableInputs" name="Relation_Type_Name_2" #rel2Type="ngModel" [(ngModel)]="familyDetails.Relation_Type_Name_2">
+                                                        <option *ngFor="let rel of dataStream.relations" value="{{ rel.Map_Relative_Id }}">
+                                                            {{ rel.Map_Relative_Name }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <h6 class="cus-h6"> Dependant 3</h6>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-3"> Name <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-5">
+                                                    <input type="text" class="form-control" [disabled]="disableInputs"  name="Relative_Name_3" [(ngModel)]="familyDetails.Relative_Name_3" #rel3Name="ngModel" pattern="[a-zA-Z ]+">
+                                                    <div *ngIf="rel3Name.invalid && (rel1Name.touched)" class="alert alert-danger">
+                                                        <div *ngIf="rel3Name.hasError('pattern')">
+                                                            Only alphabet and whitespace characters are allowed.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <label class="col-md-3"> Relation <span class="pull-right"> : </span> </label>
+                                                <div class="col-md-5">
+                                                    <select class="form-control" [disabled]="disableInputs" name="Relation_Type_Name_3" #rel3Type="ngModel" [(ngModel)]="familyDetails.Relation_Type_Name_3">
+                                                        <option *ngFor="let rel of dataStream.relations" value="{{ rel.Map_Relative_Id }}">
+                                                            {{ rel.Map_Relative_Name }}
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                                <div class="row">
+                                    <div class="col-md-12 align-right">
+                                        <hr />
+                                        <button class="btn btn-default btn-primary edit" type="edit" [hidden]="hideEditButton" (click)="enableEdit()"> Edit </button>
+                                        <button class="btn btn-default btn-primary save" type="submit" [hidden]="hideSaveButton" [disabled]="allowSave(f.value)"> Save </button>
+                                        <button class="btn btn-default btn-secondary cancel" type="reset" [hidden]="hideCancelButton" (click)="cancelEdit()"> Cancel </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+		</div>
+	</div>
+</div>

@@ -1,0 +1,100 @@
+<form [formGroup]="pastExpForm" (ngSubmit)="onSubmit()" novalidate class="tab-info tab-content">
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <div class="row" *ngIf="empId">
+                    <label class="col-md-4"> Emp ID <span class="pull-right"> : </span> </label>
+                    <div class="col-md-8">
+                        <input type="text" name="Employee_ID" formControlName="empId" [ngModel]="empId" class="form-control" required readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  <div formArrayName="pastWorkExps" class="well well-lg">
+    <div *ngFor="let address of pastWorkExps.controls; let i=index" [formGroupName]="i" >
+      <!-- The repeated work experience template -->
+      <div class="row">
+          <div class="col-md-5">
+              <h6 class="tab-h6"> Previous Work Experience {{i + 1}}</h6>
+          </div>
+          <div class="col-md-5 align-right">
+              <i class="fa fa-times rm-work-exp" aria-hidden="true" (click)="removeWorkExperience()" title="Remove Experience {{i + 1}}"></i>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-5">
+              <div class="form-group">
+                  <div class="row">
+                      <label class="col-md-4"> Company <span class="pull-right"> : </span> </label>
+                      <div class="col-md-8">
+                          <input type="text" class="form-control" name="Company" formControlName="Company" >
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <div class="row">
+                      <label class="col-md-4"> From <span class="pull-right"> : </span> </label>
+                      <div class="col-md-8">
+                          <input type="date" class="form-control" name="Joining_Date" formControlName="Joining_Date" >
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <div class="row">
+                      <label class="col-md-4"> Location <span class="pull-right"> : </span> </label>
+                      <div class="col-md-8">
+                          <input type="text" class="form-control" name="Location" formControlName="Location" >
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="col-md-5">
+              <div class="form-group">
+                  <div class="row">
+                      <label class="col-md-4"> Designation <span class="pull-right"> : </span> </label>
+                      <div class="col-md-8">
+                          <input class="form-control mr-sm-2" type="text" name="Designation" formControlName="Designation" placeholder="Designations"
+                          list="Designation" autocomplete="off" />
+                          <datalist id="Designation">
+                            <option *ngFor="let desg of dataStream.designations" value="{{ desg.Designation_Name }}">
+                               {{ desg.Designation_Name }}
+                            </option>
+                          </datalist>
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <div class="row">
+                      <label class="col-md-4"> To <span class="pull-right"> : </span> </label>
+                      <div class="col-md-8">
+                          <input type="date" class="form-control" name="Leaving_Date" formControlName="Leaving_Date" >
+                      </div>
+                  </div>
+              </div>
+              <div class="form-group">
+                  <div class="row">
+                      <label class="col-md-4"> Skills Used <span class="pull-right"> : </span> </label>
+                      <div class="col-md-8">
+                          <textarea class="form-control" name="Skills_Used" formControlName="Skills_Used" > </textarea>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <!-- End of the repeated work experience template -->
+    </div>
+
+  </div>
+  <div class="row">
+      <div class="col-md-6 align-left">
+          <button (click)="addWorkExperience()" type="button" class="btn btn-secondary">Add Work Experience</button>
+      </div>
+      <div class="col-md-6 align-right">
+          <button class="btn btn-default btn-primary save" type="submit"> Save </button>
+      </div>
+  </div>
+</form>

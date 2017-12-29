@@ -1,0 +1,51 @@
+<div class="row">
+    <div class="col col-xl-12 col-lg-12">
+        <div class="mb-12">
+            <div class="breadcrumbs">
+                <a [routerLink]="['/reports']" class="nav-link-action bc-text">
+                    Reports
+                </a>
+                <span class="gt-symbol">></span>
+                <span class="bc-text active">Employee Details</span>
+            </div>
+            <div class="horizontal-pipe-line"></div>
+            <div class="card-block card table-responsive">
+                <div class="form-group row page-header">
+                    <div class="col-md-12">
+                        <span class="pull-left column-list">
+                            <i class="fa fa-2 fa-th-list" (click)="toggleColumnsList()" [ngClass]="{'active': !hideColumnsList}" title="Table Columns"></i>
+                            <ul class="columns list-group" [hidden]="hideColumnsList">
+                                <li *ngFor="let field of fields; let i = index" class="list-group-item list-group-item-action">
+                                    <span>{{field}}</span>
+                                    <input class="pull-right" [checked]="hiddenColumnsList.indexOf( i ) === -1" type="checkbox" name="{{field}}" value="{{field}}" (click)="toggleColumn(i, $event.target.checked)">
+                                </li>
+                            </ul>
+                        </span>
+                        <label class="search-label"> Search : </label>
+                        <input type="text" class="form-control search-input" id="searchInput" [(ngModel)]="inputName" placeholder="Search value" (keyup)="searchValue($event)"/>
+                    </div>
+                </div>
+                <div class="clearfix clear"></div>
+                    <!-- <table class="table table-bordered table-striped cus-table" [mfData]="contactDetails" #mf="mfDataTable" [mfRowsOnPage]="5"> -->
+                    <table class="table table-bordered table-striped cus-table">
+                        <thead class="thead-inverse">
+                            <th *ngFor="let field of fields; let i = index" [hidden]="hideMyself(i)">{{field}}</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let detail of employeeDetails">
+                                <!-- <td *ngFor="let val of generateArray(detail)">{{ val }}</td> -->
+                                <td *ngFor="let val of detail; let i = index" [hidden]="hiddenColumnsList.indexOf( i ) !== -1">{{ val }}</td>
+                            </tr>
+                        </tbody>
+                        <!-- <tfoot>
+                          <tr>
+                              <td colspan="17">
+                                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                              </td>
+                          </tr>
+                          </tfoot> -->
+                    </table>
+            </div>
+        </div>
+    </div>
+</div>

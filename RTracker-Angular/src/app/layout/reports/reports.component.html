@@ -1,0 +1,68 @@
+<div class="reports-section" [@routerTransition]>
+    <h6 class="text-muted-header"> Reports </h6>
+    <div class="horizontal-pipe-line"></div>
+    <div class="tabs-details-container">
+        <div class="tabs-list">
+            <ngb-tabset>
+                <ngb-tab>
+                    <ng-template ngbTabTitle>HR Reports</ng-template>
+                    <ng-template ngbTabContent>
+                        <div class="col-md-3 nav-link-column">
+                            <div class="nav-link-actions">
+                                <div class="nav-link-box">
+                                  <ul class="ul">
+                                    <li>
+                                        <a [routerLink]="['/tables']" href="javascript:void(0)" class="nav-link-action">
+                                            <span class="nav-link-text"> Educational Qualification </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a [routerLink]="['/experience']" href="javascript:void(0)" class="nav-link-action">
+                                            <span class="nav-link-text"> Employee Experience </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a [routerLink]="['/personaldetails']" href="javascript:void(0)" class="nav-link-action">
+                                            <span class="nav-link-text"> Personal Details </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a [routerLink]="['/contactdetails']" href="javascript:void(0)" class="nav-link-action">
+                                            <span class="nav-link-text"> Contact Details </span>
+                                        </a>
+                                    </li>
+                                    <!-- <li>
+                                        <a class="nav-link-action">
+                                            <span class="nav-link-text"> Documentation Checklist </span>
+                                        </a>
+                                    </li> -->
+                                    <li>
+                                        <a [routerLink]="['/designation']" href="javascript:void(0)" class="nav-link-action">
+                                            <span class="nav-link-text"> Designation Count </span>
+                                        </a>
+                                    </li>
+                                    <!-- <li>
+                                        <a [routerLink]="['/educationdetails']" href="javascript:void(0)" class="nav-link-action">
+                                            <span class="nav-link-text"> Engineers vs. Others </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a [routerLink]="['/diversityratio']" href="javascript:void(0)" class="nav-link-action">
+                                            <span class="nav-link-text"> Diversity Ratio </span>
+                                        </a>
+                                    </li> -->
+                                    <li>
+                                        <a [routerLink]="['/employeedetails']" href="javascript:void(0)" class="nav-link-action">
+                                            <span class="nav-link-text"> Employee Details </span>
+                                        </a>
+                                    </li>
+                                  </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
+            </ngb-tabset>
+        </div>
+    </div>
+</div>

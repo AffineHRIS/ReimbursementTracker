@@ -1,0 +1,76 @@
+<div [@routerTransition]>
+    <!-- <app-page-header [heading]="'Reports'" [icon]="'fa-table'"></app-page-header> -->
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="mb-12">
+                <!-- <div class="card-header"> Reports > Educational Qualification Details</div> -->
+                <div class="breadcrumbs">
+                    <a [routerLink]="['/reports']" class="nav-link-action bc-text">
+                        Reports
+                    </a>
+                    <span class="gt-symbol">></span>
+                    <span class="bc-text active">Contact Details</span>
+                </div>
+                <div class="horizontal-pipe-line"></div>
+                <div class="card-block card table-responsive">
+                    <div class="form-group row page-header">
+                        <div class="col-md-12">
+                            <label class="search-label"> Search : </label>
+                            <input type="text" class="form-control search-input" id="inputName" [(ngModel)]="inputName" placeholder="Search value" (keyup)="searchValue($event)"/>
+                            <span class="pull-right reference">Per : Permanent, Res : Residential, Eme : Emergency </span>
+                        </div>
+                    </div>
+                    <div class="clearfix clear"></div>
+                        <!-- <filters></filters> -->
+                        <table class="table table-bordered table-striped cus-table" [mfData]="contactDetails" #mf="mfDataTable" [mfRowsOnPage]="5">
+                            <thead class="thead-inverse">
+                                <tr>
+                                    <th>Employee Name</th>
+                                    <th>Employee ID</th>
+                                    <th> Email ID </th>
+                                    <th> Res Mobile No </th>
+                                    <th> Res Alternate No </th>
+                                    <!-- <th> Res Eme Contact type </th>
+                                    <th> Res Eme Contact Name </th>
+                                    <th> Res Eme Contact Number </th> -->
+                                    <th> Res Address 1 </th>
+                                    <th> Per Address Mobile No </th>
+                                    <th> Per Address Alternate No </th>
+                                    <!-- <th> Per Eme Contact type </th>
+                                    <th> Per Eme Contact Name </th>
+                                    <th> Per Eme Contact Number </th> -->
+                                    <th> Per Address 1 </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                 <tr *ngFor="let contact of mf.data">
+                                     <td> {{ contact.Employee_Name }}</td>
+                                     <td> {{ contact.Employee_Id }} </td>
+                                     <td> {{ contact.Email_ID }} </td>
+                                     <td> {{ contact.Residential_Mobile_No }} </td>
+                                     <td> {{ contact.Residentail_Alternate_No }} </td>
+                                     <!-- <td> {{ contact.Residential_Emergerncy_Contact_type }} </td>
+                                     <td> {{ contact.Residential_Emergerncy_Contact_Name }} </td>
+                                     <td> {{ contact.Residential_Emergerncy_Contact_Number }} </td> -->
+                                     <td> {{ contact.Residential_Address_1 }} </td>
+                                     <td> {{ contact.Permanent_Address_Mobile_No }} </td>
+                                     <td> {{ contact.Permanent_Address_Alternate_No }} </td>
+                                     <!-- <td> {{ contact.Permanent_Emergerncy_Contact_type }} </td>
+                                     <td> {{ contact.Permanent_Emergerncy_Contact_Name }} </td>
+                                     <td> {{ contact.Permanent_Emergerncy_Contact_Number }} </td> -->
+                                     <td> {{ contact.Permanent_Address_1 }} </td>
+                                 </tr>
+                            </tbody>
+                            <tfoot>
+                              <tr>
+                                  <td colspan="17">
+                                      <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                                  </td>
+                              </tr>
+                              </tfoot>
+                        </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

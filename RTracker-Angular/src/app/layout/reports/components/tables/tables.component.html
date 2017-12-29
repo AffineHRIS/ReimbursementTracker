@@ -1,0 +1,82 @@
+<div [@routerTransition]>
+    <!-- <app-page-header [heading]="'Reports'" [icon]="'fa-table'"></app-page-header> -->
+    <div class="row">
+        <div class="col col-xl-12 col-lg-12">
+            <div class="mb-12">
+                <!-- <div class="card-header"> Reports > Educational Qualification Details</div> -->
+                <div class="breadcrumbs">
+                    <a [routerLink]="['/reports']" class="nav-link-action bc-text">
+                        Reports
+                    </a>
+                    <span class="gt-symbol">></span>
+                    <span class="bc-text active">Educational Qualification Details</span>
+                </div>
+                <div class="horizontal-pipe-line"></div>
+                <div class="card-block card table-responsive">
+                    <div class="form-group row page-header">
+                        <div class="col-md-5">
+                            <label class="search-label"> Search All Columns : </label>
+                            <input type="text" class="form-control search-input" id="inputName" [(ngModel)]="inputName" placeholder="Search All Columns" (keyup)="searchValue($event)"/>
+                            <i class="fa fa-filter fa-2x filter-icon" title="{{filterTitle}}" (click)="toggleFilter()"></i>
+                        </div>
+                    </div>
+                    <div class="clearfix clear"></div>
+                        <filters [hidden]="hideFilterSection"></filters>
+                    <table class="table table-bordered table-striped cus-table" [mfData]="empRepDetails" #mf="mfDataTable" [mfRowsOnPage]="5">
+                        <thead class="thead-inverse">
+                            <tr>
+                              <th> Employee ID </th>
+                              <th> Employee Name </th>
+                              <th> HSC Passing </th>
+                              <th> HSC Marks </th>
+                              <!-- <th> HSC Institute </th> -->
+                              <!-- <th> HSC Board</th> -->
+                              <th> SSC Passing </th>
+                              <th> SSC Marks </th>
+                              <!-- <th> SSC Institute</th> -->
+                              <!-- <th> SSC Board</th> -->
+                              <th> GRAD Passing </th>
+                              <th> GRAD Marks </th>
+                              <th> GRAD Institute</th>
+                              <!-- <th> GRAD Board </th> -->
+                              <th> PG Passing</th>
+                              <th> PG Marks</th>
+                              <th> PG Institute</th>
+                              <!-- <th> PG Board </th> -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                             <tr *ngFor="let reports of mf.data">
+                               <td> {{ reports.Employee_Id}} </td>
+                                   <td> {{ reports.Employee_Name }}</td>
+                                   <td> {{ reports.HSC_Passing }} </td>
+                                   <td> {{ reports.HSC_Marks}} </td>
+                                   <!-- <td> {{ reports.HSC_Institute}} </td> -->
+                                   <!-- <td> {{ reports.HSC_Board}} </td> -->
+                                   <td> {{ reports.SSC_Passing}} </td>
+                                   <td> {{ reports.SSC_Marks}} </td>
+                                  <!-- <td> {{ reports.SSC_Institute }}</td> -->
+                                  <!-- <td> {{ reports.SSC_Board }} </td> -->
+                                  <td> {{ reports.GRAD_Passing}} </td>
+                                  <td> {{ reports.GRAD_Marks}} </td>
+                                  <td> {{ reports.GRAD_Institute}} </td>
+                                  <!-- <td> {{ reports.GRAD_Board}} </td> -->
+                                  <td> {{ reports.PG_Passing}} </td>
+                                 <td> {{ reports.PG_Marks }}</td>
+                                 <td> {{ reports.PG_Institute }} </td>
+                                 <!-- <td> {{ reports.PG_Board}} </td> -->
+                             </tr>
+                        </tbody>
+                        <tfoot>
+                          <tr>
+                              <td colspan="17">
+                                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                              </td>
+                          </tr>
+                          </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

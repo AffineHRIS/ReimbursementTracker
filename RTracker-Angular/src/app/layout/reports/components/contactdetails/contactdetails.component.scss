@@ -1,0 +1,99 @@
+.filtersfixedwidth {
+  width: 15%;
+  float:left;
+}
+table {
+    margin-top: 4px;
+    thead {
+        th {
+            font-size: 11px;
+            text-align: center;
+            paddding:3px !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-transform: uppercase;
+        }
+    }
+    tbody {
+        tr {
+            font-size: 12px;
+            text-align: center;
+        }
+    }
+}
+
+.page-header {
+    background: rgba(0,0,0,0.1);
+    margin: 1px;
+    padding: 2px;
+    .form-control {
+        padding: 0.3rem 0.75rem;
+    }
+
+
+}
+
+.breadcrumbs {
+    font-weight: bold;
+    margin: 5px 10px 15px;
+    font-size: 14px;
+    color: #0275d8;
+    span.gt-symbol {
+        color: #0275d8;
+    }
+    span.bc-text.active {
+        color: #014c8c;
+    }
+}
+div.horizontal-pipe-line {
+    height: 2px;
+    background-color: #bbb;
+    opacity: 0.5;
+}
+.card-block {
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 0;
+}
+.pagination {
+    border: 1px solid;
+    float: right !important;
+    text-align: right;
+}
+.float-sm-right {
+    position: relative;
+}
+.search-label {
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    width: auto;
+    padding: 5px 15px;
+    color: #000;
+    float: left;
+}
+.search-input {
+    width: 200px;
+    height: 30px;
+    font-size: 12px;
+    margin: 8px 0;
+    border-radius: 0;
+    float:left
+}
+
+.filter-icon {
+    padding: 2px;
+    margin: 4px 4px 4px 15px;
+    cursor: pointer;
+    color: #616161;
+}
+.filter-icon:hover {
+    color: #0275d8;
+}
+
+.reference {
+  color: #9c1b1b;
+    font-size: 12px;
+    vertical-align: middle;
+    margin-top: 15px;
+}

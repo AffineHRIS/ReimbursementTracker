@@ -1,0 +1,99 @@
+$sky-blue : #24AEE4;
+.tab-info {
+    overflow: hidden;
+    padding:15px;
+    .form-group {
+      overflow:hidden;
+      margin: 0 0 0 10px;
+    }
+	.form-group.custom-overflow {
+        overflow: visible;
+    }
+    .user-addemployee {
+      border:2px solid #ddd;
+    }
+    .align-center {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .btn-skyblue {
+      background: $sky-blue;
+      color:#fff;
+      margin:10px auto;
+    }
+    .align-right {
+      text-align: right;
+    }
+
+    label {
+        font-size: 12px;
+        font-weight: bold;
+        margin: 7px 0;
+    }
+    input.form-control {
+        font-size: 12px;
+        padding: 0rem 0.5rem;
+        height: 30px;
+    }
+	input[type="date"].form-control {
+	    padding: 5px;
+	}
+    select.form-control {
+        font-size: 12px;
+        padding: 0rem 0.5rem;
+        height: 30px;
+    }
+    input.form-control:disabled{
+        background-color: #fff;
+        border-color: #fff;
+        cursor: default;
+    }
+    textarea.form-control {
+        font-size: 12px;
+    }
+    textarea.form-control:disabled {
+        font-size: 12px;
+        background-color: #fff;
+        border-color: #fff;
+        resize: none;
+    }
+    .tab-h6 {
+        margin:10px;
+        font-size:14px;
+        color:$sky-blue;
+        font-weight: 600;
+    }
+    .asset-group {
+        border-top:5px solid $sky-blue;
+        background: #eeeeee;
+        padding:15px;
+    }
+    .no-margin-left {
+        margin-left:0px !important;
+    }
+    .control-label {
+        font-weight: bold;
+    }
+	.row.pad-top-5 {
+	    padding-top: 5px;
+	}
+	.post-fix-text {
+		font-size: 12px;
+	}
+	.alert.alert-danger {
+	    font-size: 12px;
+	    padding: 5px 10px;
+	}
+    .rm-work-exp {
+        margin-top: 15px;
+        transition: all 0.2s;
+        font-size: 16px;
+    }
+    .rm-work-exp:hover {
+        color: #c71414;
+        cursor: pointer;
+    }
+}
+.btn-cus-grey {
+  color:#5d5d5d;
+}

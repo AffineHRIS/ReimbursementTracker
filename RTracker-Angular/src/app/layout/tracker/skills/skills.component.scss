@@ -1,0 +1,140 @@
+$sky-blue : #24AEE4;
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; /* green */
+}
+.ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+}
+.tracker-section {
+    h6.text-muted-header {
+        color: #00b0e3;
+        font-weight: bold;
+        margin: 5px 10px 15px;
+        font-size: 14px;
+    }
+    div.horizontal-pipe-line {
+        height: 1px;
+        background-color: #bbb;
+        opacity: 0.5;
+    }
+}
+table {
+    margin-top: 4px;
+    thead {
+        th {
+            font-size: 11px;
+            font-weight:bold;
+            text-align: center;
+            text-transform: uppercase;
+        }
+    }
+    tbody {
+        tr {
+            font-size: 12px;
+            text-align: center;
+            td i.fa {
+                cursor: pointer;
+            }
+            td .id-name-select-match {
+                -webkit-appearance: none;
+                background: transparent;
+                border: none;
+            }
+        }
+        tr:nth-child(4n+1) {
+            background-color: #fff;
+        }
+    }
+}
+.ng-valid[required], .ng-valid.required  {
+    border-left: 5px solid #42A948; /* green */
+}
+
+.ng-invalid:not(form)  {
+    border-left: 5px solid #a94442; /* red */
+}
+.tab-info {
+    overflow: visible;
+    padding:15px;
+    .form-group {
+      overflow:hidden;
+      margin: 0 0 0 10px;
+    }
+    .user-profile {
+      border:2px solid #ddd;
+    }
+    .align-center {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .btn-skyblue {
+      background: $sky-blue;
+      color:#fff;
+      margin:10px auto;
+    }
+    .align-right {
+      text-align: right;
+    }
+
+    label {
+        font-size: 12px;
+        font-weight: bold;
+        margin: 7px 0;
+    }
+    input.form-control {
+        font-size: 12px;
+        padding: 0rem 0.5rem;
+        height: 30px;
+    }
+    select.form-control {
+        font-size: 12px;
+        padding: 0rem 0.5rem;
+        height: 30px;
+    }
+    input.form-control:disabled{
+        background-color: #fff;
+        border-color: #fff;
+        cursor: default;
+    }
+    textarea.form-control {
+        font-size: 12px;
+    }
+    textarea.form-control:disabled {
+        font-size: 12px;
+        background-color: #fff;
+        border-color: #fff;
+        resize: none;
+    }
+    .tab-h6 {
+        margin:10px;
+        font-size:14px;
+        color:$sky-blue;
+        font-weight: 600;
+    }
+    .asset-group {
+        border-top:5px solid $sky-blue;
+        background: #eeeeee;
+        padding:15px;
+    }
+    .no-margin-left {
+        margin-left:0px !important;
+    }
+    .control-label {
+        font-weight: bold;
+    }
+    .alert {
+        position: absolute;
+        font-size: 12px;
+	    padding: 5px 10px;
+    }
+    .form-group .row > * {
+        position: unset;
+    }
+}
+.btn-cus-grey {
+  color:#5d5d5d;
+}
+.cus-background {
+  background: #f9f9f9;
+  box-shadow: 0px 1px 4px #aaa;
+}

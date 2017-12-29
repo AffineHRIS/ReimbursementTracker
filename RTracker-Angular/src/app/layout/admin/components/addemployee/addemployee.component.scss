@@ -1,0 +1,20 @@
+$sky-blue : #24AEE4;
+
+
+.breadcrumbs {
+    font-weight: bold;
+    margin: 5px 10px 15px;
+    font-size: 14px;
+	color: #0275d8;
+	span.gt-symbol {
+	    color: #0275d8;
+	}
+	span.bc-text.active {
+	    color: #014c8c;
+	}
+}
+div.horizontal-pipe-line {
+	height: 1px;
+	background-color: #bbb;
+	opacity: 0.5;
+}
