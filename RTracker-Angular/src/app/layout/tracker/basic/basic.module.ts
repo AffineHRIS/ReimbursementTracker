@@ -4,8 +4,6 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
 import { BasicComponent } from './basic.component';
 import { BasicRoutingModule } from './basic-routing.module';
-import { AngularMultiSelectModule } from '../../../shared';
-import { EmployeeBasicDetailsModule } from '../../shared';
 
 @NgModule({
     imports: [
@@ -13,8 +11,6 @@ import { EmployeeBasicDetailsModule } from '../../shared';
         FormsModule,
         ReactiveFormsModule,
         BasicRoutingModule,
-        AngularMultiSelectModule,
-        EmployeeBasicDetailsModule
     ],
     declarations: [
         BasicComponent

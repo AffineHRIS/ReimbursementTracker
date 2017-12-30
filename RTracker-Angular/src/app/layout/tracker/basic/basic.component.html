@@ -15,8 +15,8 @@
                             </div>
                             <hr />
 
-                            <div class="row">
-                                <div class="col-12" *ngIf="ReimbursementDetails">
+                            <div class="row" *ngIf="ReimbursementDetails">
+                                <div class="col-12" >
                                     <form novalidate #f="ngForm" (ngSubmit)="save(f.value)" class="tab-info tab-content">
                                     <div class="row cus-row" >
                                         <div class="col-md-6">

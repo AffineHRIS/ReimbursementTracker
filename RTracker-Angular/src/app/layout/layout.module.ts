@@ -8,7 +8,6 @@ import { FileSelectDirective } from 'ng2-file-upload';
 import { LayoutRoutingModule } from './layout-routing.module';
 import { LayoutComponent } from './layout.component';
 import { HeaderComponent, SidebarComponent } from '../shared';
-import { ResourcesComponent } from './resources/resources.component';
 
 @NgModule({
     imports: [

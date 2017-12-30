@@ -6,14 +6,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClientModule } from '@angular/common/http';
-import { ProjectsTabContentComponent } from './layout/resources/components/projects-tab-content/projects-tab-content.component'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {
-    AuthGuard, EmployeeService, EmployeeDetailsService, AuthenticateService, EmployeeIdNameService,
-    RoleGuard, EmployeeDetailsByIdService, empEduReportsService, empExpReportsService,
-    personalDetailsReportsService,educationalDetailsReportsService, Globals, ServerService, CommonDataStreamService,
-    companyProjectService
+    AuthGuard, AuthenticateService, EmployeeIdNameService, Globals
 } from './shared';
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: Http) {
@@ -44,21 +40,9 @@ export function HttpLoaderFactory(http: Http) {
     ],
     providers: [
       AuthGuard,
-      RoleGuard,
-      EmployeeService,
-      EmployeeDetailsService,
       EmployeeIdNameService,
-      EmployeeDetailsByIdService,
-      empEduReportsService,
-      empExpReportsService,
-      ServerService,
       AuthenticateService,
-      personalDetailsReportsService,
-      educationalDetailsReportsService,
       Globals,
-      CommonDataStreamService,
-      companyProjectService,
-      ProjectsTabContentComponent
     ],
     bootstrap: [AppComponent]
 })

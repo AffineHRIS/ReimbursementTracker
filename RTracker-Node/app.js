@@ -1,6 +1,5 @@
 // Module dependencies
 'use strict';
-
 var express  = require('express'),
 mysql        = require('mysql'),
 bodyParser   = require('body-parser')
@@ -70,7 +69,7 @@ app.post('/authenticate', function (req, res) {
   var username = req.body.username;
   var password = req.body.password;
 
-  con.query('SELECT * FROM dev_hris.aa_hris_users WHERE username = ?',[username], function (error, results, fields) {
+  con.query('SELECT * FROM rtracker.aa_user WHERE username = ?',[username], function (error, results, fields) {
     if ( error ) {
       res.json({
         status:false,
@@ -79,14 +78,13 @@ app.post('/authenticate', function (req, res) {
     } else {
       if ( results.length > 0 ) {
         bcrypt.compare(password, results[0].password, function(err, ress) {
-
-          if ( true ) {
-
-            con.query('SELECT Employee_Name FROM dev_hris.employee WHERE Employee_Id = ?', [results[0].username], function (error1, results1, fields1) {
+          console.log(ress);
+          if ( ress ) {
+            con.query('SELECT Employee_Name FROM rtracker.employee_details WHERE Employee_Id = ?', [results[0].username], function (error1, results1, fields1) {
               if ( error1 ) {
                 res.json({
                   status: true,
-                  message: 'User authentication is successful!',
+                  message: 'User Employee Not found!',
                   role: results[0].role,
                   empid: results[0].username,
                   empname: 'Not found.'
@@ -103,7 +101,7 @@ app.post('/authenticate', function (req, res) {
                 } else {
                   res.json({
                     status: true,
-                    message: 'User authentication is successful!',
+                    message: 'User not found!',
                     role: results[0].role,
                     empid: results[0].username,
                     empname: 'Not found.'
@@ -126,6 +124,27 @@ app.post('/authenticate', function (req, res) {
           message:"Username does not exists."
         });
       }
+    }
+  });
+});
+
+
+app.get('/employeeIdName', function (req, res) {
+  var id = req.params.Search_Emp;
+  con.query('SELECT Employee_Id, Employee_Name FROM dev_hris.employee', function(err, rows, fields) {
+    if (!err){
+      var response = [];
+
+      if (rows.length != 0) {
+        response.push({'result' : 'success', 'data' : rows});
+      } else {
+        response.push({'result' : 'error', 'msg' : 'No Results Found'});
+      }
+
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).send(JSON.stringify(response));
+    } else {
+      res.status(400).send(err);
     }
   });
 });
