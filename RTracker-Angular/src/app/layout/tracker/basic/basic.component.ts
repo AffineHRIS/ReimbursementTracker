@@ -1,4 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, NgModule, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -10,15 +11,26 @@ import { Globals } from '../../../shared';
     styleUrls: ['./basic.component.scss']
 })
 
+
 export class BasicComponent implements OnInit {
-    
-    ReimbursementDetails : any;
+
+    ReimbursementDetails: any = {};
+    addReimbursementForm : boolean = true;
+
     constructor(
         private route: ActivatedRoute
     ) { }
 
-    ngOnInit(){
+    @ViewChild('f') form: any;
+
+    ngOnInit(): void {
 
     }
 
+    addClaim() {
+        this.addReimbursementForm = false;
+    }
+    save(model : any) {
+      console.log(model);
+    }
 }

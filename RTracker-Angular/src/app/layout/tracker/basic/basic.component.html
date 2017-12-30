@@ -10,13 +10,12 @@
                         <div class="tab-info tab-pane active">
                             <div class="row">
                                 <div class="col-12">
-                                        <button class="btn btn-default pull-right"> Add Claim </button>
+                                        <button class="btn btn-default pull-right" (click)="addClaim()"> Add Claim </button>
                                     </div>
                             </div>
                             <hr />
-
-                            <div class="row" *ngIf="ReimbursementDetails">
-                                <div class="col-12" >
+                            <div class="row" [hidden]="addReimbursementForm">
+                                <div class="col-12" *ngIf="ReimbursementDetails">
                                     <form novalidate #f="ngForm" (ngSubmit)="save(f.value)" class="tab-info tab-content">
                                     <div class="row cus-row" >
                                         <div class="col-md-6">
@@ -85,7 +84,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Comment <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <textarea type="text" class="form-control" name="Comment" [(ngModel)]="projectDetails.Comment" #comment="ngModel" placeholder="Comment"> </textarea>
+                                                        <textarea type="text" class="form-control" name="Comment" [(ngModel)]="ReimbursementDetails.Comment" #comment="ngModel" placeholder="Comment"> </textarea>
 
                                                     </div>
                                                 </div>
@@ -94,7 +93,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Approved Amount <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="Approved_Amount" [(ngModel)]="projectDetails.Approved_Amount" #ApprovedAmount="ngModel" placeholder="Approved Amount" />
+                                                        <input type="number" class="form-control" name="Approved_Amount" [(ngModel)]="ReimbursementDetails.Approved_Amount" #ApprovedAmount="ngModel" placeholder="Approved Amount" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -102,7 +101,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Approved Date <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="date" class="form-control" name="Approved_Date" [(ngModel)]="projectDetails.Approved_Date" #ApprovedDate="ngModel" />
+                                                        <input type="date" class="form-control" name="Approved_Date" [(ngModel)]="ReimbursementDetails.Approved_Date" #ApprovedDate="ngModel" />
                                                     </div>
                                                 </div>
                                             </div>
