@@ -310,6 +310,7 @@ app.post('/sendMail', function(req,res) {
   var transporter = nodemailer.createTransport(
 
      {
+      type: 'smtp', 
       host: 'smtp.office365.com',
       port: 587,
       //secure: true, // use SSL
@@ -318,10 +319,8 @@ app.post('/sendMail', function(req,res) {
       tls: {
           rejectUnauthorized: false
         },
-      auth: {
-          user: 'yogesh.shanmukhappa@affineanalytics.com',
-          pass: 'g6@ntme@affine'
-      }
+       logger: true,
+       debug: true,
   });
 
   var mailOptions = {
