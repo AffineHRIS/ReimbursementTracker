@@ -150,7 +150,7 @@
                                   <input type="text" class="form-control search-input" id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Status" (keyup)="searchValue($event)"/>
                               </div>
                               <div class="col-md-6">
-                                  <i class="fa fa-file-o" (click)="fileDownload(claimList)"> </i>
+                                  <button class="btn btn-default export-excel pull-right" (click)="fileDownload(claimList)">Download <i class="fa fa-file-excel-o"></i></button>
                               </div>
                               <div class="col-12">
                                   <table class="table table-bordered table-striped cus-table" [mfData]="claimList" #mf="mfDataTable" [mfRowsOnPage]="10">
