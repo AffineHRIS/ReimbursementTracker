@@ -4,7 +4,7 @@
 
 	<div class="tabs-details-container">
 		<div class="tabs-list">
-            <div class="row mt-3">
+            <div class="row mt-3" style="margin-top:0px !important">
                 <div class="col-sm-6 col-md-12">
                     <div class="basic-details tab-content">
                         <div class="tab-info tab-pane active">
@@ -15,6 +15,9 @@
                             </div>
                             <hr />
                             <div class="row" [hidden]="addReimbursementForm">
+                                <div class="col-12">
+                                    <i class="fa fa-times pull-right" (click)="hideTab()"></i>
+                                </div>
                                 <div class="col-12" *ngIf="ReimbursementDetails">
                                     <form novalidate #f="ngForm" (ngSubmit)="save(f.value)" class="tab-info tab-content">
                                         <input class="form-control" type="hidden"  name="Claim_Id" [ngModel]="ReimbursementDetails.Claim_Id" #claimId="ngModel" />
@@ -32,7 +35,12 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Id <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" name="Employee_Id" [(ngModel)]="ReimbursementDetails.Employee_Id" #EmployeeId="ngModel"  placeholder="Employee Id" (blur)="employeeDetail($event.target.value)"  />
+                                                        <input type="text" class="form-control" list="EmployeeId" name="Employee_Id" [(ngModel)]="ReimbursementDetails.Employee_Id" #EmployeeId="ngModel"  placeholder="Employee Id" (blur)="employeeDetail($event.target.value)"  />
+                                                        <datalist id="EmployeeId">
+                                                            <option *ngFor="let coun of empList" value="{{ coun.Employee_Id }}">
+                                                                {{ coun.Map_Education_Boards_Name }}
+                                                            </option>
+                                                        </datalist>
                                                     </div>
                                                 </div>
                                             </div>
@@ -40,7 +48,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Name <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" name="Employee_Name" [(ngModel)]="ReimbursementDetails.Employee_Name" #EmployeeName="ngModel"  placeholder="Employee Name" list="employees" autocomplete="off" />
+                                                        <input type="text" readonly class="form-control" name="Employee_Name" [(ngModel)]="ReimbursementDetails.Employee_Name" #EmployeeName="ngModel"  placeholder="Employee Name" list="employees" autocomplete="off" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -48,7 +56,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Email <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email" />
+                                                        <input type="text" readonly class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -60,7 +68,18 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenAccept">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <label class="col-md-5"> Expense Type <span class="pull-right"> : </span> </label>
+                                                    <div class="col-md-6">
+                                                        <select name="Expense_Type" [(ngModel)]="ReimbursementDetails.Expense_Type" class="form-control">
+                                                            <option value="direct"> Direct </option>
+                                                            <option value="indirect"> Indirect </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
                                                 <div class="row">
                                                     <label class="col-md-5"> Expense Details <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
@@ -70,18 +89,26 @@
                                             </div>
                                         </div>
                                         <div class="col-6">
+                                            <div class="form-group">
+                                                <div class="row">
+                                                    <label class="col-md-5"> Project Name <span class="pull-right"> : </span> </label>
+                                                    <div class="col-md-6">
+                                                        <input type="text" class="form-control" name="Project_Name" [(ngModel)]="ReimbursementDetails.Project_Name" #ProjectName="ngModel" placeholder="Project Name" />
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="form-group" [hidden]="whenAccept">
                                                 <div class="row">
                                                     <label class="col-md-5"> Status <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
                                                         <select class="form-control" name="Status" [(ngModel)]="ReimbursementDetails.Status" #Status="ngModel" (change) ="statusFind($event.target.value)">
                                                             <option value="Accept"> Accept </option>
-                                                            <option value="Reject"> Reject </option>
+                                                            <option value="Hold"> On Hold </option>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenReject">
+                                            <div class="form-group" [hidden]="whenHold">
                                                 <div class="row">
                                                     <label class="col-md-5"> Approved Amount <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
@@ -89,7 +116,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenReject">
+                                            <div class="form-group" [hidden]="whenHold">
                                                 <div class="row">
                                                     <label class="col-md-5"> Approved Date <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
@@ -118,8 +145,15 @@
                           </div>
 
                           <div class="row">
+                              <div class="col-md-6">
+                                  <label class="search-label"> Search : </label>
+                                  <input type="text" class="form-control search-input" id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Status" (keyup)="searchValue($event)"/>
+                              </div>
+                              <div class="col-md-6">
+                                  <i class="fa fa-file-o" (click)="fileDownload(claimList)"> </i>
+                              </div>
                               <div class="col-12">
-                                  <table class="table table-bordered table-striped cus-table">
+                                  <table class="table table-bordered table-striped cus-table" [mfData]="claimList" #mf="mfDataTable" [mfRowsOnPage]="10">
                                       <thead class="thead-inverse">
                                         <tr>
                                             <th> Claim No </th>
@@ -131,8 +165,7 @@
                                         </tr>
                                       </thead>
                                       <tbody>
-                                          <ng-template ngFor let-claims [ngForOf]="claimList">
-                                            <tr>
+                                            <tr *ngFor="let claims of mf.data">
                                                 <td> <a (click)=showClaim(claims.Claim_Id) style="color:#24AEE4;font-weight:600"> {{ claims.Claim_Id }} </a> </td>
                                                 <td> {{ claims.Date_Of_Receipt | date: 'yyyy-MM-dd' }} </td>
                                                 <td> {{ claims.Employee_Id }} </td>
@@ -140,8 +173,14 @@
                                                 <td> {{ claims.Claim_Amount }} </td>
                                                 <td> {{ claims.Status  }}</td>
                                             </tr>
-                                          </ng-template>
                                       </tbody>
+                                      <tfoot>
+                                          <tr>
+                                              <td colspan="17">
+                                                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
+                                              </td>
+                                          </tr>
+                                      </tfoot>
                                   </table>
                               </div>
                           </div>

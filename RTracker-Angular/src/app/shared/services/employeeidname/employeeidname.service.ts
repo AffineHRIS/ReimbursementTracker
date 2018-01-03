@@ -24,6 +24,15 @@ export class EmployeeIdNameService {
 
     };
 
+    getEmployeeList(): Promise<any> {
+
+        return this.httpClient.get('http://'+ this.globals.apiServerIP +':3100/employeeIdList/')
+        .toPromise()
+        .then(response => response)
+        .catch(this.handleError);
+
+    };
+
     sendEmail(model: {}) {
         const headers = new Headers({'Content-Type': 'application/json'});
         return this.http.post(

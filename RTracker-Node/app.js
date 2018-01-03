@@ -2,11 +2,12 @@
 'use strict';
 var express  = require('express'),
 mysql        = require('mysql'),
-bodyParser   = require('body-parser')
-
+bodyParser   = require('body-parser'),
+dataUploader = require('./data-uploader');
 // require the bcrypt module
 const bcrypt = require('bcrypt');
 
+var json2xls = require('json2xls');
 // Local and server mysql hosts.
  var mysqlHost = '127.0.0.1'; // Local
 // var mysqlHost = '192.168.0.128'; // Server
@@ -152,7 +153,7 @@ app.get('/employeeIdName/:data', function (req, res) {
 
 
 app.get('/claimDetails', function (req, res) {
-  con.query('SELECT * FROM rtracker.reimbursement_details', function(err, rows, fields) {
+  con.query('SELECT * FROM rtracker.reimbursement_details order by Claim_Id DESC', function(err, rows, fields) {
     if (!err){
       var response = [];
 
@@ -182,13 +183,19 @@ app.post('/api/addClaim', function (req, res) {
       var modelData = {
           Employee_Id : req.body.Employee_Id,
           Claim_Amount : req.body.Claim_Amount,
-          Expense_Details : null,
+          Expense_Type : req.body.Expense_Type,
+          Expense_Details : req.body.Expense_Details,
+          Project_Name : req.body.Project_Name,
           Status : "Submitted",
           Date_Of_Receipt : req.body.Date_Of_Receipt,
           Approved_Amount : null,
           Approved_Date : null,
-          Comment : null
+          Comment : null,
+          Created_At : new Date(),
+          Modified_At : null
        }
+
+      console.log(modelData);
 
       knex1.transaction(function (t) {
           console.log("Adding the Claim details for accept state");
@@ -196,13 +203,15 @@ app.post('/api/addClaim', function (req, res) {
               .transacting(t)
               .insert(modelData)
               .then(function (response) {
-                  // console.log("Adding the Projects Details");
+                   console.log("Adding the Projects Details");
+                   console.log(response);
                   // return knex1('aa_projects')
                   // .transacting(t)
                   // .insert(modelData2)
                   // .then(function (response) {
                   //
                   // })
+                  req.body['Claim_Id'] = response[0];
                   console.log("Added claim details");
               })
           .then(t.commit)
@@ -224,14 +233,18 @@ app.post('/api/addClaim', function (req, res) {
       var modelData = {
           Employee_Id : req.body.Employee_Id,
           Claim_Amount : req.body.Claim_Amount,
+          Expense_Type : req.body.Expense_Type,
           Expense_Details : req.body.Expense_Details,
+          Project_Name : req.body.Project_Name,
           Status : req.body.Status,
           Date_Of_Receipt : req.body.Date_Of_Receipt,
           Approved_Amount : req.body.Approved_Amount,
           Approved_Date : req.body.Approved_Date,
-          Comment : req.body.Comment
+          Comment : req.body.Comment,
+          Modified_At : new Date()
        }
 
+       console.log(modelData);
       knex1.transaction(function (t) {
           console.log("updating the Claim details for accept state");
           return knex1('reimbursement_details')
@@ -251,7 +264,6 @@ app.post('/api/addClaim', function (req, res) {
           .then(t.commit)
           .catch(t.rollback)
       })
-
       .then(function (success) {
           result['data'] = req.body;
           result['result'] = 'success';
@@ -303,14 +315,14 @@ app.post('/sendMail', function(req,res) {
     var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted with comments as <b> '+comment+' </b> for an amount of <b> INR '+approvedAmount+' </b> and the same would be disbursed by <b>'+approvedDate+'.</b> </p><p>Regards<br>Accounts Team</p>'
   }
   else {
-    var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> has been rejected with comments as <b> '+comment+' </b><p>Regards<br>Accounts Team</p>'
+    var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> on hold with comments as <b> '+comment+' </b><p>Regards<br>Accounts Team</p>'
   }
   console.log(To_Name);
   var nodemailer = require('nodemailer');
   var transporter = nodemailer.createTransport(
 
      {
-      type: 'smtp', 
+      type: 'smtp',
       host: 'smtp.office365.com',
       port: 587,
       //secure: true, // use SSL
@@ -319,8 +331,10 @@ app.post('/sendMail', function(req,res) {
       tls: {
           rejectUnauthorized: false
         },
-       logger: true,
-       debug: true,
+        auth: {
+            user: 'yogesh.shanmukhappa@affineanalytics.com',
+            pass: 'g6@ntme@affine'
+        }
   });
 
   var mailOptions = {
@@ -341,6 +355,54 @@ app.post('/sendMail', function(req,res) {
 
 })
 
+app.get('/employeeIdList/', function (req, res) {
+  var id = req.params.data;
+  var sqlQuery = "SELECT * FROM rtracker.employee_details";
+  con.query(sqlQuery, function(err, rows, fields) {
+    if (!err){
+      var response = [];
+
+      if (rows.length != 0) {
+        response.push({'result' : 'success', 'data' : rows});
+      } else {
+        response.push({'result' : 'error', 'msg' : 'No Results Found'});
+      }
+
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).send(JSON.stringify(response));
+    } else {
+      res.status(400).send(err);
+    }
+  });
+});
+
+app.post('/api/updateEmployeeData', function (req, res) {
+    console.log("Requested loading employee data %s", req.body.File_Name);
+    var fileName = req.body.File_Name;
+
+    dataUploader.loadData( fileName, req, res, knex1 );
+});
+
+var jsonArr = [{
+    foo: 'bar',
+    qux: 'moo',
+    poo: 123,
+    stux: new Date()
+},
+{
+    foo: 'bar',
+    qux: 'moo',
+    poo: 345,
+    stux: new Date()
+}];
+
+
+var json2xls = require('json2xls');
+
+app.use(json2xls.middleware);
+app.get('/file',function(req, res) {
+    res.xls('data.xlsx', jsonArr);
+});
 
 // Begin listening
 app.listen(3100, function() {

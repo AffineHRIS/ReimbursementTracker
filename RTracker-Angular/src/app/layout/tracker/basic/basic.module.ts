@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
 import { BasicComponent } from './basic.component';
 import { BasicRoutingModule } from './basic-routing.module';
+import { DataTableModule } from "angular2-datatable";
 
 @NgModule({
     imports: [
@@ -11,6 +12,7 @@ import { BasicRoutingModule } from './basic-routing.module';
         FormsModule,
         ReactiveFormsModule,
         BasicRoutingModule,
+        DataTableModule
     ],
     declarations: [
         BasicComponent

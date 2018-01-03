@@ -30,6 +30,21 @@ export class reimbursementService {
             .catch(this.handleError);
     };
 
+    getFileDownload(data:any): Promise<any> {
+        return this.httpClient.get('http://'+ this.globals.apiServerIP +':3100/file')
+            .toPromise()
+            .then(response => response)
+            .catch(this.handleError);
+    };
+
+    // getFileDownload(dataFile: {}) {
+    //     const headers = new Headers({'Content-Type': 'application/json'});
+    //     return this.http.post(
+    //         'http://'+ this.globals.apiServerIP +':3100/file',
+    //         dataFile,
+    //         { headers: headers }
+    //     );
+    // }
     addDetails(model: {}) {
         const headers = new Headers({'Content-Type': 'application/json'});
         return this.http.post(
