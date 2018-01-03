@@ -19,7 +19,7 @@ var knex1 = require('knex')({
     host : mysqlHost,
     user : 'root',
     password : 'test@123',
-    database : 'dev_hris'
+    database : 'rtracker'
   },
   pool: { min: 0, max: 7 }
 });
@@ -129,9 +129,10 @@ app.post('/authenticate', function (req, res) {
 });
 
 
-app.get('/employeeIdName', function (req, res) {
-  var id = req.params.Search_Emp;
-  con.query('SELECT Employee_Id, Employee_Name FROM dev_hris.employee', function(err, rows, fields) {
+app.get('/employeeIdName/:data', function (req, res) {
+  var id = req.params.data;
+  var sqlQuery = "SELECT * FROM rtracker.employee_details where Employee_Id='"+id+"'";
+  con.query(sqlQuery, function(err, rows, fields) {
     if (!err){
       var response = [];
 
@@ -148,6 +149,199 @@ app.get('/employeeIdName', function (req, res) {
     }
   });
 });
+
+
+app.get('/claimDetails', function (req, res) {
+  con.query('SELECT * FROM rtracker.reimbursement_details', function(err, rows, fields) {
+    if (!err){
+      var response = [];
+
+      if (rows.length != 0) {
+        response.push({'result' : 'success', 'data' : rows});
+      } else {
+        response.push({'result' : 'error', 'msg' : 'No Results Found'});
+      }
+
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).send(JSON.stringify(response));
+    } else {
+      res.status(400).send(err);
+    }
+  });
+});
+
+app.post('/api/addClaim', function (req, res) {
+    var result = {};
+    console.log(req.body.Claim_Id);
+
+    var claimid = req.body.Claim_Id;
+
+    console.log(claimid);
+
+    if(req.body.Status == null) {
+      var modelData = {
+          Employee_Id : req.body.Employee_Id,
+          Claim_Amount : req.body.Claim_Amount,
+          Expense_Details : null,
+          Status : "Submitted",
+          Date_Of_Receipt : req.body.Date_Of_Receipt,
+          Approved_Amount : null,
+          Approved_Date : null,
+          Comment : null
+       }
+
+      knex1.transaction(function (t) {
+          console.log("Adding the Claim details for accept state");
+          return knex1('reimbursement_details')
+              .transacting(t)
+              .insert(modelData)
+              .then(function (response) {
+                  // console.log("Adding the Projects Details");
+                  // return knex1('aa_projects')
+                  // .transacting(t)
+                  // .insert(modelData2)
+                  // .then(function (response) {
+                  //
+                  // })
+                  console.log("Added claim details");
+              })
+          .then(t.commit)
+          .catch(t.rollback)
+      })
+
+      .then(function (success) {
+          result['data'] = req.body;
+          result['result'] = 'success';
+          result['message'] = 'Claim details added successfully!';
+          res.setHeader('Content-Type', 'application/json');
+          res.status(200).send( result );
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }
+    else {
+      var modelData = {
+          Employee_Id : req.body.Employee_Id,
+          Claim_Amount : req.body.Claim_Amount,
+          Expense_Details : req.body.Expense_Details,
+          Status : req.body.Status,
+          Date_Of_Receipt : req.body.Date_Of_Receipt,
+          Approved_Amount : req.body.Approved_Amount,
+          Approved_Date : req.body.Approved_Date,
+          Comment : req.body.Comment
+       }
+
+      knex1.transaction(function (t) {
+          console.log("updating the Claim details for accept state");
+          return knex1('reimbursement_details')
+              .transacting(t)
+              .update(modelData)
+              .where('Claim_Id', '=', claimid )
+              .then(function (response) {
+                  // console.log("Adding the Projects Details");
+                  // return knex1('aa_projects')
+                  // .transacting(t)
+                  // .insert(modelData2)
+                  // .then(function (response) {
+                  //
+                  // })
+                  console.log("Updated claim details");
+              })
+          .then(t.commit)
+          .catch(t.rollback)
+      })
+
+      .then(function (success) {
+          result['data'] = req.body;
+          result['result'] = 'success';
+          result['message'] = 'Claim details updated successfully!';
+          res.setHeader('Content-Type', 'application/json');
+          res.status(200).send( result );
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }
+
+})
+
+app.get('/claimDetails/:data', function (req, res) {
+  var result = {};
+  var Claim = req.params.data;
+  knex1.select(
+       '*'
+   )
+   .from('reimbursement_details')
+   .where('Claim_Id', Claim)
+   .timeout(10000, {cancel: true})
+   .map(function (row) { return row; })
+   .then(function (data = []) {
+       result = data;
+       result['result'] = 'success';
+       result['message'] = 'data fetched successfully!';
+       res.setHeader('Content-Type', 'application/json');
+       res.status(200).send( result );
+   })
+});
+
+app.post('/sendMail', function(req,res) {
+
+  var To_Name = req.body.Employee_Email;
+  var claimid = req.body.Claim_Id;
+  var comment = req.body.Comment;
+  var approvedAmount = req.body.Approved_Amount;
+  var approvedDate = req.body.Approved_Date
+
+  console.log("check condition");
+  console.log(req.body.Status);
+
+  if (req.body.Status == null) {
+      var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> is being Processed'
+  }
+  else if (req.body.Status == 'Accept') {
+    var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted with comments as <b> '+comment+' </b> for an amount of <b> INR '+approvedAmount+' </b> and the same would be disbursed by <b>'+approvedDate+'.</b> </p><p>Regards<br>Accounts Team</p>'
+  }
+  else {
+    var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> has been rejected with comments as <b> '+comment+' </b><p>Regards<br>Accounts Team</p>'
+  }
+  console.log(To_Name);
+  var nodemailer = require('nodemailer');
+  var transporter = nodemailer.createTransport(
+
+     {
+      host: 'smtp.office365.com',
+      port: 587,
+      //secure: true, // use SSL
+      secure: false, //disable SSL
+      requireTLS: true,//Force TLS
+      tls: {
+          rejectUnauthorized: false
+        },
+      auth: {
+          user: 'yogesh.shanmukhappa@affineanalytics.com',
+          pass: 'g6@ntme@affine'
+      }
+  });
+
+  var mailOptions = {
+    from: 'yogesh.shanmukhappa@affineanalytics.com',
+    to: To_Name,
+    subject: 'Reimbursement claim:'+claimid,
+    text: 'Status update for your claim',
+    html: text
+  };
+
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+    } else {
+      console.log('Email sent: ' + info.response);
+    }
+  });
+
+})
+
 
 // Begin listening
 app.listen(3100, function() {

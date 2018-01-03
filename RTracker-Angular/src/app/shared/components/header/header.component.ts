@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.getEmployeeIdNames();
+        // this.getEmployeeIdNames();
     }
 
     onLoggedout() {
@@ -30,8 +30,8 @@ export class HeaderComponent implements OnInit {
         this.router.navigate(['/login']);
     }
 
-    getEmployeeIdNames(): void {
-        this.employeeIdNameService.getEmployeeIdName().then(result => this.employeeIdNames = result[0].data);
+    getEmployeeIdNames(employeeData): void {
+        this.employeeIdNameService.getEmployeeIdName(employeeData).then(result => this.employeeIdNames = result[0].data);
     }
 
     showProfile(model: HeaderForm) {

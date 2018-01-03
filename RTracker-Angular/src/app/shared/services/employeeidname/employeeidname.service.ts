@@ -9,20 +9,28 @@ import { Globals } from '../../global';
 @Injectable()
 export class EmployeeIdNameService {
 
-    private url1 = 'http://'+ this.globals.apiServerIP +':3100/employeeIdName';
     constructor(
-        private http:HttpClient,
+        private http:Http,
+        private httpClient: HttpClient,
         private globals: Globals
     ){}
 
-    getEmployeeIdName(): Promise<EmployeeIdName> {
+    getEmployeeIdName(employeeData: any): Promise<EmployeeIdName> {
 
-        return this.http.get(this.url1)
+        return this.httpClient.get('http://'+ this.globals.apiServerIP +':3100/employeeIdName/'+employeeData)
         .toPromise()
         .then(response => response)
         .catch(this.handleError);
 
     };
+
+    sendEmail(model: {}) {
+        const headers = new Headers({'Content-Type': 'application/json'});
+        return this.http.post(
+            'http://'+ this.globals.apiServerIP +':3100/sendMail',
+            model, { headers: headers }
+        );
+    }
 
     private handleError(error: any): Promise<any> {
         console.error('An error occurred while fetching the employee details.', error); // for demo purposes only
