@@ -7,6 +7,8 @@ import { Globals } from '../../../shared';
 import { utils, write, WorkBook } from 'xlsx';
 import { saveAs } from 'file-saver';
 
+import { DataTable, DataTableResource } from 'angular-4-data-table';
+
 @Component({
     selector: 'basic-details',
     templateUrl: './basic.component.html',
@@ -23,6 +25,7 @@ export class BasicComponent implements OnInit {
     addReimbursementForm : boolean = true;
     whenAccept:boolean = true;
     whenHold:boolean = true;
+    whenPaid:boolean =true;
     submitButton :boolean = false;
     saveButton: boolean = true;
     employeeDetailRecord:any;
@@ -30,11 +33,26 @@ export class BasicComponent implements OnInit {
     inputName : string = '';
     empList:any;
     origDetails: any;
+    SuccessSave : string = '';
+    SuccessMail : string = '';
+
+      claims = this.claimList;
+      claimResource = new DataTableResource(this.claims);
+
+      claimCount = 0;
+
+      @ViewChild(DataTable) claimsTable: DataTable;
+
+
+
     constructor(
         private route: ActivatedRoute,
         private reimbService: reimbursementService,
         private EmployeeDetail : EmployeeIdNameService
-    ) { }
+    ) {
+
+        this.claimResource.count().then(count => this.claimCount = count);
+    }
 
     @ViewChild('f') form: any;
 
@@ -43,18 +61,31 @@ export class BasicComponent implements OnInit {
         this.getClaims();
     }
 
+    reloadClaims(params) {
+        this.claimResource.query(params).then(claims => this.claims = claims);
+    }
+
+
     statusFind(value):void {
         if(value == "Accept") {
                 this.whenAccept = false;
                 this.whenHold = false;
+                this.whenPaid = true;
+        }
+        else if(value == "Hold") {
+            this.whenAccept = false;
+            this.whenHold = true;
+            this.whenPaid = true;
         }
         else {
             this.whenAccept = false;
             this.whenHold = true;
+            this.whenPaid = false;
         }
     }
 
     hideTab() : void {
+        this.form.reset();
         this.addReimbursementForm = true;
     }
 
@@ -75,6 +106,10 @@ export class BasicComponent implements OnInit {
      }
 
     addClaim() {
+        this.whenAccept = true;
+        this.whenHold = true;
+        this.whenPaid = true;
+        this.form.reset();
         this.addReimbursementForm = false;
     }
 
@@ -106,28 +141,8 @@ export class BasicComponent implements OnInit {
           };
           return buf;
         }
-
         saveAs(new Blob([s2ab(wbout)], { type: 'application/octet-stream' }), 'exported.xlsx');
-        // console.log(fileData);
-        // this.reimbService.getFileDownload(fileData).then(fileData => {
-        //
-        // });
     }
-
-    // fileDownload(fileData:any) : void {
-    //     console.log(fileData);
-    //
-    //     this.reimbService.getFileDownload(fileData)
-    //     .subscribe(
-    //         (response) =>{
-    //             console.log("file downloaded");
-    //         },
-    //         (error) => {
-    //             alert(error);
-    //             console.log(error);
-    //         }
-    //     );
-    // }
 
 
     getClaims(): void {
@@ -147,9 +162,11 @@ export class BasicComponent implements OnInit {
          this.EmployeeDetail.sendEmail(modelData).subscribe(
              (response) =>{
                  let body = response.json();
-                 alert(body.message);
                  this.getClaims();
-
+                 this.SuccessMail = body.Status;
+                 setTimeout(()=>{    //<<<---    using ()=> syntax
+                     this.SuccessMail = "";
+                 },1500);
              },
              (error) => {
                  alert(error);
@@ -160,15 +177,30 @@ export class BasicComponent implements OnInit {
 
 
      showClaim(claimId) : void {
-         this.reimbService.getClaim(claimId).then(claimvalues => {
+         this.reimbService.getClaim(claimId.Claim_Id).then(claimvalues => {
              this.ReimbursementDetails = claimvalues[0];
              this.employeeDetail(this.ReimbursementDetails.Employee_Id);
              console.log(this.ReimbursementDetails);
-             this.whenAccept = false;
-             this.whenHold = true;
+
              this.submitButton = true;
              this.saveButton = false;
              this.addReimbursementForm = false;
+
+             if(this.ReimbursementDetails.Status == "Accept") {
+                     this.whenAccept = false;
+                     this.whenHold = false;
+                     this.whenPaid = true;
+             }
+             else if(this.ReimbursementDetails.Status == "Hold") {
+                 this.whenAccept = false;
+                 this.whenHold = true;
+                 this.whenPaid = true;
+             }
+             else {
+                 this.whenAccept = false;
+                 this.whenHold = true;
+                 this.whenPaid = true;
+             }
          });
      }
 
@@ -176,17 +208,22 @@ export class BasicComponent implements OnInit {
       console.log(model);
 
       if (this.form.valid) {
-
           var modelData = Object.assign({}, model);
           console.log( modelData );
           this.reimbService.addDetails(modelData)
           .subscribe(
               (response) =>{
                   let body = response.json();
-                  alert(body.message);
+
                   this.sendMail(body.data);
                   this.getClaims();
+                  this.form.reset();
                   this.addReimbursementForm = true;
+                  this.SuccessSave = body.message;
+                  setTimeout(()=> {    //<<<---    using ()=> syntax
+                      this.SuccessSave = "";
+                  },4000);
+
               },
               (error) => {
                   alert(error);

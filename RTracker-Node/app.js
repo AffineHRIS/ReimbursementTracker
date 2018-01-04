@@ -153,7 +153,13 @@ app.get('/employeeIdName/:data', function (req, res) {
 
 
 app.get('/claimDetails', function (req, res) {
-  con.query('SELECT * FROM rtracker.reimbursement_details order by Claim_Id DESC', function(err, rows, fields) {
+  con.query(`SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
+      ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
+      ( select * from rtracker.reimbursement_details) a
+      left join
+      (select * from rtracker.employee_details
+      group by Employee_Id) b
+      on a.Employee_Id = b.Employee_Id ORDER BY Claim_Id DESC`, function(err, rows, fields) {
     if (!err){
       var response = [];
 
@@ -190,6 +196,7 @@ app.post('/api/addClaim', function (req, res) {
           Date_Of_Receipt : req.body.Date_Of_Receipt,
           Approved_Amount : null,
           Approved_Date : null,
+          Paid_Date : null,
           Comment : null,
           Created_At : new Date(),
           Modified_At : null
@@ -241,12 +248,13 @@ app.post('/api/addClaim', function (req, res) {
           Approved_Amount : req.body.Approved_Amount,
           Approved_Date : req.body.Approved_Date,
           Comment : req.body.Comment,
+          Paid_Date : req.body.Paid_Date,
           Modified_At : new Date()
        }
 
        console.log(modelData);
       knex1.transaction(function (t) {
-          console.log("updating the Claim details for accept state");
+          console.log("updating the Claim details");
           return knex1('reimbursement_details')
               .transacting(t)
               .update(modelData)
@@ -303,16 +311,20 @@ app.post('/sendMail', function(req,res) {
   var claimid = req.body.Claim_Id;
   var comment = req.body.Comment;
   var approvedAmount = req.body.Approved_Amount;
-  var approvedDate = req.body.Approved_Date
-
+  var approvedDate = req.body.Approved_Date;
+  var claimAmount = req.body.Claim_Amount;
+  var paidDate = req.body.Paid_Date;
   console.log("check condition");
   console.log(req.body.Status);
 
   if (req.body.Status == null) {
-      var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> is being Processed'
+      var text = '<p>Hi</p><p>Your reimbursement claim amount: <b> '+claimAmount+' </b>  with <b> claim no:'+claimid+' </b> is received'
   }
   else if (req.body.Status == 'Accept') {
-    var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted with comments as <b> '+comment+' </b> for an amount of <b> INR '+approvedAmount+' </b> and the same would be disbursed by <b>'+approvedDate+'.</b> </p><p>Regards<br>Accounts Team</p>'
+    var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on approved date <b>'+approvedDate+'</b> for the approved amount<b> INR '+approvedAmount+' </b> and will be paid <b> '+comment+' </b>.</p><p>Regards<br>Accounts Team</p>'
+  }
+  else if (req.body.Status == 'Paid') {
+    var text = '<p>Hi</p><p>Your <b> claim no:'+claimid+' </b> for claim amount: <b> '+claimAmount+' </b> has been paid on Date: <b> '+paidDate+' </b> for rupess approved amount<b> INR '+approvedAmount+'. Kindly acknowledge receipt.</p><p>Regards<br>Accounts Team</p>'
   }
   else {
     var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> on hold with comments as <b> '+comment+' </b><p>Regards<br>Accounts Team</p>'
@@ -348,8 +360,10 @@ app.post('/sendMail', function(req,res) {
   transporter.sendMail(mailOptions, function(error, info){
     if (error) {
       console.log(error);
+      res.send( { Error : "error" } );
     } else {
       console.log('Email sent: ' + info.response);
+      res.status(200).send( { Status : "Mail sent successfully" } );
     }
   });
 

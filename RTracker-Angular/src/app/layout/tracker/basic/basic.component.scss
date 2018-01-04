@@ -1,32 +1,52 @@
 $sky-blue : #24AEE4;
-$sky-blue : #24AEE4;
+.button-panel {
+  display: none !important;
+}
+.message {
+  color:green;
+  text-align: center;
+}
 .filtersfixedwidth {
   width: 15%;
   float:left;
 }
 .cus-row {
-  padding:25
-}
-table {
-    margin-top: 4px;
-    thead {
-        th {
-            font-size: 11px;
-            text-align: center;
-            paddding:3px !important;
-            white-space: nowrap;
-            overflow: hidden;
-            text-transform: uppercase;
-        }
-    }
-    tbody {
-        tr {
-            font-size: 12px;
-            text-align: center;
-        }
-    }
+  padding:25px
 }
 
+.data-table-header[_ngcontent-c6] {
+    /* min-height: 25px; */
+    /* margin-bottom: 10px; */
+    display: none !important;
+}
+
+.data-table-wrapper {
+    data-table-header {
+        display:none !important;
+    }
+    .data-table-header {
+      display:none !important;
+    }
+    .table {
+        margin-top: 4px;
+        thead {
+            th {
+                font-size: 11px;
+                text-align: center;
+                paddding:3px !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-transform: uppercase;
+            }
+        }
+        tbody {
+            tr {
+                font-size: 12px;
+                text-align: center;
+            }
+        }
+    }
+}
 .page-header {
     background: rgba(0,0,0,0.1);
     margin: 1px;
@@ -428,4 +448,14 @@ $placeholder-color : #b5b5b5;
   font-size: 12px;
   line-height: 30px;
   margin-left: 5px;
+}
+
+.form-row {
+  background: #f1f1f1;
+  margin: 0px;
+  border-bottom: 1px dotted #aaa;
+  margin-bottom: 15px;
+}
+.cus-hr {
+  margin:5px 0px 0px 0px!important;
 }

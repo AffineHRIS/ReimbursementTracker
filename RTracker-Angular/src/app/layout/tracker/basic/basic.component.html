@@ -1,3 +1,4 @@
+
 <div class="tracker-section">
     <h6 class="text-muted-header">Employee Reimbursement Tracker</h6>
     <div class="horizontal-pipe-line"></div>
@@ -9,12 +10,18 @@
                     <div class="basic-details tab-content">
                         <div class="tab-info tab-pane active">
                             <div class="row">
-                                <div class="col-12">
-                                        <button class="btn btn-default pull-right" (click)="addClaim()"> Add Claim </button>
-                                    </div>
+                                <div class="col-3">
+                                    <h6 class="message"> {{ SuccessSave }} </h6>
+                                </div>
+                                <div class="col-3">
+                                    <h6 class="message"> {{ SuccessMail }} </h6>
+                                </div>
+                                <div class="col-6">
+                                    <button class="btn btn-default pull-right" (click)="addClaim()"> Add Claim </button>
+                                </div>
                             </div>
-                            <hr />
-                            <div class="row" [hidden]="addReimbursementForm">
+                            <hr class="cus-hr" />
+                            <div class="row form-row" [hidden]="addReimbursementForm">
                                 <div class="col-12">
                                     <i class="fa fa-times pull-right" (click)="hideTab()"></i>
                                 </div>
@@ -27,7 +34,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Date of Receipt  <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input class="form-control" type="date"  name="Date_Of_Receipt" [ngModel]="ReimbursementDetails.Date_Of_Receipt | date:'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Date_Of_Receipt=$event" #DateReceipt="ngModel"  placeholder="Date Receipt"  />
+                                                        <input class="form-control" type="date"  name="Date_Of_Receipt" [ngModel]="ReimbursementDetails.Date_Of_Receipt | date:'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Date_Of_Receipt=$event" #DateReceipt="ngModel"  placeholder="Date Receipt" required />
                                                     </div>
                                                 </div>
                                             </div>
@@ -35,7 +42,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Id <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" list="EmployeeId" name="Employee_Id" [(ngModel)]="ReimbursementDetails.Employee_Id" #EmployeeId="ngModel"  placeholder="Employee Id" (blur)="employeeDetail($event.target.value)"  />
+                                                        <input type="text" class="form-control" list="EmployeeId" name="Employee_Id" [(ngModel)]="ReimbursementDetails.Employee_Id" #EmployeeId="ngModel"  placeholder="Employee Id" (blur)="employeeDetail($event.target.value)" required />
                                                         <datalist id="EmployeeId">
                                                             <option *ngFor="let coun of empList" value="{{ coun.Employee_Id }}">
                                                                 {{ coun.Map_Education_Boards_Name }}
@@ -48,7 +55,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Name <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" readonly class="form-control" name="Employee_Name" [(ngModel)]="ReimbursementDetails.Employee_Name" #EmployeeName="ngModel"  placeholder="Employee Name" list="employees" autocomplete="off" />
+                                                        <input type="text" readonly class="form-control" name="Employee_Name" [(ngModel)]="ReimbursementDetails.Employee_Name" #EmployeeName="ngModel"  placeholder="Employee Name" list="employees" autocomplete="off" required/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -56,7 +63,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Email <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" readonly class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email" />
+                                                        <input type="text" readonly class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email" required />
                                                     </div>
                                                 </div>
                                             </div>
@@ -64,7 +71,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Claim Amount <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="Claim_Amount" [(ngModel)]="ReimbursementDetails.Claim_Amount" #ClaimAmount="ngModel" placeholder="Claim Amount" />
+                                                        <input type="number" class="form-control" name="Claim_Amount" [(ngModel)]="ReimbursementDetails.Claim_Amount" #ClaimAmount="ngModel" placeholder="Claim Amount" required />
                                                     </div>
                                                 </div>
                                             </div>
@@ -72,7 +79,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Expense Type <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <select name="Expense_Type" [(ngModel)]="ReimbursementDetails.Expense_Type" class="form-control">
+                                                        <select name="Expense_Type" [(ngModel)]="ReimbursementDetails.Expense_Type" class="form-control" required>
                                                             <option value="direct"> Direct </option>
                                                             <option value="indirect"> Indirect </option>
                                                         </select>
@@ -83,7 +90,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Expense Details <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <textarea type="text" class="form-control" name="Expense_Details" [(ngModel)]="ReimbursementDetails.Expense_Details" #ExpenseDetails="ngModel" placeholder="Expense Detail"> </textarea>
+                                                        <textarea type="text" class="form-control" name="Expense_Details" [(ngModel)]="ReimbursementDetails.Expense_Details" #ExpenseDetails="ngModel" placeholder="Expense Detail" required> </textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -93,7 +100,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Project Name <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" name="Project_Name" [(ngModel)]="ReimbursementDetails.Project_Name" #ProjectName="ngModel" placeholder="Project Name" />
+                                                        <input type="text" class="form-control" name="Project_Name" [(ngModel)]="ReimbursementDetails.Project_Name" #ProjectName="ngModel" placeholder="Project Name" required/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -104,6 +111,7 @@
                                                         <select class="form-control" name="Status" [(ngModel)]="ReimbursementDetails.Status" #Status="ngModel" (change) ="statusFind($event.target.value)">
                                                             <option value="Accept"> Accept </option>
                                                             <option value="Hold"> On Hold </option>
+                                                            <option value="Paid"> Paid </option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -121,6 +129,14 @@
                                                     <label class="col-md-5"> Approved Date <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
                                                         <input type="date" class="form-control" name="Approved_Date" [ngModel]="ReimbursementDetails.Approved_Date | date: 'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Approved_Date=$event" #ApprovedDate="ngModel" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" [hidden]="whenPaid">
+                                                <div class="row">
+                                                    <label class="col-md-5"> Paid Date <span class="pull-right"> : </span> </label>
+                                                    <div class="col-md-6">
+                                                        <input type="date" class="form-control" name="Paid_Date" [ngModel]="ReimbursementDetails.Paid_Date | date: 'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Paid_Date=$event" #PaidDate="ngModel" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -153,35 +169,57 @@
                                   <button class="btn btn-default export-excel pull-right" (click)="fileDownload(claimList)">Download <i class="fa fa-file-excel-o"></i></button>
                               </div>
                               <div class="col-12">
-                                  <table class="table table-bordered table-striped cus-table" [mfData]="claimList" #mf="mfDataTable" [mfRowsOnPage]="10">
-                                      <thead class="thead-inverse">
-                                        <tr>
-                                            <th> Claim No </th>
-                                            <th> Date of Receipt </th>
-                                            <th> Employee Id </th>
-                                            <!-- <th> Employee Name </th> -->
-                                            <th> Claim Amount </th>
-                                            <th> Status </th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                            <tr *ngFor="let claims of mf.data">
-                                                <td> <a (click)=showClaim(claims.Claim_Id) style="color:#24AEE4;font-weight:600"> {{ claims.Claim_Id }} </a> </td>
-                                                <td> {{ claims.Date_Of_Receipt | date: 'yyyy-MM-dd' }} </td>
-                                                <td> {{ claims.Employee_Id }} </td>
-                                                <!-- <td>  </td> -->
-                                                <td> {{ claims.Claim_Amount }} </td>
-                                                <td> {{ claims.Status  }}</td>
-                                            </tr>
-                                      </tbody>
-                                      <tfoot>
-                                          <tr>
-                                              <td colspan="17">
-                                                  <mfBootstrapPaginator [rowsOnPageSet]="[5,10,25]"></mfBootstrapPaginator>
-                                              </td>
-                                          </tr>
-                                      </tfoot>
-                                  </table>
+                                  <data-table
+                                    [items]="claimList"
+                                    [itemCount]="claimCount"
+                                    (reload)="reloadClaims($event)"
+                                    [pagination]="true"
+                                    [indexColumn]="false"
+                                    [selectColumn]="true"
+                                    [multiSelect]="true"
+                                    [limit]="4"
+                                    [header]="false"
+                                    >
+                                    <data-table-column
+                                      property="Claim_Id"
+                                      header="Claim Id">
+                                      <ng-template #dataTableCell let-item="item">
+                                           <button (click)="showClaim(item)" class="btn btn-sm btn-default"> {{ item.Claim_Id }} </button>
+                                       </ng-template>
+                                    </data-table-column>
+                                    <data-table-column
+                                      property="Employee_Id"
+                                      header="Employee Id">
+                                    </data-table-column>
+                                    <data-table-column
+                                      property="Employee_Name"
+                                      header="Employee Name ">
+                                    </data-table-column>
+                                    <data-table-column
+                                      property="Employee_Name"
+                                      header="Date of Receipt">
+                                      <ng-template #dataTableCell let-item="item">
+                                          {{ item.Date_Of_Receipt | date: 'yyyy-MM-dd' }}
+                                       </ng-template>
+                                    </data-table-column>
+                                    <data-table-column
+                                      property="Claim_Amount"
+                                      header="Claim Amount">
+                                    </data-table-column>
+                                    <data-table-column
+                                      property="Status"
+                                      header="Status">
+                                    </data-table-column>
+                                  </data-table>
+                                  <div>
+                                    <div>
+                                        <b>Selected:</b>
+                                        <span [textContent]="claimsTable.selectedRows.length"></span>
+                                    </div>
+                                    <div *ngFor="let selected of claimsTable.selectedRows">
+                                        <span [textContent]="selected.item.Claim_Id"></span>
+                                    </div>
+                                  </div>
                               </div>
                           </div>
                         </div>
