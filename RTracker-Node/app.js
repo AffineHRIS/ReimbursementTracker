@@ -342,8 +342,8 @@ app.post('/sendMail', function(req,res) {
           rejectUnauthorized: false
         },
         auth: {
-            user: 'yogesh.shanmukhappa@affineanalytics.com',
-            pass: 'g6@ntme@affine'
+            user: 'Reimursements@affineanalytics.com',
+            pass: 'Affine$123'
         }
   });
 
