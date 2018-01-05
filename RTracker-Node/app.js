@@ -316,16 +316,16 @@ app.post('/sendMail', function(req,res) {
   console.log(req.body.Status);
 
   if (req.body.Status == null) {
-      var text = '<p>Hi</p><p>Your reimbursement claim amount: <b> '+claimAmount+' </b>  with <b> claim no:'+claimid+' </b> is received'
+      var text = '<p>Hi</p><p>Your request for reimbursement of an amount of: <b> '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>'
   }
   else if (req.body.Status == 'Accept') {
-    var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on approved date <b>'+approvedDate+'</b> for the approved amount<b> INR '+approvedAmount+' </b> and will be paid <b> '+comment+' </b>.</p><p>Regards<br>Accounts Team</p>'
+    var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount of <b> INR '+approvedAmount+' </b> and will be paid <b> '+comment+' </b>.</p><p>Regards<br>Accounts Team</p>'
   }
   else if (req.body.Status == 'Paid') {
-    var text = '<p>Hi</p><p>Your <b> claim no:'+claimid+' </b> for claim amount: <b> '+claimAmount+' </b> has been paid on Date: <b> '+paidDate+' </b> for rupess approved amount<b> INR '+approvedAmount+'. Kindly acknowledge receipt.</p><p>Regards<br>Accounts Team</p>'
+    var text = '<p>Hi</p><p> <b>An amount of INR '+approvedAmount+'</b> has been paid/disbursed on <b> '+paidDate+' </b>against your reimursement claim with <b> claim no:'+claimid+' </b> for an amount of  <b> INR '+claimAmount+' </b>. Kindly acknowledge receipt.</p><p>Regards<br>Accounts Team</p>'
   }
   else {
-    var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> on hold with comments as <b> '+comment+' </b><p>Regards<br>Accounts Team</p>'
+    var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> is on hold with comments as <b> '+comment+' </b>. Kindly contact us for further information.<p>Regards<br>Accounts Team</p>'
   }
   console.log(To_Name);
   var nodemailer = require('nodemailer');
