@@ -85,7 +85,6 @@ export class BasicComponent implements OnInit {
     }
 
     hideTab() : void {
-        this.form.reset();
         this.addReimbursementForm = true;
     }
 
@@ -106,6 +105,8 @@ export class BasicComponent implements OnInit {
      }
 
     addClaim() {
+
+        console.log(this.claimsTable.selectedRows);
         this.whenAccept = true;
         this.whenHold = true;
         this.whenPaid = true;
@@ -177,6 +178,8 @@ export class BasicComponent implements OnInit {
 
 
      showClaim(claimId) : void {
+
+         console.log(claimId);
          this.reimbService.getClaim(claimId.Claim_Id).then(claimvalues => {
              this.ReimbursementDetails = claimvalues[0];
              this.employeeDetail(this.ReimbursementDetails.Employee_Id);
@@ -196,6 +199,11 @@ export class BasicComponent implements OnInit {
                  this.whenHold = true;
                  this.whenPaid = true;
              }
+             else if(this.ReimbursementDetails.Status == "Paid") {
+                 this.whenAccept = false;
+                 this.whenHold = true;
+                 this.whenPaid = false;
+             }
              else {
                  this.whenAccept = false;
                  this.whenHold = true;
@@ -206,7 +214,6 @@ export class BasicComponent implements OnInit {
 
     save(model : any) {
       console.log(model);
-
       if (this.form.valid) {
           var modelData = Object.assign({}, model);
           console.log( modelData );
@@ -214,16 +221,15 @@ export class BasicComponent implements OnInit {
           .subscribe(
               (response) =>{
                   let body = response.json();
-
+                  console.log(body.data);
                   this.sendMail(body.data);
                   this.getClaims();
-                  this.form.reset();
-                  this.addReimbursementForm = true;
                   this.SuccessSave = body.message;
                   setTimeout(()=> {    //<<<---    using ()=> syntax
                       this.SuccessSave = "";
                   },4000);
 
+                  this.addReimbursementForm = true;
               },
               (error) => {
                   alert(error);

@@ -10,13 +10,7 @@
                     <div class="basic-details tab-content">
                         <div class="tab-info tab-pane active">
                             <div class="row">
-                                <div class="col-3">
-                                    <h6 class="message"> {{ SuccessSave }} </h6>
-                                </div>
-                                <div class="col-3">
-                                    <h6 class="message"> {{ SuccessMail }} </h6>
-                                </div>
-                                <div class="col-6">
+                                <div class="col-12">
                                     <button class="btn btn-default pull-right" (click)="addClaim()"> Add Claim </button>
                                 </div>
                             </div>
@@ -126,7 +120,7 @@
                                             </div>
                                             <div class="form-group" [hidden]="whenHold">
                                                 <div class="row">
-                                                    <label class="col-md-5"> Approved Date <span class="pull-right"> : </span> </label>
+                                                    <label class="col-md-5"> Date of Approval <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
                                                         <input type="date" class="form-control" name="Approved_Date" [ngModel]="ReimbursementDetails.Approved_Date | date: 'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Approved_Date=$event" #ApprovedDate="ngModel" />
                                                     </div>
@@ -134,7 +128,7 @@
                                             </div>
                                             <div class="form-group" [hidden]="whenPaid">
                                                 <div class="row">
-                                                    <label class="col-md-5"> Paid Date <span class="pull-right"> : </span> </label>
+                                                    <label class="col-md-5"> Date of payment <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
                                                         <input type="date" class="form-control" name="Paid_Date" [ngModel]="ReimbursementDetails.Paid_Date | date: 'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Paid_Date=$event" #PaidDate="ngModel" />
                                                     </div>
@@ -142,7 +136,7 @@
                                             </div>
                                             <div class="form-group" [hidden]="whenAccept">
                                                 <div class="row">
-                                                    <label class="col-md-5"> Comment <span class="pull-right"> : </span> </label>
+                                                    <label class="col-md-5"> Comments <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
                                                         <textarea type="text" class="form-control" name="Comment" [(ngModel)]="ReimbursementDetails.Comment" #comment="ngModel" placeholder="Comment"> </textarea>
                                                     </div>
@@ -151,6 +145,7 @@
                                         </div>
                                     </div>
                                     <div class="row">
+
                                         <div class="col-md-12">
                                             <button type="submit" class="btn btn-default btn-cus-grey pull-right" [hidden]="submitButton" > SUBMIT </button>
                                             <button type="submit" class="btn btn-default btn-cus-grey pull-right" [hidden]="saveButton"> SAVE </button>
@@ -161,11 +156,14 @@
                           </div>
 
                           <div class="row">
-                              <div class="col-md-6">
+                              <div class="col-md-3">
                                   <label class="search-label"> Search : </label>
                                   <input type="text" class="form-control search-input" id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Status" (keyup)="searchValue($event)"/>
                               </div>
-                              <div class="col-md-6">
+                              <div class="col-md-7 pull-right">
+                                  <h6 class="message"> {{ SuccessSave }} </h6> <h6 class="message"> {{ SuccessMail }} </h6>
+                              </div>
+                              <div class="col-md-2">
                                   <button class="btn btn-default export-excel pull-right" (click)="fileDownload(claimList)">Download <i class="fa fa-file-excel-o"></i></button>
                               </div>
                               <div class="col-12">
@@ -217,7 +215,7 @@
                                         <span [textContent]="claimsTable.selectedRows.length"></span>
                                     </div>
                                     <div *ngFor="let selected of claimsTable.selectedRows">
-                                        <span [textContent]="selected.item.Claim_Id"></span>
+                                        <span [textContent]="selected.item"></span>
                                     </div>
                                   </div>
                               </div>

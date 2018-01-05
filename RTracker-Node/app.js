@@ -179,10 +179,9 @@ app.get('/claimDetails', function (req, res) {
 
 app.post('/api/addClaim', function (req, res) {
     var result = {};
+
     console.log(req.body.Claim_Id);
-
     var claimid = req.body.Claim_Id;
-
     console.log(claimid);
 
     if(req.body.Status == null) {
@@ -237,51 +236,50 @@ app.post('/api/addClaim', function (req, res) {
       });
     }
     else {
-      var modelData = {
-          Employee_Id : req.body.Employee_Id,
-          Claim_Amount : req.body.Claim_Amount,
-          Expense_Type : req.body.Expense_Type,
-          Expense_Details : req.body.Expense_Details,
-          Project_Name : req.body.Project_Name,
-          Status : req.body.Status,
-          Date_Of_Receipt : req.body.Date_Of_Receipt,
-          Approved_Amount : req.body.Approved_Amount,
-          Approved_Date : req.body.Approved_Date,
-          Comment : req.body.Comment,
-          Paid_Date : req.body.Paid_Date,
-          Modified_At : new Date()
-       }
+      if (claimid == null) {
+        res.status(200).send( { message : "Error while updating. please try again for some time" } );
+      }
+      else {
+        var modelData = {
+            Employee_Id : req.body.Employee_Id,
+            Claim_Amount : req.body.Claim_Amount,
+            Expense_Type : req.body.Expense_Type,
+            Expense_Details : req.body.Expense_Details,
+            Project_Name : req.body.Project_Name,
+            Status : req.body.Status,
+            Date_Of_Receipt : req.body.Date_Of_Receipt,
+            Approved_Amount : req.body.Approved_Amount,
+            Approved_Date : req.body.Approved_Date,
+            Comment : req.body.Comment,
+            Paid_Date : req.body.Paid_Date,
+            Modified_At : new Date()
+         }
 
-       console.log(modelData);
-      knex1.transaction(function (t) {
-          console.log("updating the Claim details");
-          return knex1('reimbursement_details')
-              .transacting(t)
-              .update(modelData)
-              .where('Claim_Id', '=', claimid )
-              .then(function (response) {
-                  // console.log("Adding the Projects Details");
-                  // return knex1('aa_projects')
-                  // .transacting(t)
-                  // .insert(modelData2)
-                  // .then(function (response) {
-                  //
-                  // })
-                  console.log("Updated claim details");
-              })
-          .then(t.commit)
-          .catch(t.rollback)
-      })
-      .then(function (success) {
-          result['data'] = req.body;
-          result['result'] = 'success';
-          result['message'] = 'Claim details updated successfully!';
-          res.setHeader('Content-Type', 'application/json');
-          res.status(200).send( result );
-      })
-      .catch(function (error) {
-          console.log(error);
-      });
+         console.log(modelData);
+        knex1.transaction(function (t) {
+            console.log("updating the Claim details");
+            return knex1('reimbursement_details')
+                .transacting(t)
+                .update(modelData)
+                .where('Claim_Id', '=', claimid )
+                .then(function (response) {
+                    console.log("Updated claim details");
+                })
+            .then(t.commit)
+            .catch(t.rollback)
+        })
+        .then(function (success) {
+            result['data'] = req.body;
+            result['result'] = 'success';
+            result['message'] = 'Claim details updated successfully!';
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).send( result );
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+      }
+
     }
 
 })
@@ -305,8 +303,8 @@ app.get('/claimDetails/:data', function (req, res) {
    })
 });
 
-app.post('/sendMail', function(req,res) {
 
+app.post('/sendMail', function(req,res) {
   var To_Name = req.body.Employee_Email;
   var claimid = req.body.Claim_Id;
   var comment = req.body.Comment;
