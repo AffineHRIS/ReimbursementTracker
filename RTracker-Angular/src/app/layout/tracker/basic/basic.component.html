@@ -155,7 +155,7 @@
                               </div>
                           </div>
 
-                          <div class="row">
+                          <div class="row" [hidden]="noClaims">
                               <div class="col-md-3">
                                   <label class="search-label"> Search : </label>
                                   <input type="text" class="form-control search-input" id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Status" (keyup)="searchValue($event)"/>
@@ -220,6 +220,11 @@
                                   </div>
                               </div>
                           </div>
+
+                          <div class="row" [hidden]="!noClaims">
+                              <h6>Cool... No claims to process.</h6>
+                          </div>
+
                         </div>
                     </div>
                 </div>

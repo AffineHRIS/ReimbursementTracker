@@ -88,7 +88,7 @@ app.post('/authenticate', function (req, res) {
                   message: 'User Employee Not found!',
                   role: results[0].role,
                   empid: results[0].username,
-                  empname: 'Not found.'
+                  empname: results[0].username
                 });
               } else {
                 if ( results1.length > 0 ) {
@@ -105,7 +105,7 @@ app.post('/authenticate', function (req, res) {
                     message: 'User not found!',
                     role: results[0].role,
                     empid: results[0].username,
-                    empname: 'Not found.'
+                    empname: results[0].username
                   });
                 }
               }
@@ -312,20 +312,25 @@ app.post('/sendMail', function(req,res) {
   var approvedDate = req.body.Approved_Date;
   var claimAmount = req.body.Claim_Amount;
   var paidDate = req.body.Paid_Date;
-  console.log("check condition");
-  console.log(req.body.Status);
+  // console.log("check condition");
+  // console.log(req.body.Status);
 
   if (req.body.Status == null) {
-      var text = '<p>Hi</p><p>Your request for reimbursement of an amount of <b>INR '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>'
+      var text = '<p>Hi</p><p>Your request for reimbursement of an amount of <b>INR '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>';
   }
   else if (req.body.Status == 'Accept') {
-    var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount of <b> INR '+approvedAmount+' </b> and will be paid <b> '+comment+' </b>.</p><p>Regards<br>Accounts Team</p>'
+    var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount <b> INR '+ approvedAmount + '</b>';
+    if ( comment !== null && comment !== undefined && comment.length > 0 ) {
+        text += ' with comment <b>'+comment+'</b>. </p><p>Regards,<br>Accounts Team</p>';
+    } else {
+        text += '.';
+    }
   }
   else if (req.body.Status == 'Paid') {
-    var text = '<p>Hi</p><p> <b>An amount of INR '+approvedAmount+'</b> has been paid/disbursed on <b> '+paidDate+' </b>against your reimursement claim with <b> claim no:'+claimid+' </b> for an amount of  <b> INR '+claimAmount+' </b>. Kindly acknowledge receipt.</p><p>Regards<br>Accounts Team</p>'
+    var text = '<p>Hi</p><p> <b>An amount of INR '+approvedAmount+'</b> has been paid/disbursed on <b> '+paidDate+' </b>against your reimursement claim with <b> claim no:'+claimid+' </b> for an amount of  <b> INR '+claimAmount+' </b>. Kindly acknowledge receipt.</p><p>Regards<br>Accounts Team</p>';
   }
   else {
-    var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> is on hold with comments as <b> '+comment+' </b>. Kindly contact us for further information.<p>Regards<br>Accounts Team</p>'
+    var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> is on hold with comments as <b> '+comment+' </b>. Kindly contact us for further information.<p>Regards<br>Accounts Team</p>';
   }
   console.log(To_Name);
   var nodemailer = require('nodemailer');

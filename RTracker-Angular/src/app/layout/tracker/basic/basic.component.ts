@@ -22,6 +22,7 @@ export class BasicComponent implements OnInit {
 
     claimList : any = [];
     claimValues : any =[];
+    noClaims: boolean = true;
     addReimbursementForm : boolean = true;
     whenAccept:boolean = true;
     whenHold:boolean = true;
@@ -105,8 +106,6 @@ export class BasicComponent implements OnInit {
      }
 
     addClaim() {
-
-        console.log(this.claimsTable.selectedRows);
         this.whenAccept = true;
         this.whenHold = true;
         this.whenPaid = true;
@@ -148,15 +147,20 @@ export class BasicComponent implements OnInit {
 
     getClaims(): void {
         this.reimbService.getClaimDetails().then(claimDetails => {
-            this.claimList = claimDetails[0].data;
-            this.origDetails = claimDetails[0].data;
-            if(claimDetails[0].data[0].Status == null) {
-               claimDetails[0].data[0].Status = "Submitted"
+
+            if ( claimDetails[0].data !== undefined ) {
+                this.claimList = claimDetails[0].data;
+                this.origDetails = claimDetails[0].data;
+
+                if ( claimDetails[0].data[0].Status == null ) {
+                    claimDetails[0].data[0].Status = "Submitted";
+                }
+
+                this.noClaims = this.claimList.length <= 0;
             }
-            console.log(this.claimList);
+
         });
      }
-
 
      sendMail(model:any): void {
          var modelData = Object.assign({}, model);
