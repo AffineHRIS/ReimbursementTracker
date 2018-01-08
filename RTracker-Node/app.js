@@ -316,7 +316,7 @@ app.post('/sendMail', function(req,res) {
   console.log(req.body.Status);
 
   if (req.body.Status == null) {
-      var text = '<p>Hi</p><p>Your request for reimbursement of an amount of: <b> '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>'
+      var text = '<p>Hi</p><p>Your request for reimbursement of an amount of <b>INR '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>'
   }
   else if (req.body.Status == 'Accept') {
     var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount of <b> INR '+approvedAmount+' </b> and will be paid <b> '+comment+' </b>.</p><p>Regards<br>Accounts Team</p>'
@@ -342,13 +342,13 @@ app.post('/sendMail', function(req,res) {
           rejectUnauthorized: false
         },
         auth: {
-            user: 'Reimursements@affineanalytics.com',
+            user: 'reimbursements@affineanalytics.com',
             pass: 'Affine$123'
         }
   });
 
   var mailOptions = {
-    from: 'yogesh.shanmukhappa@affineanalytics.com',
+    from: 'reimbursements@affineanalytics.com',
     to: To_Name,
     subject: 'Reimbursement claim:'+claimid,
     text: 'Status update for your claim',
