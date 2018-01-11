@@ -1,7 +1,7 @@
 //
 // Basic Bootstrap table
 //
-
+$sky-blue : #24AEE4;
 .table {
   width: 100%;
   max-width: 100%;
@@ -9,20 +9,19 @@
 
   th,
   td {
-    padding: $table-cell-padding;
+    padding: 5px;
     vertical-align: top;
     border-top: $table-border-width solid $table-border-color;
   }
 
   thead th {
-    vertical-align: bottom;
-    border-bottom: (2 * $table-border-width) solid $table-border-color;
+    background: $sky-blue;
+    color: #fff;
+    font-size: 13px;
   }
-
-  tbody + tbody {
-    border-top: (2 * $table-border-width) solid $table-border-color;
+  tbody td {
+    font-size: 13px;
   }
-
   .table {
     background-color: $body-bg;
   }

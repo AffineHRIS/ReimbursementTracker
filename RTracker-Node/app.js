@@ -2,11 +2,12 @@
 'use strict';
 var express  = require('express'),
 mysql        = require('mysql'),
-bodyParser   = require('body-parser')
-
+bodyParser   = require('body-parser'),
+dataUploader = require('./data-uploader');
 // require the bcrypt module
 const bcrypt = require('bcrypt');
 
+var json2xls = require('json2xls');
 // Local and server mysql hosts.
  var mysqlHost = '127.0.0.1'; // Local
 // var mysqlHost = '192.168.0.128'; // Server
@@ -19,7 +20,7 @@ var knex1 = require('knex')({
     host : mysqlHost,
     user : 'root',
     password : 'test@123',
-    database : 'dev_hris'
+    database : 'rtracker'
   },
   pool: { min: 0, max: 7 }
 });
@@ -87,7 +88,7 @@ app.post('/authenticate', function (req, res) {
                   message: 'User Employee Not found!',
                   role: results[0].role,
                   empid: results[0].username,
-                  empname: 'Not found.'
+                  empname: results[0].username
                 });
               } else {
                 if ( results1.length > 0 ) {
@@ -104,7 +105,7 @@ app.post('/authenticate', function (req, res) {
                     message: 'User not found!',
                     role: results[0].role,
                     empid: results[0].username,
-                    empname: 'Not found.'
+                    empname: results[0].username
                   });
                 }
               }
@@ -129,9 +130,10 @@ app.post('/authenticate', function (req, res) {
 });
 
 
-app.get('/employeeIdName', function (req, res) {
-  var id = req.params.Search_Emp;
-  con.query('SELECT Employee_Id, Employee_Name FROM dev_hris.employee', function(err, rows, fields) {
+app.get('/employeeIdName/:data', function (req, res) {
+  var id = req.params.data;
+  var sqlQuery = "SELECT * FROM rtracker.employee_details where Employee_Id='"+id+"'";
+  con.query(sqlQuery, function(err, rows, fields) {
     if (!err){
       var response = [];
 
@@ -147,6 +149,294 @@ app.get('/employeeIdName', function (req, res) {
       res.status(400).send(err);
     }
   });
+});
+
+
+app.get('/claimDetails', function (req, res) {
+  con.query(`SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
+      ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
+      ( select * from rtracker.reimbursement_details) a
+      left join
+      (select * from rtracker.employee_details
+      group by Employee_Id) b
+      on a.Employee_Id = b.Employee_Id ORDER BY Claim_Id DESC`, function(err, rows, fields) {
+    if (!err){
+      var response = [];
+
+      if (rows.length != 0) {
+        response.push({'result' : 'success', 'data' : rows});
+      } else {
+        response.push({'result' : 'error', 'msg' : 'No Results Found'});
+      }
+
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).send(JSON.stringify(response));
+    } else {
+      res.status(400).send(err);
+    }
+  });
+});
+
+app.post('/api/addClaim', function (req, res) {
+    var result = {};
+
+    console.log(req.body.Claim_Id);
+    var claimid = req.body.Claim_Id;
+    console.log(claimid);
+
+    if(req.body.Status == null) {
+      var modelData = {
+          Employee_Id : req.body.Employee_Id,
+          Claim_Amount : req.body.Claim_Amount,
+          Expense_Type : req.body.Expense_Type,
+          Expense_Details : req.body.Expense_Details,
+          Project_Name : req.body.Project_Name,
+          Status : "Submitted",
+          Date_Of_Receipt : req.body.Date_Of_Receipt,
+          Approved_Amount : null,
+          Approved_Date : null,
+          Paid_Date : null,
+          Comment : null,
+          Created_At : new Date(),
+          Modified_At : null
+       }
+
+      console.log(modelData);
+
+      knex1.transaction(function (t) {
+          console.log("Adding the Claim details for accept state");
+          return knex1('reimbursement_details')
+              .transacting(t)
+              .insert(modelData)
+              .then(function (response) {
+                   console.log("Adding the Projects Details");
+                   console.log(response);
+                  // return knex1('aa_projects')
+                  // .transacting(t)
+                  // .insert(modelData2)
+                  // .then(function (response) {
+                  //
+                  // })
+                  req.body['Claim_Id'] = response[0];
+                  console.log("Added claim details");
+              })
+          .then(t.commit)
+          .catch(t.rollback)
+      })
+
+      .then(function (success) {
+          result['data'] = req.body;
+          result['result'] = 'success';
+          result['message'] = 'Claim details added successfully!';
+          res.setHeader('Content-Type', 'application/json');
+          res.status(200).send( result );
+      })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }
+    else {
+      if (claimid == null) {
+        res.status(200).send( { message : "Error while updating. please try again for some time" } );
+      }
+      else {
+        var modelData = {
+            Employee_Id : req.body.Employee_Id,
+            Claim_Amount : req.body.Claim_Amount,
+            Expense_Type : req.body.Expense_Type,
+            Expense_Details : req.body.Expense_Details,
+            Project_Name : req.body.Project_Name,
+            Status : req.body.Status,
+            Date_Of_Receipt : req.body.Date_Of_Receipt,
+            Approved_Amount : req.body.Approved_Amount,
+            Approved_Date : req.body.Approved_Date,
+            Comment : req.body.Comment,
+            Paid_Date : req.body.Paid_Date,
+            Modified_At : new Date()
+         }
+
+         console.log(modelData);
+        knex1.transaction(function (t) {
+            console.log("updating the Claim details");
+            return knex1('reimbursement_details')
+                .transacting(t)
+                .update(modelData)
+                .where('Claim_Id', '=', claimid )
+                .then(function (response) {
+                    console.log("Updated claim details");
+                })
+            .then(t.commit)
+            .catch(t.rollback)
+        })
+        .then(function (success) {
+            result['data'] = req.body;
+            result['result'] = 'success';
+            result['message'] = 'Claim details updated successfully!';
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).send( result );
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+      }
+
+    }
+
+})
+
+app.get('/claimDetails/:data', function (req, res) {
+  var result = {};
+  var Claim = req.params.data;
+  knex1.select(
+       '*'
+   )
+   .from('reimbursement_details')
+   .where('Claim_Id', Claim)
+   .timeout(10000, {cancel: true})
+   .map(function (row) { return row; })
+   .then(function (data = []) {
+       result = data;
+       result['result'] = 'success';
+       result['message'] = 'data fetched successfully!';
+       res.setHeader('Content-Type', 'application/json');
+       res.status(200).send( result );
+   })
+});
+
+
+function getMailText ( data ) {
+    var mailText = '';
+
+    var To_Name = data.Employee_Email;
+    var claimid = data.Claim_Id;
+    var comment = data.Comment;
+    var approvedAmount = data.Approved_Amount;
+    var approvedDate = data.Approved_Date;
+    var claimAmount = data.Claim_Amount;
+    var paidDate = data.Paid_Date;
+
+    if ( data.Status === data.Old_Status ) {
+        mailText = `<p>Hi,</p>
+                    <p>The details of your reimbursement with <b>claim no: `+ claimid +`</b> have been updated for an amount of <b>INR `+ claimAmount +`</b>.</p>
+                    <p>Kindly contact us for further information.</p><p>Regards,<br>Accounts Team</p>`;
+    } else if ( data.Status == null ) {
+        mailText = `<p>Hi,</p>
+                    <p>Your request for the reimbursement of an amount of
+                        <b>INR `+claimAmount+` </b>has been received. Please note the <b>claim no:`+claimid+` </b>for your reference.
+                    </p>
+                    <p>Regards,<br>Accounts Team</p>`;
+    } else if ( data.Status == 'Accept' ) {
+        mailText = '<p>Hi,</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount of <b> INR '+ approvedAmount + '</b>';
+        if ( comment !== null && comment !== undefined && comment.length > 0 ) {
+            mailText += ' with comment <b>'+comment+'</b>. </p><p>Regards,<br>Accounts Team</p>';
+        } else {
+            mailText += '.</p><p>Regards,<br>Accounts Team</p>';
+        }
+    } else if ( data.Status == 'Paid' ) {
+        mailText = '<p>Hi,</p><p> <b>An amount of INR '+approvedAmount+'</b> has been paid/disbursed on <b> '+paidDate+' </b>against your reimbursement claim with <b> claim no:'+claimid+' </b> for an amount of  <b> INR '+claimAmount+' </b>.<br>Kindly acknowledge the receipt.</p><p>Regards,<br>Accounts Team</p>';
+    } else if ( data.Status == 'Hold' ) {
+        mailText = '<p>Hi,</p> <p>Your reimbursement claim with <b>claim no:'+claimid+'</b> is on hold';
+        if ( comment !== null && comment !== undefined && comment.length > 0 ) {
+            mailText += ' with comment <b>'+comment+' </b>';
+        }
+        mailText += '.</p><p>Kindly contact us for further information.</p><p>Regards,<br>Accounts Team</p>';
+    } else {
+        console.log("Unexpected status of the reimbursement claim is noticed: %s", data.Status);
+    }
+
+    return mailText;
+}
+
+app.post('/sendMail', function(req, res) {
+    var To_Name = req.body.Employee_Email;
+    var claimid = req.body.Claim_Id;
+
+    var text = getMailText( req.body );
+
+    var nodemailer = require('nodemailer');
+    var transporter = nodemailer.createTransport({
+        type: 'smtp',
+        host: 'smtp.office365.com',
+        port: 587,
+        //secure: true, // use SSL
+        secure: false, //disable SSL
+        requireTLS: true,//Force TLS
+        tls: {
+            rejectUnauthorized: false
+        },
+        auth: {
+            user: 'reimbursements@affineanalytics.com',
+            pass: 'Affine$123'
+        }
+    });
+
+    var mailOptions = {
+        from: 'reimbursements@affineanalytics.com',
+        to: To_Name,
+        subject: 'Reimbursement Claim: '+claimid,
+        text: 'Status update for your claim',
+        html: text
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+            res.send( { Error : "error" } );
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.status(200).send( { Status : "Mail sent successfully" } );
+        }
+    });
+
+});
+
+app.get('/employeeIdList/', function (req, res) {
+  var id = req.params.data;
+  var sqlQuery = "SELECT * FROM rtracker.employee_details";
+  con.query(sqlQuery, function(err, rows, fields) {
+    if (!err){
+      var response = [];
+
+      if (rows.length != 0) {
+        response.push({'result' : 'success', 'data' : rows});
+      } else {
+        response.push({'result' : 'error', 'msg' : 'No Results Found'});
+      }
+
+      res.setHeader('Content-Type', 'application/json');
+      res.status(200).send(JSON.stringify(response));
+    } else {
+      res.status(400).send(err);
+    }
+  });
+});
+
+app.post('/api/updateEmployeeData', function (req, res) {
+    console.log("Requested loading employee data %s", req.body.File_Name);
+    var fileName = req.body.File_Name;
+
+    dataUploader.loadData( fileName, req, res, knex1 );
+});
+
+var jsonArr = [{
+    foo: 'bar',
+    qux: 'moo',
+    poo: 123,
+    stux: new Date()
+},
+{
+    foo: 'bar',
+    qux: 'moo',
+    poo: 345,
+    stux: new Date()
+}];
+
+
+var json2xls = require('json2xls');
+
+app.use(json2xls.middleware);
+app.get('/file',function(req, res) {
+    res.xls('data.xlsx', jsonArr);
 });
 
 // Begin listening

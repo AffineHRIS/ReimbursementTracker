@@ -2,18 +2,27 @@
   width: 80% !important;
   float: left !important;
 }
-table {
+data-table-header {
+    display:none !important;
+}
+.data-table-header {
+  display:none !important;
+}
+.table {
     margin-top: 4px;
     thead {
         th {
-            font-size: 12px;
+            font-size: 11px;
             text-align: center;
             paddding:3px !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-transform: uppercase;
         }
     }
     tbody {
         tr {
-            font-size: 13px;
+            font-size: 12px;
             text-align: center;
         }
     }

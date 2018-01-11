@@ -7,15 +7,15 @@
             <form novalidate role="form" #f="ngForm" (ngSubmit)="f.valid && onLoggedin(f.value)">
                 <div class="form-content">
                     <div class="form-group">
-                        <input type="text" name="username" [(ngModel)]="username" #un="ngModel"
+                        <input type="email" name="username" [(ngModel)]="username" #un="ngModel"
 							class="form-control input-lg" placeholder="Username"
-							required forbiddenName="" pattern="[A-Za-z0-9]+" autofocus />
+							required forbiddenName="" autofocus />
 						<div *ngIf="un.invalid && (un.dirty || un.touched)" class="alert alert-danger">
 							<div *ngIf="un.errors.required">
 								Username is required.
 							</div>
 							<div *ngIf="un.hasError('pattern')">
-								Username should contain alphanumeric characters only.
+								Username should be a valid email address only.
 							</div>
 						</div>
                     </div>
@@ -39,5 +39,5 @@
                 <button type="submit" class="btn btn-primary login-button" > LOGIN </button>
             </form>
         </div>
-    </div>
+			    </div>
 </div>

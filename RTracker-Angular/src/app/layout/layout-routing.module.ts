@@ -15,6 +15,10 @@ const routes: Routes = [
             {
                 path: 'basic/:id',
                 loadChildren: './tracker/basic/basic.module#BasicModule'
+            },
+            {
+                path: 'signup',
+                loadChildren: './signup/signup.module#SignupModule'
             }
         ]
     }
