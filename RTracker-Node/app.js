@@ -304,73 +304,91 @@ app.get('/claimDetails/:data', function (req, res) {
 });
 
 
-app.post('/sendMail', function(req,res) {
-  var To_Name = req.body.Employee_Email;
-  var claimid = req.body.Claim_Id;
-  var comment = req.body.Comment;
-  var approvedAmount = req.body.Approved_Amount;
-  var approvedDate = req.body.Approved_Date;
-  var claimAmount = req.body.Claim_Amount;
-  var paidDate = req.body.Paid_Date;
-  // console.log("check condition");
-  // console.log(req.body.Status);
+function getMailText ( data ) {
+    var mailText = '';
 
-  if (req.body.Status == null) {
-      var text = '<p>Hi</p><p>Your request for reimbursement of an amount of <b>INR '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>';
-  }
-  else if (req.body.Status == 'Accept') {
-    var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount <b> INR '+ approvedAmount + '</b>';
-    if ( comment !== null && comment !== undefined && comment.length > 0 ) {
-        text += ' with comment <b>'+comment+'</b>. </p><p>Regards,<br>Accounts Team</p>';
+    var To_Name = data.Employee_Email;
+    var claimid = data.Claim_Id;
+    var comment = data.Comment;
+    var approvedAmount = data.Approved_Amount;
+    var approvedDate = data.Approved_Date;
+    var claimAmount = data.Claim_Amount;
+    var paidDate = data.Paid_Date;
+
+    if ( data.Status === data.Old_Status ) {
+        mailText = `<p>Hi,</p>
+                    <p>The details of your reimbursement with <b>claim no: `+ claimid +`</b> have been updated for an amount of <b>INR `+ claimAmount +`</b>.</p>
+                    <p>Kindly contact us for further information.</p><p>Regards,<br>Accounts Team</p>`;
+    } else if ( data.Status == null ) {
+        mailText = `<p>Hi,</p>
+                    <p>Your request for the reimbursement of an amount of
+                        <b>INR `+claimAmount+` </b>has been received. Please note the <b>claim no:`+claimid+` </b>for your reference.
+                    </p>
+                    <p>Regards,<br>Accounts Team</p>`;
+    } else if ( data.Status == 'Accept' ) {
+        mailText = '<p>Hi,</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount of <b> INR '+ approvedAmount + '</b>';
+        if ( comment !== null && comment !== undefined && comment.length > 0 ) {
+            mailText += ' with comment <b>'+comment+'</b>. </p><p>Regards,<br>Accounts Team</p>';
+        } else {
+            mailText += '.</p><p>Regards,<br>Accounts Team</p>';
+        }
+    } else if ( data.Status == 'Paid' ) {
+        mailText = '<p>Hi,</p><p> <b>An amount of INR '+approvedAmount+'</b> has been paid/disbursed on <b> '+paidDate+' </b>against your reimbursement claim with <b> claim no:'+claimid+' </b> for an amount of  <b> INR '+claimAmount+' </b>.<br>Kindly acknowledge the receipt.</p><p>Regards,<br>Accounts Team</p>';
+    } else if ( data.Status == 'Hold' ) {
+        mailText = '<p>Hi,</p> <p>Your reimbursement claim with <b>claim no:'+claimid+'</b> is on hold';
+        if ( comment !== null && comment !== undefined && comment.length > 0 ) {
+            mailText += ' with comment <b>'+comment+' </b>';
+        }
+        mailText += '.</p><p>Kindly contact us for further information.</p><p>Regards,<br>Accounts Team</p>';
     } else {
-        text += '.';
+        console.log("Unexpected status of the reimbursement claim is noticed: %s", data.Status);
     }
-  }
-  else if (req.body.Status == 'Paid') {
-    var text = '<p>Hi</p><p> <b>An amount of INR '+approvedAmount+'</b> has been paid/disbursed on <b> '+paidDate+' </b>against your reimursement claim with <b> claim no:'+claimid+' </b> for an amount of  <b> INR '+claimAmount+' </b>. Kindly acknowledge receipt.</p><p>Regards<br>Accounts Team</p>';
-  }
-  else {
-    var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> is on hold with comments as <b> '+comment+' </b>. Kindly contact us for further information.<p>Regards<br>Accounts Team</p>';
-  }
-  console.log(To_Name);
-  var nodemailer = require('nodemailer');
-  var transporter = nodemailer.createTransport(
 
-     {
-      type: 'smtp',
-      host: 'smtp.office365.com',
-      port: 587,
-      //secure: true, // use SSL
-      secure: false, //disable SSL
-      requireTLS: true,//Force TLS
-      tls: {
-          rejectUnauthorized: false
+    return mailText;
+}
+
+app.post('/sendMail', function(req, res) {
+    var To_Name = req.body.Employee_Email;
+    var claimid = req.body.Claim_Id;
+
+    var text = getMailText( req.body );
+
+    var nodemailer = require('nodemailer');
+    var transporter = nodemailer.createTransport({
+        type: 'smtp',
+        host: 'smtp.office365.com',
+        port: 587,
+        //secure: true, // use SSL
+        secure: false, //disable SSL
+        requireTLS: true,//Force TLS
+        tls: {
+            rejectUnauthorized: false
         },
         auth: {
             user: 'reimbursements@affineanalytics.com',
             pass: 'Affine$123'
         }
-  });
+    });
 
-  var mailOptions = {
-    from: 'reimbursements@affineanalytics.com',
-    to: To_Name,
-    subject: 'Reimbursement claim:'+claimid,
-    text: 'Status update for your claim',
-    html: text
-  };
+    var mailOptions = {
+        from: 'reimbursements@affineanalytics.com',
+        to: To_Name,
+        subject: 'Reimbursement Claim: '+claimid,
+        text: 'Status update for your claim',
+        html: text
+    };
 
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log(error);
-      res.send( { Error : "error" } );
-    } else {
-      console.log('Email sent: ' + info.response);
-      res.status(200).send( { Status : "Mail sent successfully" } );
-    }
-  });
+    transporter.sendMail(mailOptions, function(error, info){
+        if (error) {
+            console.log(error);
+            res.send( { Error : "error" } );
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.status(200).send( { Status : "Mail sent successfully" } );
+        }
+    });
 
-})
+});
 
 app.get('/employeeIdList/', function (req, res) {
   var id = req.params.data;

@@ -458,5 +458,9 @@ $placeholder-color : #b5b5b5;
   margin-bottom: 15px;
 }
 .cus-hr {
-  margin:5px 0px 0px 0px!important;
+  margin:5px 0px!important;
+}
+
+input[name="Employee_Id"] {
+    text-transform: uppercase;
 }
