@@ -24,19 +24,19 @@
                                         <input class="form-control" type="hidden"  name="Claim_Id" [ngModel]="ReimbursementDetails.Claim_Id" #claimId="ngModel" />
                                     <div class="row cus-row" >
                                         <div class="col-md-6">
-                                            <div class="form-group">
+                                            <div class="form-group" [hidden]="whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Date of Receipt  <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input class="form-control" type="date"  name="Date_Of_Receipt" [ngModel]="ReimbursementDetails.Date_Of_Receipt | date:'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Date_Of_Receipt=$event" #DateReceipt="ngModel"  placeholder="Date Receipt" required />
+                                                        <input class="form-control" type="date"  name="Date_Of_Receipt" [ngModel]="ReimbursementDetails.Date_Of_Receipt | date:'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Date_Of_Receipt=$event" #DateReceipt="ngModel"  placeholder="Date Receipt"  />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" [hidden]="whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Id <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" list="EmployeeId" name="Employee_Id" [(ngModel)]="ReimbursementDetails.Employee_Id" #EmployeeId="ngModel"  placeholder="Employee Id" (blur)="employeeDetail($event.target.value)" required />
+                                                        <input type="text" class="form-control" list="EmployeeId" name="Employee_Id" [(ngModel)]="ReimbursementDetails.Employee_Id" #EmployeeId="ngModel"  placeholder="Employee Id" (blur)="employeeDetail($event.target.value)"  />
                                                         <datalist id="EmployeeId">
                                                             <option *ngFor="let coun of empList" value="{{ coun.Employee_Id }}">
                                                                 {{ coun.Map_Education_Boards_Name }}
@@ -45,56 +45,56 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" [hidden]="whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Name <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" readonly class="form-control" name="Employee_Name" [(ngModel)]="ReimbursementDetails.Employee_Name" #EmployeeName="ngModel"  placeholder="Employee Name" list="employees" autocomplete="off" required/>
+                                                        <input type="text" readonly class="form-control" name="Employee_Name" [(ngModel)]="ReimbursementDetails.Employee_Name" #EmployeeName="ngModel"  placeholder="Employee Name" list="employees" autocomplete="off" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" [hidden]="whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Email <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" readonly class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email" required />
+                                                        <input type="text" readonly class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email"  />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" [hidden]="whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Claim Amount <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="Claim_Amount" [(ngModel)]="ReimbursementDetails.Claim_Amount" #ClaimAmount="ngModel" placeholder="Claim Amount" required />
+                                                        <input type="number" class="form-control" name="Claim_Amount" [(ngModel)]="ReimbursementDetails.Claim_Amount" #ClaimAmount="ngModel" placeholder="Claim Amount"  />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" [hidden]="whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Expense Type <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <select name="Expense_Type" [(ngModel)]="ReimbursementDetails.Expense_Type" class="form-control" required>
+                                                        <select name="Expense_Type" [(ngModel)]="ReimbursementDetails.Expense_Type" class="form-control" >
                                                             <option value="direct"> Direct </option>
                                                             <option value="indirect"> Indirect </option>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group">
+                                            <div class="form-group" [hidden]="whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Expense Details <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <textarea type="text" class="form-control" name="Expense_Details" [(ngModel)]="ReimbursementDetails.Expense_Details" #ExpenseDetails="ngModel" placeholder="Expense Detail" required> </textarea>
+                                                        <textarea type="text" class="form-control" name="Expense_Details" [(ngModel)]="ReimbursementDetails.Expense_Details" #ExpenseDetails="ngModel" placeholder="Expense Detail" > </textarea>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="form-group">
+                                            <div class="form-group" [hidden]="whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Project Name <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" name="Project_Name" [(ngModel)]="ReimbursementDetails.Project_Name" #ProjectName="ngModel" placeholder="Project Name" required/>
+                                                        <input type="text" class="form-control" name="Project_Name" [(ngModel)]="ReimbursementDetails.Project_Name" #ProjectName="ngModel" placeholder="Project Name" />
                                                     </div>
                                                 </div>
                                             </div>
@@ -134,7 +134,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenAccept">
+                                            <div class="form-group" [hidden]="whenComment">
                                                 <div class="row">
                                                     <label class="col-md-5"> Comments <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">

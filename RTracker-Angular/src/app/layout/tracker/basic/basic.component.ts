@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, NgModule, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
+import { Component, Input, OnInit,OnChanges, NgModule, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -22,9 +22,13 @@ export class BasicComponent implements OnInit {
 
     claimList : any = [];
     claimValues : any =[];
+    multipleData :any = {};
+    PaymentData : any = [];
     noClaims: boolean = true;
     addReimbursementForm : boolean = true;
+    whenMultiple : boolean = false;
     whenAccept:boolean = true;
+    whenComment:boolean = true;
     whenHold:boolean = true;
     whenPaid:boolean =true;
     submitButton :boolean = false;
@@ -36,7 +40,6 @@ export class BasicComponent implements OnInit {
     origDetails: any;
     SuccessSave : string = '';
     SuccessMail : string = '';
-
       claims = this.claimList;
       claimResource = new DataTableResource(this.claims);
 
@@ -62,6 +65,10 @@ export class BasicComponent implements OnInit {
         this.getClaims();
     }
 
+    ngOnChanges(): void{
+
+    }
+
     reloadClaims(params) {
         this.claimResource.query(params).then(claims => this.claims = claims);
     }
@@ -70,16 +77,19 @@ export class BasicComponent implements OnInit {
     statusFind(value):void {
         if(value == "Accept") {
                 this.whenAccept = false;
+                this.whenComment = false;
                 this.whenHold = false;
                 this.whenPaid = true;
         }
         else if(value == "Hold") {
             this.whenAccept = false;
+            this.whenComment = false;
             this.whenHold = true;
             this.whenPaid = true;
         }
         else {
             this.whenAccept = false;
+            this.whenComment = false;
             this.whenHold = true;
             this.whenPaid = false;
         }
@@ -106,11 +116,26 @@ export class BasicComponent implements OnInit {
      }
 
     addClaim() {
-        this.whenAccept = true;
-        this.whenHold = true;
-        this.whenPaid = true;
-        this.form.reset();
-        this.addReimbursementForm = false;
+        console.log(this.claimsTable.selectedRows);
+        if(this.claimsTable.selectedRows.length >= 1 ) {
+            this.form.reset();
+            this.whenPaid = false;
+            this.whenMultiple = true;
+            this.whenAccept = false;
+            this.whenComment = false;
+            this.whenHold = true;
+            this.addReimbursementForm = false;
+        }
+        else {
+            this.whenMultiple = false;
+            this.whenAccept = true;
+            this.whenComment = true;
+            this.whenHold = true;
+            this.whenPaid = true;
+            this.form.reset();
+            this.addReimbursementForm = false;
+        }
+
     }
 
     searchValue(value: any): void {
@@ -195,21 +220,25 @@ export class BasicComponent implements OnInit {
 
              if(this.ReimbursementDetails.Status == "Accept") {
                      this.whenAccept = false;
+                     this.whenComment = false;
                      this.whenHold = false;
                      this.whenPaid = true;
              }
              else if(this.ReimbursementDetails.Status == "Hold") {
                  this.whenAccept = false;
+                 this.whenComment = false;
                  this.whenHold = true;
                  this.whenPaid = true;
              }
              else if(this.ReimbursementDetails.Status == "Paid") {
                  this.whenAccept = false;
+                 this.whenComment = false;
                  this.whenHold = true;
                  this.whenPaid = false;
              }
              else {
                  this.whenAccept = false;
+                 this.whenComment = false;
                  this.whenHold = true;
                  this.whenPaid = true;
              }
@@ -218,17 +247,28 @@ export class BasicComponent implements OnInit {
 
     save(model : any) {
       console.log(model);
+
+      var modelData = Object.assign({}, model);
+      var TableData = [];
+      this.multipleData.PaymentData = modelData;
+      for(var i=0; i < this.claimsTable.selectedRows.length; i++){
+         TableData.push(this.claimsTable.selectedRows[i].item)
+      }
+      this.multipleData.selectedRow = TableData;
+      console.log( this.multipleData );
+
+
       if (this.form.valid) {
           var modelData = Object.assign({}, model);
-          console.log( modelData );
-          this.reimbService.addDetails(modelData)
+          this.reimbService.addDetails(this.multipleData)
           .subscribe(
               (response) =>{
                   let body = response.json();
-                  console.log(body.data);
-                  this.sendMail(body.data);
-                  this.getClaims();
+                  if(this.multipleData.PaymentData.Status == null ) {
+                      this.sendMail(body.data);
+                  }
                   this.SuccessSave = body.message;
+                  this.getClaims();
                   setTimeout(()=> {    //<<<---    using ()=> syntax
                       this.SuccessSave = "";
                   },4000);
@@ -244,7 +284,5 @@ export class BasicComponent implements OnInit {
         else {
           alert("Required fields are manadatory")
         }
-
-
     }
 }
