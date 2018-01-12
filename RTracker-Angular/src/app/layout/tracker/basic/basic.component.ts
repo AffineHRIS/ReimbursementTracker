@@ -40,6 +40,7 @@ export class BasicComponent implements OnInit {
     origDetails: any;
     SuccessSave : string = '';
     SuccessMail : string = '';
+    noEmpDetail: boolean = false;
       claims = this.claimList;
       claimResource = new DataTableResource(this.claims);
 
@@ -100,13 +101,19 @@ export class BasicComponent implements OnInit {
     }
 
     employeeDetail (employeeData : any) {
-        this.EmployeeDetail.getEmployeeIdName(employeeData).then(employeeDetails => {
-            this.employeeDetailRecord = employeeDetails[0].data;
-            this.ReimbursementDetails.Employee_Name = "";
-            this.ReimbursementDetails.Employee_Email = "";
-             this.ReimbursementDetails.Employee_Name =this.employeeDetailRecord[0].Employee_Name;
-             this.ReimbursementDetails.Employee_Email =this.employeeDetailRecord[0].Email_Id;
-        });
+      this.EmployeeDetail.getEmployeeIdName(employeeData).then(employeeDetails => {
+          this.employeeDetailRecord = employeeDetails[0].data;
+          this.ReimbursementDetails.Employee_Name = "";
+          this.ReimbursementDetails.Employee_Email = "";
+          if ( this.employeeDetailRecord !== undefined ) {
+              this.ReimbursementDetails.Employee_Name = this.employeeDetailRecord[0].Employee_Name;
+              this.ReimbursementDetails.Employee_Email = this.employeeDetailRecord[0].Email_Id;
+              this.noEmpDetail = false;
+          } else {
+              this.noEmpDetail = true;
+          }
+
+      });
     }
 
     getEmployee(): void {
@@ -265,7 +272,9 @@ export class BasicComponent implements OnInit {
               (response) =>{
                   let body = response.json();
                   if(this.multipleData.PaymentData.Status == null ) {
-                      this.sendMail(body.data);
+                      if(this.multipleData.PaymentData.Employee_Email!=null) {
+                          this.sendMail(body.data);
+                      }
                   }
                   this.SuccessSave = body.message;
                   this.getClaims();

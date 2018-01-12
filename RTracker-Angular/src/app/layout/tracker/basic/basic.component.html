@@ -24,19 +24,19 @@
                                         <input class="form-control" type="hidden"  name="Claim_Id" [ngModel]="ReimbursementDetails.Claim_Id" #claimId="ngModel" />
                                     <div class="row cus-row" >
                                         <div class="col-md-6">
-                                            <div class="form-group" [hidden]="whenMultiple">
+                                            <div class="form-group" *ngIf="!whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Date of Receipt  <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input class="form-control" type="date"  name="Date_Of_Receipt" [ngModel]="ReimbursementDetails.Date_Of_Receipt | date:'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Date_Of_Receipt=$event" #DateReceipt="ngModel"  placeholder="Date Receipt"  />
+                                                        <input class="form-control" type="date"  name="Date_Of_Receipt" [ngModel]="ReimbursementDetails.Date_Of_Receipt | date:'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Date_Of_Receipt=$event" #DateReceipt="ngModel"  placeholder="Date Receipt" required />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenMultiple">
+                                            <div class="form-group" *ngIf="!whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Id <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" list="EmployeeId" name="Employee_Id" [(ngModel)]="ReimbursementDetails.Employee_Id" #EmployeeId="ngModel"  placeholder="Employee Id" (blur)="employeeDetail($event.target.value)"  />
+                                                        <input type="text" class="form-control" list="EmployeeId" name="Employee_Id" [(ngModel)]="ReimbursementDetails.Employee_Id" #EmployeeId="ngModel"  placeholder="Employee Id" (blur)="employeeDetail($event.target.value)" required />
                                                         <datalist id="EmployeeId">
                                                             <option *ngFor="let coun of empList" value="{{ coun.Employee_Id }}">
                                                                 {{ coun.Map_Education_Boards_Name }}
@@ -45,7 +45,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenMultiple">
+                                            <div class="form-group" *ngIf="!whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Name <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
@@ -53,56 +53,57 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenMultiple">
+                                            <div class="form-group" *ngIf="!whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Email <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" readonly class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email"  />
+                                                        <input type="text" readonly class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email" />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenMultiple">
+                                            <div class="form-group" *ngIf="!whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Claim Amount <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="Claim_Amount" [(ngModel)]="ReimbursementDetails.Claim_Amount" #ClaimAmount="ngModel" placeholder="Claim Amount"  />
+                                                        <input type="number" class="form-control" name="Claim_Amount" [(ngModel)]="ReimbursementDetails.Claim_Amount" #ClaimAmount="ngModel" placeholder="Claim Amount" required/>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenMultiple">
+                                            <div class="form-group" *ngIf="!whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Expense Type <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <select name="Expense_Type" [(ngModel)]="ReimbursementDetails.Expense_Type" class="form-control" >
+                                                        <select name="Expense_Type" [(ngModel)]="ReimbursementDetails.Expense_Type" class="form-control" required>
                                                             <option value="direct"> Direct </option>
                                                             <option value="indirect"> Indirect </option>
                                                         </select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenMultiple">
+                                            <div class="form-group" *ngIf="!whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Expense Details <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <textarea type="text" class="form-control" name="Expense_Details" [(ngModel)]="ReimbursementDetails.Expense_Details" #ExpenseDetails="ngModel" placeholder="Expense Detail" > </textarea>
+                                                        <textarea type="text" class="form-control" name="Expense_Details" [(ngModel)]="ReimbursementDetails.Expense_Details" #ExpenseDetails="ngModel" placeholder="Expense Detail" required> </textarea>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="form-group" [hidden]="whenMultiple">
+                                            <div class="form-group" *ngIf="!whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Project Name <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" name="Project_Name" [(ngModel)]="ReimbursementDetails.Project_Name" #ProjectName="ngModel" placeholder="Project Name" />
+                                                        <input type="text" class="form-control" name="Project_Name" [(ngModel)]="ReimbursementDetails.Project_Name" #ProjectName="ngModel" placeholder="Project Name" required/>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenAccept">
+                                            <div class="form-group" *ngIf="!whenAccept">
                                                 <div class="row">
                                                     <label class="col-md-5"> Status <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <select class="form-control" name="Status" [(ngModel)]="ReimbursementDetails.Status" #Status="ngModel" (change) ="statusFind($event.target.value)">
+                                                        <select class="form-control" name="Status" [(ngModel)]="ReimbursementDetails.Status" #Status="ngModel" (change) ="statusFind($event.target.value)" required>
+                                                            <option value="Submitted"> Submitted </option>
                                                             <option value="Accept"> Accept </option>
                                                             <option value="Hold"> On Hold </option>
                                                             <option value="Paid"> Paid </option>
@@ -110,35 +111,35 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenHold">
+                                            <div class="form-group" *ngIf="!whenHold">
                                                 <div class="row">
                                                     <label class="col-md-5"> Approved Amount <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="number" class="form-control" name="Approved_Amount" [(ngModel)]="ReimbursementDetails.Approved_Amount" #ApprovedAmount="ngModel" placeholder="Approved Amount" />
+                                                        <input type="number" class="form-control" name="Approved_Amount" [(ngModel)]="ReimbursementDetails.Approved_Amount" #ApprovedAmount="ngModel" placeholder="Approved Amount" required/>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenHold">
+                                            <div class="form-group" *ngIf="!whenHold">
                                                 <div class="row">
                                                     <label class="col-md-5"> Date of Approval <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="date" class="form-control" name="Approved_Date" [ngModel]="ReimbursementDetails.Approved_Date | date: 'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Approved_Date=$event" #ApprovedDate="ngModel" />
+                                                        <input type="date" class="form-control" name="Approved_Date" [ngModel]="ReimbursementDetails.Approved_Date | date: 'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Approved_Date=$event" #ApprovedDate="ngModel" required />
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenPaid">
+                                            <div class="form-group" *ngIf="!whenPaid">
                                                 <div class="row">
                                                     <label class="col-md-5"> Date of payment <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="date" class="form-control" name="Paid_Date" [ngModel]="ReimbursementDetails.Paid_Date | date: 'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Paid_Date=$event" #PaidDate="ngModel" />
+                                                        <input type="date" class="form-control" name="Paid_Date" [ngModel]="ReimbursementDetails.Paid_Date | date: 'yyyy-MM-dd'" (ngModelChange)="ReimbursementDetails.Paid_Date=$event" #PaidDate="ngModel" required/>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group" [hidden]="whenComment">
+                                            <div class="form-group" *ngIf="!whenComment">
                                                 <div class="row">
                                                     <label class="col-md-5"> Comments <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <textarea type="text" class="form-control" name="Comment" [(ngModel)]="ReimbursementDetails.Comment" #comment="ngModel" placeholder="Comment"> </textarea>
+                                                        <textarea type="text" class="form-control" name="Comment" [(ngModel)]="ReimbursementDetails.Comment" #comment="ngModel" placeholder="Comment" required> </textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -214,9 +215,9 @@
                                         <b>Selected:</b>
                                         <span [textContent]="claimsTable.selectedRows.length"></span>
                                     </div>
-                                    <div *ngFor="let selected of claimsTable.selectedRows">
+                                    <!-- <div *ngFor="let selected of claimsTable.selectedRows">
                                         <span [textContent]="selected.item"></span>
-                                    </div>
+                                    </div> -->
                                   </div>
                               </div>
                           </div>

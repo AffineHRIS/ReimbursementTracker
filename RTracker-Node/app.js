@@ -301,7 +301,7 @@ app.post('/api/addClaim', function (req, res) {
                       var claimAmount = req.body.PaymentData.Claim_Amount;
                       var paidDate = req.body.PaymentData.Paid_Date;
                     }
-                      if (req.body.PaymentData.Status == null) {
+                      if (req.body.PaymentData.Status == null || req.body.PaymentData.Status == 'Submitted') {
                           var text = '<p>Hi</p><p>Your request for reimbursement of an amount of <b>INR '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>';
                       }
                       else if (req.body.PaymentData.Status == 'Accept') {
