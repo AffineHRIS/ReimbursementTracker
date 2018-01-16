@@ -38,8 +38,6 @@ export class HeaderComponent implements OnInit {
 
         if( this.role === '1' ) {
             this.router.navigate(['/basic', model.employeedetail]);
-        } else {
-            this.router.navigate(['/employee', model.employeedetail]);
         }
 
         this.employeedetail = '';

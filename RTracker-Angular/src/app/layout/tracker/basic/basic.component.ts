@@ -15,7 +15,6 @@ import { DataTable, DataTableResource } from 'angular-4-data-table';
     styleUrls: ['./basic.component.scss']
 })
 
-
 export class BasicComponent implements OnInit {
 
     ReimbursementDetails: any = [];
@@ -41,14 +40,17 @@ export class BasicComponent implements OnInit {
     SuccessSave : string = '';
     SuccessMail : string = '';
     noEmpDetail: boolean = false;
-      claims = this.claimList;
-      claimResource = new DataTableResource(this.claims);
-
-      claimCount = 0;
-
-      @ViewChild(DataTable) claimsTable: DataTable;
-
-
+    claims = this.claimList;
+    claimResource = new DataTableResource(this.claims);
+    claimCount = 0;
+    caption : string = "Add Claims"
+    value = true;
+    SumOfApprovedAmount : string = "";
+    data : any = {}
+    From_Claims :any;
+    To_Claims : any;
+    filterStatus : string = "";
+    @ViewChild(DataTable) claimsTable: DataTable;
 
     constructor(
         private route: ActivatedRoute,
@@ -62,12 +64,18 @@ export class BasicComponent implements OnInit {
     @ViewChild('f') form: any;
 
     ngOnInit(): void {
+        var date = new Date(), y = date.getFullYear(), m = date.getMonth();
+        var firstDay = new Date(y, m-1, 2);
+        var lastDay = new Date();
+        this.From_Claims = new Date(firstDay).toISOString().slice(0, 10);
+        this.To_Claims = new Date(lastDay).toISOString().slice(0, 10);
+
+        var data = {
+            from :this.From_Claims,
+            to: this.To_Claims
+        }
         this.getEmployee();
-        this.getClaims();
-    }
-
-    ngOnChanges(): void{
-
+        this.getClaims(data);
     }
 
     reloadClaims(params) {
@@ -77,10 +85,10 @@ export class BasicComponent implements OnInit {
 
     statusFind(value):void {
         if(value == "Accept") {
-                this.whenAccept = false;
-                this.whenComment = false;
-                this.whenHold = false;
-                this.whenPaid = true;
+            this.whenAccept = false;
+            this.whenComment = false;
+            this.whenHold = false;
+            this.whenPaid = true;
         }
         else if(value == "Hold") {
             this.whenAccept = false;
@@ -101,29 +109,39 @@ export class BasicComponent implements OnInit {
     }
 
     employeeDetail (employeeData : any) {
-      this.EmployeeDetail.getEmployeeIdName(employeeData).then(employeeDetails => {
-          this.employeeDetailRecord = employeeDetails[0].data;
-          this.ReimbursementDetails.Employee_Name = "";
-          this.ReimbursementDetails.Employee_Email = "";
-          if ( this.employeeDetailRecord !== undefined ) {
-              this.ReimbursementDetails.Employee_Name = this.employeeDetailRecord[0].Employee_Name;
-              this.ReimbursementDetails.Employee_Email = this.employeeDetailRecord[0].Email_Id;
-              this.noEmpDetail = false;
-          } else {
-              this.noEmpDetail = true;
-          }
+        this.EmployeeDetail.getEmployeeIdName(employeeData).then(employeeDetails => {
+            this.employeeDetailRecord = employeeDetails[0].data;
+            this.ReimbursementDetails.Employee_Name = "";
+            this.ReimbursementDetails.Employee_Email = "";
+            if ( this.employeeDetailRecord !== undefined ) {
+                this.value = true;
+                this.ReimbursementDetails.Employee_Name = this.employeeDetailRecord[0].Employee_Name;
+                this.ReimbursementDetails.Employee_Email = this.employeeDetailRecord[0].Email_Id;
 
-      });
+            } else {
+                this.value = false;
+            }
+
+        });
     }
 
     getEmployee(): void {
         this.EmployeeDetail.getEmployeeList().then(empDetails => {
             this.empList = empDetails[0].data;
         });
-     }
+    }
+
+    approvedAmount() {
+        var ApprovedAmount = [];
+        for(var i=0; i < this.claimsTable.selectedRows.length; i++){
+            ApprovedAmount.push(this.claimsTable.selectedRows[i].item.Approved_Amount)
+        }
+        var sum = ApprovedAmount.reduce((a, b) => a + b, 0)
+
+        this.SumOfApprovedAmount = sum;
+    }
 
     addClaim() {
-        console.log(this.claimsTable.selectedRows);
         if(this.claimsTable.selectedRows.length >= 1 ) {
             this.form.reset();
             this.whenPaid = false;
@@ -134,6 +152,7 @@ export class BasicComponent implements OnInit {
             this.addReimbursementForm = false;
         }
         else {
+            this.SumOfApprovedAmount = "";
             this.whenMultiple = false;
             this.whenAccept = true;
             this.whenComment = true;
@@ -149,149 +168,194 @@ export class BasicComponent implements OnInit {
         let searchId: string = this.inputName.toLowerCase();
         this.claimList = [];
         this.claimList = this.origDetails.filter(function(val, ind, arr){
-          var status = (
-              ( val.Employee_Id !== undefined && val.Employee_Id !== null && val.Employee_Id.toLowerCase().indexOf(searchId) !== -1 ) ||
-              ( val.Status !== null && val.Status !== undefined && val.Status.toString().toLowerCase().indexOf(searchId) !== -1 )          );
-          return status;
-        });
+            var status = (
+                ( val.Employee_Id !== undefined && val.Employee_Id !== null && val.Employee_Id.toLowerCase().indexOf(searchId) !== -1 ) ||
+                ( val.Status !== null && val.Status !== undefined && val.Status.toString().toLowerCase().indexOf(searchId) !== -1 ) ||
+                ( val.Employee_Name !== undefined && val.Employee_Name !== null && val.Employee_Name.toLowerCase().indexOf(searchId) !== -1 ))
+                return status;
+            });
+
+        if(this.claimList == null || this.claimList == undefined ) {
+            this.filterStatus = "No Results Found";
+        }
     }
 
     fileDownload(fileData:any) : void {
-
+        var TableData = [];
+        for(var i=0; i < this.claimsTable.selectedRows.length; i++){
+            TableData.push(this.claimsTable.selectedRows[i].item)
+        }
         const ws_name = 'SomeSheet';
         const wb: WorkBook = { SheetNames: [], Sheets: {} };
-        const ws: any = utils.json_to_sheet(fileData);
+        const ws: any = utils.json_to_sheet(TableData);
         wb.SheetNames.push(ws_name);
         wb.Sheets[ws_name] = ws;
         const wbout = write(wb, { bookType: 'xlsx', bookSST: true, type: 'binary' });
 
         function s2ab(s) {
-          const buf = new ArrayBuffer(s.length);
-          const view = new Uint8Array(buf);
-          for (let i = 0; i !== s.length; ++i) {
-            view[i] = s.charCodeAt(i) & 0xFF;
-          };
-          return buf;
+            const buf = new ArrayBuffer(s.length);
+            const view = new Uint8Array(buf);
+            for (let i = 0; i !== s.length; ++i) {
+                view[i] = s.charCodeAt(i) & 0xFF;
+            };
+            return buf;
         }
         saveAs(new Blob([s2ab(wbout)], { type: 'application/octet-stream' }), 'exported.xlsx');
     }
 
+    getClaims(model): void {
+        var modelData = Object.assign({}, model);
+        this.reimbService.getClaimDetails(modelData).subscribe(
+            (response) =>{
+                let body = response.json();
+                if ( body[0].data !== undefined ) {
+                    this.claimList = body[0].data;
+                    this.origDetails = body[0].data;
+                    this.filterStatus = body[0].msg;
+                    if ( body[0].data[0].Status == null ) {
+                        body[0].data[0].Status = "Submitted";
+                    }
 
-    getClaims(): void {
-        this.reimbService.getClaimDetails().then(claimDetails => {
-
-            if ( claimDetails[0].data !== undefined ) {
-                this.claimList = claimDetails[0].data;
-                this.origDetails = claimDetails[0].data;
-
-                if ( claimDetails[0].data[0].Status == null ) {
-                    claimDetails[0].data[0].Status = "Submitted";
+                    this.noClaims = this.claimList.length <= 0;
                 }
-
-                this.noClaims = this.claimList.length <= 0;
+            },
+            (error) => {
+                alert(error);
+                console.log(error);
             }
+        );
+    }
 
-        });
-     }
+    filter() {
+        var data = {
+            from :this.From_Claims,
+            to: this.To_Claims
+        }
+        this.getClaims(data)
+    }
 
-     sendMail(model:any): void {
-         var modelData = Object.assign({}, model);
-         this.EmployeeDetail.sendEmail(modelData).subscribe(
-             (response) =>{
-                 let body = response.json();
-                 this.getClaims();
-                 this.SuccessMail = body.Status;
-                 setTimeout(()=>{    //<<<---    using ()=> syntax
-                     this.SuccessMail = "";
-                 },1500);
-             },
-             (error) => {
-                 alert(error);
-                 console.log(error);
-             }
-         );
-      }
+    sendMail(model:any): void {
+        var modelData = Object.assign({}, model);
+        var data = {
+            from :this.From_Claims,
+            to: this.To_Claims
+        }
+        this.EmployeeDetail.sendEmail(modelData).subscribe(
+            (response) =>{
+                let body = response.json();
+                this.getClaims(data);
+                this.SuccessMail = body.Status;
+                setTimeout(()=>{    //<<<---    using ()=> syntax
+                    this.SuccessMail = "";
+                },1500);
+            },
+            (error) => {
+                alert(error);
+                console.log(error);
+            }
+        );
+    }
 
+    showClaim(claimId) : void {
+         if(this.claimsTable.selectedRows.length >=1) {
+             alert("Please uncheck selected claims and than claim id");
 
-     showClaim(claimId) : void {
-
-         console.log(claimId);
-         this.reimbService.getClaim(claimId.Claim_Id).then(claimvalues => {
-             this.ReimbursementDetails = claimvalues[0];
-             this.employeeDetail(this.ReimbursementDetails.Employee_Id);
-             console.log(this.ReimbursementDetails);
-
-             this.submitButton = true;
-             this.saveButton = false;
+         }
+         else {
+             console.log(claimId);
+             this.SumOfApprovedAmount = "";
+             this.whenMultiple = false;
+             this.whenAccept = true;
+             this.whenComment = true;
+             this.whenHold = true;
+             this.whenPaid = true;
+             this.form.reset();
              this.addReimbursementForm = false;
+             this.reimbService.getClaim(claimId.Claim_Id).then(claimvalues => {
+                 this.ReimbursementDetails = claimvalues[0];
+                 this.employeeDetail(this.ReimbursementDetails.Employee_Id);
+                 console.log(this.ReimbursementDetails);
+                 this.submitButton = true;
+                 this.saveButton = false;
+                 this.addReimbursementForm = false;
 
-             if(this.ReimbursementDetails.Status == "Accept") {
-                     this.whenAccept = false;
-                     this.whenComment = false;
-                     this.whenHold = false;
-                     this.whenPaid = true;
-             }
-             else if(this.ReimbursementDetails.Status == "Hold") {
-                 this.whenAccept = false;
-                 this.whenComment = false;
-                 this.whenHold = true;
-                 this.whenPaid = true;
-             }
-             else if(this.ReimbursementDetails.Status == "Paid") {
-                 this.whenAccept = false;
-                 this.whenComment = false;
-                 this.whenHold = true;
-                 this.whenPaid = false;
-             }
-             else {
-                 this.whenAccept = false;
-                 this.whenComment = false;
-                 this.whenHold = true;
-                 this.whenPaid = true;
-             }
-         });
-     }
+                 if(this.claimsTable.selectedRows.length >= 1){
+                     alert("Un check the selected Claims");
+                 }
+                 else {
+                     if(this.ReimbursementDetails.Status == "Accept") {
+                         this.whenAccept = false;
+                         this.whenComment = false;
+                         this.whenHold = false;
+                         this.whenPaid = true;
+                     }
+                     else if(this.ReimbursementDetails.Status == "Hold") {
+                         this.whenAccept = false;
+                         this.whenComment = false;
+                         this.whenHold = true;
+                         this.whenPaid = true;
+                     }
+                     else if(this.ReimbursementDetails.Status == "Paid") {
+                         this.whenAccept = false;
+                         this.whenComment = false;
+                         this.whenHold = true;
+                         this.whenPaid = false;
+                     }
+                     else {
+                         this.whenAccept = false;
+                         this.whenComment = false;
+                         this.whenHold = true;
+                         this.whenPaid = true;
+                     }
+                 }
+             });
+         }
+    }
 
     save(model : any) {
-      console.log(model);
+        console.log(model);
 
-      var modelData = Object.assign({}, model);
-      var TableData = [];
-      this.multipleData.PaymentData = modelData;
-      for(var i=0; i < this.claimsTable.selectedRows.length; i++){
-         TableData.push(this.claimsTable.selectedRows[i].item)
-      }
-      this.multipleData.selectedRow = TableData;
-      console.log( this.multipleData );
+        var modelData = Object.assign({}, model);
+        var TableData = [];
+        this.multipleData.PaymentData = modelData;
+        for(var i=0; i < this.claimsTable.selectedRows.length; i++){
+            TableData.push(this.claimsTable.selectedRows[i].item)
+        }
+        this.multipleData.selectedRow = TableData;
+        console.log( this.multipleData );
 
+        var data = {
+            from :this.From_Claims,
+            to: this.To_Claims
+        }
 
-      if (this.form.valid) {
-          var modelData = Object.assign({}, model);
-          this.reimbService.addDetails(this.multipleData)
-          .subscribe(
-              (response) =>{
-                  let body = response.json();
-                  if(this.multipleData.PaymentData.Status == null ) {
-                      if(this.multipleData.PaymentData.Employee_Email!=null) {
-                          this.sendMail(body.data);
-                      }
-                  }
-                  this.SuccessSave = body.message;
-                  this.getClaims();
-                  setTimeout(()=> {    //<<<---    using ()=> syntax
-                      this.SuccessSave = "";
-                  },4000);
+        if (this.form.valid) {
+            var modelData = Object.assign({}, model);
+            this.reimbService.addDetails(this.multipleData)
+            .subscribe(
+                (response) =>{
+                    let body = response.json();
+                    if(this.multipleData.PaymentData.Status == null ) {
+                        if(this.multipleData.PaymentData.Employee_Email!=null) {
+                            this.sendMail(body.data);
+                        }
+                    }
+                    this.SuccessSave = body.message;
+                    this.getClaims(data);
+                    setTimeout(()=> {    //<<<---    using ()=> syntax
+                        this.SuccessSave = "";
+                    },4000);
 
-                  this.addReimbursementForm = true;
-              },
-              (error) => {
-                  alert(error);
-                  console.log(error);
-              }
-          );
+                    this.addReimbursementForm = true;
+                },
+                (error) => {
+                    alert(error);
+                    console.log(error);
+                }
+            );
         }
         else {
-          alert("Required fields are manadatory")
+            alert("Required fields are manadatory")
         }
     }
 }

@@ -10,8 +10,17 @@
                     <div class="basic-details tab-content">
                         <div class="tab-info tab-pane active">
                             <div class="row">
-                                <div class="col-12">
-                                    <button class="btn btn-default pull-right" (click)="addClaim()"> Add Claim </button>
+                                <div class="col-6">
+                                    <label class="search-label">Selected: {{ claimsTable.selectedRows.length }} </label>
+                                    <label class="search-label" *ngIf="claimsTable.selectedRows.length >=1; else approvedAmount()"> Approved Amount: {{ SumOfApprovedAmount }}</label>
+                                </div>
+                                <div class="col-md-3">
+                                    <h6 class="message"> {{ SuccessSave }} </h6> <h6 class="message"> {{ SuccessMail }} </h6>
+                                </div>
+
+                                <div class="col-3">
+                                    <button class="btn btn-default pull-right affine-blue" (click)="addClaim()" *ngIf ="claimsTable.selectedRows.length >=1">  Paid Mail <i class="fa fa-plus"> </i></button>
+                                    <button class="btn btn-default pull-right affine-blue" (click)="addClaim()" *ngIf ="claimsTable.selectedRows.length ===0"> Add Claims <i class="fa fa-plus"> </i></button>
                                 </div>
                             </div>
                             <hr class="cus-hr" />
@@ -49,7 +58,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Name <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" readonly class="form-control" name="Employee_Name" [(ngModel)]="ReimbursementDetails.Employee_Name" #EmployeeName="ngModel"  placeholder="Employee Name" list="employees" autocomplete="off" />
+                                                        <input type="text" [attr.readonly]="value ? 'readonly' : null" class="form-control" name="Employee_Name" [(ngModel)]="ReimbursementDetails.Employee_Name" #EmployeeName="ngModel"  placeholder="Employee Name" list="employees" autocomplete="off" required />
                                                     </div>
                                                 </div>
                                             </div>
@@ -57,7 +66,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Email <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" readonly class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email" />
+                                                        <input type="text" [attr.readonly]="value ? 'readonly' : null" class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email" required/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -156,17 +165,31 @@
                               </div>
                           </div>
 
-                          <div class="row" [hidden]="noClaims">
-                              <div class="col-md-3">
-                                  <label class="search-label"> Search : </label>
-                                  <input type="text" class="form-control search-input" id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Status" (keyup)="searchValue($event)"/>
-                              </div>
-                              <div class="col-md-7 pull-right">
-                                  <h6 class="message"> {{ SuccessSave }} </h6> <h6 class="message"> {{ SuccessMail }} </h6>
-                              </div>
-                              <div class="col-md-2">
-                                  <button class="btn btn-default export-excel pull-right" (click)="fileDownload(claimList)">Download <i class="fa fa-file-excel-o"></i></button>
-                              </div>
+                          <div class="row" [hidden]="noClaims" style="background:#f7f7f7">
+                            <div class="col-md-3">
+                                <label class="search-label"> Search : </label>
+                                <input type="text" class="form-control search-input" id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Name, Status" (keyup)="searchValue($event)"/>
+                            </div>
+                            <div class="col-7">
+                                <form novalidate #f="ngForm" (ngSubmit)="filter(f.value)">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label class="search-label"> From : </label>
+                                            <input type="date" class="form-control search-input" name="From_Claims" [(ngModel)]="From_Claims" #From="ngModel"/>
+                                        </div>
+                                        <div class="col-5">
+                                            <label class="search-label"> To : </label>
+                                            <input type="date" class="form-control search-input" name="To_Claims" [(ngModel)]="To_Claims" #To="ngModel" />
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button type="submit" class="btn btn-default export-excel">Filter <i class="fa fa-filter"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-default export-excel pull-right affine-blue" (click)="fileDownload(claimsTable.selectedRows)">Download <i class="fa fa-file-excel-o"></i></button>
+                            </div>
                               <div class="col-12">
                                   <data-table
                                     [items]="claimList"
@@ -178,12 +201,13 @@
                                     [multiSelect]="true"
                                     [limit]="0"
                                     [header]="false"
+                                    [selectOnRowClick]="false"
                                     >
                                     <data-table-column
                                       property="Claim_Id"
                                       header="Claim Id">
                                       <ng-template #dataTableCell let-item="item">
-                                           <button (click)="showClaim(item)" class="btn btn-sm btn-default"> {{ item.Claim_Id }} </button>
+                                           <button (click)="showClaim(item)" class="btn btn-sm btn-default affine-blue-text"> {{ item.Claim_Id }} </button>
                                        </ng-template>
                                     </data-table-column>
                                     <data-table-column
@@ -206,22 +230,21 @@
                                       header="Claim Amount">
                                     </data-table-column>
                                     <data-table-column
+                                      property="Approved_Amount"
+                                      header="Approved Amount">
+                                    </data-table-column>
+                                    <data-table-column
                                       property="Status"
                                       header="Status">
                                     </data-table-column>
                                   </data-table>
-                                  <div>
-                                    <div>
-                                        <b>Selected:</b>
-                                        <span [textContent]="claimsTable.selectedRows.length"></span>
-                                    </div>
-                                    <!-- <div *ngFor="let selected of claimsTable.selectedRows">
-                                        <span [textContent]="selected.item"></span>
-                                    </div> -->
-                                  </div>
                               </div>
                           </div>
-
+                          <div class="row" [hidden]="!filterStatus">
+                             <div class="col-12">
+                                  <h6 class="center">{{ filterStatus }}</h6>
+                              </div>
+                          </div>
                           <div class="row" [hidden]="!noClaims">
                               <h6>Cool... No claims to process.</h6>
                           </div>

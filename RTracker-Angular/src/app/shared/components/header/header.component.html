@@ -9,8 +9,7 @@
         <i class="fa fa-user user-icon"></i> {{employeeName}} <b class="caret"></b>
       </a>
       <div class="dropdown-menu dropdown-menu-right">
-        <a class="dropdown-item" [routerLink]="['/signup']" ><i class="fa fa-fw fa-power-off"></i> Change Password </a>
-
+        <a class="dropdown-item" [routerLink]="['/password']" ><i class="fa fa-fw fa-power-off"></i> Change Password </a>
         <a class="dropdown-item" [routerLink]="['/login']" (click)="onLoggedout()"><i class="fa fa-fw fa-power-off"></i> Log Out</a>
       </div>
     </li>

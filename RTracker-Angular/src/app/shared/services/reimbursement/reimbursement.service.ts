@@ -15,12 +15,11 @@ export class reimbursementService {
         private globals: Globals
     ){}
 
-    getClaimDetails(): Promise<any> {
-
-        return this.httpClient.get(this.companyClaimDetails)
-            .toPromise()
-            .then(response => response)
-            .catch(this.handleError);
+    getClaimDetails(model : {}) {
+      const headers = new Headers({'Content-Type': 'application/json'});
+      return this.http.post(this.companyClaimDetails, model,
+          { headers: headers }
+      );
     };
 
     getClaim(data:any): Promise<any> {

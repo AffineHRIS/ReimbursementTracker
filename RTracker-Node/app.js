@@ -151,11 +151,14 @@ app.get('/employeeIdName/:data', function (req, res) {
   });
 });
 
-
-app.get('/claimDetails', function (req, res) {
+app.post('/claimDetails', function (req, res) {
+    var From = req.body.from;
+    var To = req.body.to;
+    console.log(From);
+    console.log(To);
   con.query(`SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
       ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
-      ( select * from rtracker.reimbursement_details) a
+      ( select * from rtracker.reimbursement_details WHERE Date_Of_Receipt between '`+From+`' and '`+ To +`') a
       left join
       (select * from rtracker.employee_details
       group by Employee_Id) b
@@ -166,7 +169,7 @@ app.get('/claimDetails', function (req, res) {
       if (rows.length != 0) {
         response.push({'result' : 'success', 'data' : rows});
       } else {
-        response.push({'result' : 'error', 'msg' : 'No Results Found'});
+        response.push({'result' : 'error', 'msg' : 'No Results Found', 'data' : rows});
       }
 
       res.setHeader('Content-Type', 'application/json');
@@ -204,14 +207,12 @@ app.post('/api/addClaim', function (req, res) {
               .then(function (response) {
                    console.log("Adding the Projects Details");
                    console.log(response);
-
-                  // return knex1('aa_projects')
-                  // .transacting(t)
-                  // .insert(modelData2)
-                  // .then(function (response) {
-                  //
-                  // })
+                   return knex1.raw(`
+                     INSERT INTO employee_details (Employee_Id,Employee_Name,Email_Id) VALUES('`+modelData.Employee_Id+`','`+req.body.PaymentData.Employee_Name+`','`+req.body.PaymentData.Employee_Email+`') ON DUPLICATE KEY UPDATE
+                     Employee_Name='`+req.body.PaymentData.Employee_Name+`', Email_Id='`+req.body.PaymentData.Employee_Email+`'
+                   `)
                   req.body['Claim_Id'] = response[0];
+                  console.log("added employe details");
                   console.log("Added claim details");
               })
           .then(t.commit)
@@ -507,26 +508,74 @@ app.post('/api/updateEmployeeData', function (req, res) {
     dataUploader.loadData( fileName, req, res, knex1 );
 });
 
-var jsonArr = [{
-    foo: 'bar',
-    qux: 'moo',
-    poo: 123,
-    stux: new Date()
-},
-{
-    foo: 'bar',
-    qux: 'moo',
-    poo: 345,
-    stux: new Date()
-}];
+// Change user password.
+app.post('/api/changePassword', function (req, res) {
+    var un = req.body.username,
+        cp = req.body.Current_Password,
+        np = req.body.New_Password;
+
+        knex1.select('id', 'username', 'password')
+        .from('aa_user')
+        .where('username', un)
+        .timeout(10000, {cancel: true})
+        .map(function (row) { return row; })
+        .then(function(userDetails = []){
+            console.log( userDetails[0].password );
+
+            if ( userDetails.length ) {
+                bcrypt.compare(cp, userDetails[0].password, function(err, ress) {
+
+                    console.log( ress );
+
+                    if ( ress ) {
+                        var salt = bcrypt.genSaltSync(10);
+                        var hash = bcrypt.hashSync(np, salt);
+
+                        knex1('aa_user')
+                        .where('id', userDetails[0].id)
+                        .update({
+                            password: hash,
+                            last_password_changed_at: knex1.fn.now()
+                        })
+                        .then(function(response){
+                            console.log(response);
+                            res.setHeader('Content-Type', 'application/json');
+                            res.status(200).send({
+                                result: 'success',
+                                message:'Your password has been changed. Please log in again.'
+                            });
+                        });
+
+                  } else {
+                    res.setHeader('Content-Type', 'application/json');
+                    res.status(200).send({
+                        result: 'failure',
+                        message:'Current password is not valid to change your password.'
+                    });
+                  }
+
+                });
+            } else {
+                res.setHeader('Content-Type', 'application/json');
+                res.status(200).send({
+                    result: 'failure',
+                    message:'Sorry, could not change your password. Please contact the administrator.'
+                });
+            }
 
 
-var json2xls = require('json2xls');
+        })
+        .catch(function (err) {
+            console.log('Error: %s', err.toString());
+            res.setHeader('Content-Type', 'application/json');
+            res.status(200).send({
+                result: 'failure',
+                message:'Some error occured. Please contact the administrator.'
+            });
+        });
 
-app.use(json2xls.middleware);
-app.get('/file',function(req, res) {
-    res.xls('data.xlsx', jsonArr);
 });
+
 
 // Begin listening
 app.listen(3100, function() {

@@ -1,4 +1,16 @@
 $sky-blue : #24AEE4;
+.affine-blue {
+  background-color: $sky-blue;
+  color: #fff
+}
+.affine-blue-text {
+  color: $sky-blue;
+  background: #fff;
+  text-decoration: underline;
+}
+.center {
+  text-align: center
+}
 .button-panel {
   display: none !important;
 }

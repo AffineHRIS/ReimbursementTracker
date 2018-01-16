@@ -17,8 +17,8 @@ const routes: Routes = [
                 loadChildren: './tracker/basic/basic.module#BasicModule'
             },
             {
-                path: 'signup',
-                loadChildren: './signup/signup.module#SignupModule'
+                path: 'password',
+                loadChildren: './password/password.module#PasswordModule'
             }
         ]
     }
