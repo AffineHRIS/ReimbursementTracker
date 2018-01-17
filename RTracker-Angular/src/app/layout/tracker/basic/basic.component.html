@@ -1,6 +1,14 @@
 
 <div class="tracker-section">
-    <h6 class="text-muted-header">Employee Reimbursement Tracker</h6>
+    <div class="row">
+        <div class="col-6">
+            <h6 class="text-muted-header">Employee Reimbursement Tracker</h6>
+        </div>
+        <div class="col-6">
+            <i class="fa fa-refresh fa-1x affine-blue-text-noline pull-right" (click)="refresh()"></i>
+        </div>
+    </div>
+
     <div class="horizontal-pipe-line"></div>
 
 	<div class="tabs-details-container">
@@ -17,8 +25,8 @@
                                 <div class="col-md-3">
                                     <h6 class="message"> {{ SuccessSave }} </h6> <h6 class="message"> {{ SuccessMail }} </h6>
                                 </div>
-
                                 <div class="col-3">
+                                    <button class="btn btn-default export-excel affine-blue" (click)="fileDownload(claimsTable.selectedRows)">Download <i class="fa fa-file-excel-o"></i></button>
                                     <button class="btn btn-default pull-right affine-blue" (click)="addClaim()" *ngIf ="claimsTable.selectedRows.length >=1">  Paid Mail <i class="fa fa-plus"> </i></button>
                                     <button class="btn btn-default pull-right affine-blue" (click)="addClaim()" *ngIf ="claimsTable.selectedRows.length ===0"> Add Claims <i class="fa fa-plus"> </i></button>
                                 </div>
@@ -31,6 +39,8 @@
                                 <div class="col-12" *ngIf="ReimbursementDetails">
                                     <form novalidate #f="ngForm" (ngSubmit)="save(f.value)" class="tab-info tab-content">
                                         <input class="form-control" type="hidden"  name="Claim_Id" [ngModel]="ReimbursementDetails.Claim_Id" #claimId="ngModel" />
+                                        <h6 class="tab-h6"> Selected Claim Id :  {{ ReimbursementDetails.Claim_Id }} </h6>
+                                        <hr class="cus-hr"/>
                                     <div class="row cus-row" >
                                         <div class="col-md-6">
                                             <div class="form-group" *ngIf="!whenMultiple">
@@ -168,27 +178,33 @@
                           <div class="row" [hidden]="noClaims" style="background:#f7f7f7">
                             <div class="col-md-3">
                                 <label class="search-label"> Search : </label>
-                                <input type="text" class="form-control search-input" id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Name, Status" (keyup)="searchValue($event)"/>
+                                <input type="text" class="form-control search-input" list="EmployeeId" multiple id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Name, Status" (keyup)="searchValue($event)"/>
                             </div>
-                            <div class="col-7">
+                            <div class="col-9">
                                 <form novalidate #f="ngForm" (ngSubmit)="filter(f.value)">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <label class="search-label"> From : </label>
-                                            <input type="date" class="form-control search-input" name="From_Claims" [(ngModel)]="From_Claims" #From="ngModel"/>
+                                        <div class="col-md-3">
+                                            <angular2-multiselect class="form-control" [data]="empSet" [(ngModel)]="selectedItems" name=[(ngModel)]
+                                                [settings]="dropdownSettings"
+                                                (onSelect)="onItemSelect($event)"
+                                                (onDeSelect)="OnItemDeSelect($event)"
+                                                (onSelectAll)="onSelectAll($event)"
+                                                (onDeSelectAll)="onDeSelectAll($event)">
+                                            </angular2-multiselect>
                                         </div>
-                                        <div class="col-5">
+                                        <div class="col-md-4">
+                                            <label class="search-label pull-right"> From : </label>
+                                            <input type="date" style="width:180px;float:right" class="form-control search-input pull-right" name="From_Claims" [(ngModel)]="From_Claims" #From="ngModel"/>
+                                        </div>
+                                        <div class="col-3">
                                             <label class="search-label"> To : </label>
-                                            <input type="date" class="form-control search-input" name="To_Claims" [(ngModel)]="To_Claims" #To="ngModel" />
+                                            <input style="width:150px" type="date" class="form-control search-input" name="To_Claims" [(ngModel)]="To_Claims" #To="ngModel" />
                                         </div>
-                                        <div class="col-md-1">
-                                            <button type="submit" class="btn btn-default export-excel">Filter <i class="fa fa-filter"></i></button>
+                                        <div class="col-md-2 ">
+                                            <button type="submit" class="btn btn-default export-excel pull-right">Filter <i class="fa fa-filter"></i></button>
                                         </div>
                                     </div>
                                 </form>
-                            </div>
-                            <div class="col-md-2">
-                                <button class="btn btn-default export-excel pull-right affine-blue" (click)="fileDownload(claimsTable.selectedRows)">Download <i class="fa fa-file-excel-o"></i></button>
                             </div>
                               <div class="col-12">
                                   <data-table

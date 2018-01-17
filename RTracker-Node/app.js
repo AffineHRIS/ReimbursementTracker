@@ -154,15 +154,32 @@ app.get('/employeeIdName/:data', function (req, res) {
 app.post('/claimDetails', function (req, res) {
     var From = req.body.from;
     var To = req.body.to;
-    console.log(From);
-    console.log(To);
-  con.query(`SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
-      ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
-      ( select * from rtracker.reimbursement_details WHERE Date_Of_Receipt between '`+From+`' and '`+ To +`') a
-      left join
-      (select * from rtracker.employee_details
-      group by Employee_Id) b
-      on a.Employee_Id = b.Employee_Id ORDER BY Claim_Id DESC`, function(err, rows, fields) {
+    var emp_list = req.body.emp_list;
+    var list_of_emp = [];
+
+    emp_list.forEach((val, index) => {
+        list_of_emp.push(val.id );
+    });
+    var emp_res = "'"+list_of_emp.join("','")+"'";
+    if (list_of_emp.length >= 1){
+      var sqlQuery = `SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
+          ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
+          ( select * from rtracker.reimbursement_details WHERE (Date_Of_Receipt between '`+From+`' and '`+ To +`') AND Employee_Id IN (`+emp_res+`)) a
+          left join
+          (select * from rtracker.employee_details
+          group by Employee_Id) b
+          on a.Employee_Id = b.Employee_Id ORDER BY Claim_Id DESC`
+    }
+    else {
+      var sqlQuery = `SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
+          ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
+          ( select * from rtracker.reimbursement_details WHERE Date_Of_Receipt between '`+From+`' and '`+ To +`') a
+          left join
+          (select * from rtracker.employee_details
+          group by Employee_Id) b
+          on a.Employee_Id = b.Employee_Id ORDER BY Claim_Id DESC`
+    }
+  con.query(sqlQuery, function(err, rows, fields) {
     if (!err){
       var response = [];
 
@@ -206,12 +223,11 @@ app.post('/api/addClaim', function (req, res) {
               .insert(modelData)
               .then(function (response) {
                    console.log("Adding the Projects Details");
-                   console.log(response);
+                   req.body['Claim_Id'] = response[0];
                    return knex1.raw(`
                      INSERT INTO employee_details (Employee_Id,Employee_Name,Email_Id) VALUES('`+modelData.Employee_Id+`','`+req.body.PaymentData.Employee_Name+`','`+req.body.PaymentData.Employee_Email+`') ON DUPLICATE KEY UPDATE
                      Employee_Name='`+req.body.PaymentData.Employee_Name+`', Email_Id='`+req.body.PaymentData.Employee_Email+`'
                    `)
-                  req.body['Claim_Id'] = response[0];
                   console.log("added employe details");
                   console.log("Added claim details");
               })
@@ -319,8 +335,6 @@ app.post('/api/addClaim', function (req, res) {
                       else {
                         var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> is on hold with comments as <b> '+comment+' </b>. Kindly contact us for further information.<p>Regards<br>Accounts Team</p>';
                       }
-
-                      console.log(To_Name);
                       var nodemailer = require('nodemailer');
                       var transporter = nodemailer.createTransport(
 
@@ -380,12 +394,10 @@ app.post('/api/addClaim', function (req, res) {
             res.setHeader('Content-Type', 'application/json');
             res.status(200).send( result );
           }
-
         })
         .catch(function (error) {
             console.log(error);
         });
-
       }
       insertRowToDatabase( 0 );
     }
@@ -412,8 +424,9 @@ app.get('/claimDetails/:data', function (req, res) {
 
 
 app.post('/sendMail', function(req,res) {
-  console.log("checkkkkkkkkkkkkkkkk");
+  console.log("check");
   console.log(req.body);
+
   var To_Name = req.body.PaymentData.Employee_Email;
   var claimid = req.body.Claim_Id;
   var comment = req.body.PaymentData.Comment;
@@ -477,7 +490,6 @@ app.post('/sendMail', function(req,res) {
       res.status(200).send( { Status : "Mail sent successfully" } );
     }
   });
-
 })
 
 app.get('/employeeIdList/', function (req, res) {
@@ -486,13 +498,11 @@ app.get('/employeeIdList/', function (req, res) {
   con.query(sqlQuery, function(err, rows, fields) {
     if (!err){
       var response = [];
-
       if (rows.length != 0) {
         response.push({'result' : 'success', 'data' : rows});
       } else {
         response.push({'result' : 'error', 'msg' : 'No Results Found'});
       }
-
       res.setHeader('Content-Type', 'application/json');
       res.status(200).send(JSON.stringify(response));
     } else {
@@ -562,8 +572,6 @@ app.post('/api/changePassword', function (req, res) {
                     message:'Sorry, could not change your password. Please contact the administrator.'
                 });
             }
-
-
         })
         .catch(function (err) {
             console.log('Error: %s', err.toString());
@@ -573,7 +581,6 @@ app.post('/api/changePassword', function (req, res) {
                 message:'Some error occured. Please contact the administrator.'
             });
         });
-
 });
 
 

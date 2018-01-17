@@ -50,6 +50,10 @@ export class BasicComponent implements OnInit {
     From_Claims :any;
     To_Claims : any;
     filterStatus : string = "";
+    selectedItems : any = [];
+    empSet : any = [];
+    dropdownSettings = {};
+
     @ViewChild(DataTable) claimsTable: DataTable;
 
     constructor(
@@ -64,18 +68,32 @@ export class BasicComponent implements OnInit {
     @ViewChild('f') form: any;
 
     ngOnInit(): void {
+
         var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-        var firstDay = new Date(y, m-1, 2);
+        var firstDay = new Date(y, m-2, 2);
         var lastDay = new Date();
         this.From_Claims = new Date(firstDay).toISOString().slice(0, 10);
         this.To_Claims = new Date(lastDay).toISOString().slice(0, 10);
 
         var data = {
             from :this.From_Claims,
-            to: this.To_Claims
+            to: this.To_Claims,
+            emp_list : this.selectedItems,
         }
+
         this.getEmployee();
         this.getClaims(data);
+
+        this.dropdownSettings = {
+            text:"Select",
+            selectAllText:'Select All',
+            unSelectAllText:'UnSelect All',
+            enableSearchFilter: true,
+            badgeShowLimit: 3,
+            disabled:false,
+            searchPlaceholderText: "Search",
+            enableCheckAll: true
+        };
     }
 
     reloadClaims(params) {
@@ -128,6 +146,10 @@ export class BasicComponent implements OnInit {
     getEmployee(): void {
         this.EmployeeDetail.getEmployeeList().then(empDetails => {
             this.empList = empDetails[0].data;
+
+            this.empList.forEach((val, index) => {
+                this.empSet.push({ "id": val.Employee_Id, "itemName": val.Employee_Id, "deptId": val.Employee_Id });
+            });
         });
     }
 
@@ -164,6 +186,19 @@ export class BasicComponent implements OnInit {
 
     }
 
+    onItemSelect(item:any){
+        console.log(this.selectedItems);
+    }
+    OnItemDeSelect(item:any){
+        console.log(this.selectedItems);
+    }
+    onSelectAll(items: any){
+        console.log(items);
+    }
+    onDeSelectAll(items: any){
+        console.log(items);
+    }
+
     searchValue(value: any): void {
         let searchId: string = this.inputName.toLowerCase();
         this.claimList = [];
@@ -175,7 +210,7 @@ export class BasicComponent implements OnInit {
                 return status;
             });
 
-        if(this.claimList == null || this.claimList == undefined ) {
+        if(this.claimList === null || this.claimList === undefined ) {
             this.filterStatus = "No Results Found";
         }
     }
@@ -229,7 +264,8 @@ export class BasicComponent implements OnInit {
     filter() {
         var data = {
             from :this.From_Claims,
-            to: this.To_Claims
+            to: this.To_Claims,
+            emp_list : this.selectedItems,
         }
         this.getClaims(data)
     }
@@ -238,7 +274,8 @@ export class BasicComponent implements OnInit {
         var modelData = Object.assign({}, model);
         var data = {
             from :this.From_Claims,
-            to: this.To_Claims
+            to: this.To_Claims,
+            emp_list : this.selectedItems,
         }
         this.EmployeeDetail.sendEmail(modelData).subscribe(
             (response) =>{
@@ -326,7 +363,8 @@ export class BasicComponent implements OnInit {
 
         var data = {
             from :this.From_Claims,
-            to: this.To_Claims
+            to: this.To_Claims,
+            emp_list : this.selectedItems,
         }
 
         if (this.form.valid) {
@@ -337,6 +375,8 @@ export class BasicComponent implements OnInit {
                     let body = response.json();
                     if(this.multipleData.PaymentData.Status == null ) {
                         if(this.multipleData.PaymentData.Employee_Email!=null) {
+
+                            console.log(body.data)
                             this.sendMail(body.data);
                         }
                     }
@@ -357,5 +397,8 @@ export class BasicComponent implements OnInit {
         else {
             alert("Required fields are manadatory")
         }
+    }
+    refresh(): void {
+        window.location.reload();
     }
 }

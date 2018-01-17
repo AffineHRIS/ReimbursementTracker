@@ -8,6 +8,11 @@ $sky-blue : #24AEE4;
   background: #fff;
   text-decoration: underline;
 }
+.affine-blue-text-noline {
+  color: $sky-blue;
+  background: #fff;
+  cursor: pointer
+}
 .center {
   text-align: center
 }
