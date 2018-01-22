@@ -66,10 +66,8 @@ app.get('/', function(req, res) {
 
 // Authenticate the user.
 app.post('/authenticate', function (req, res) {
-
   var username = req.body.username;
   var password = req.body.password;
-
   con.query('SELECT * FROM rtracker.aa_user WHERE username = ?',[username], function (error, results, fields) {
     if ( error ) {
       res.json({
@@ -162,7 +160,7 @@ app.post('/claimDetails', function (req, res) {
     });
     var emp_res = "'"+list_of_emp.join("','")+"'";
     if (list_of_emp.length >= 1){
-      var sqlQuery = `SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
+      var sqlQuery = `SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Amount_Type,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
           ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
           ( select * from rtracker.reimbursement_details WHERE (Date_Of_Receipt between '`+From+`' and '`+ To +`') AND Employee_Id IN (`+emp_res+`)) a
           left join
@@ -203,6 +201,7 @@ app.post('/api/addClaim', function (req, res) {
     if(req.body.PaymentData.Status == null) {
         var modelData = {
           Employee_Id : req.body.PaymentData.Employee_Id,
+          Amount_Type : req.body.PaymentData.Amount_Type,
           Claim_Amount : req.body.PaymentData.Claim_Amount,
           Expense_Type : req.body.PaymentData.Expense_Type,
           Expense_Details : req.body.PaymentData.Expense_Details,
@@ -217,19 +216,15 @@ app.post('/api/addClaim', function (req, res) {
           Modified_At : null
         }
         knex1.transaction(function (t) {
-          console.log("Adding the Claim details for accept state");
           return knex1('reimbursement_details')
               .transacting(t)
               .insert(modelData)
               .then(function (response) {
-                   console.log("Adding the Projects Details");
                    req.body['Claim_Id'] = response[0];
                    return knex1.raw(`
                      INSERT INTO employee_details (Employee_Id,Employee_Name,Email_Id) VALUES('`+modelData.Employee_Id+`','`+req.body.PaymentData.Employee_Name+`','`+req.body.PaymentData.Employee_Email+`') ON DUPLICATE KEY UPDATE
                      Employee_Name='`+req.body.PaymentData.Employee_Name+`', Email_Id='`+req.body.PaymentData.Employee_Email+`'
                    `)
-                  console.log("added employe details");
-                  console.log("Added claim details");
               })
           .then(t.commit)
           .catch(t.rollback)
@@ -248,8 +243,13 @@ app.post('/api/addClaim', function (req, res) {
     else {
       var modelData = []
       var insertRowToDatabase = function( i ) {
+        console.log("else condition");
+        console.log(req.body);
         if(req.body.selectedRow.length == 0) {
+
           var claimid = req.body.PaymentData.Claim_Id;
+          console.log("selected row length 0");
+          console.log(claimid);
           var dor = req.body.PaymentData.Date_Of_Receipt;
           dor = dor.replace('T',' ').replace('Z', '');
           var apd = req.body.PaymentData.Approved_Date;
@@ -257,6 +257,7 @@ app.post('/api/addClaim', function (req, res) {
 
           var modelData = {
               Employee_Id : req.body.PaymentData.Employee_Id,
+              Amount_Type : req.body.PaymentData.Amount_Type,
               Claim_Amount : req.body.PaymentData.Claim_Amount,
               Expense_Type : req.body.PaymentData.Expense_Type,
               Expense_Details : req.body.PaymentData.Expense_Details,
@@ -279,6 +280,7 @@ app.post('/api/addClaim', function (req, res) {
 
           var modelData = {
               Employee_Id : req.body.selectedRow[i].Employee_Id,
+              Amount_Type : req.body.PaymentData.Amount_Type,
               Claim_Amount : req.body.selectedRow[i].Claim_Amount,
               Expense_Type : req.body.selectedRow[i].Expense_Type,
               Expense_Details : req.body.selectedRow[i].Expense_Details,
@@ -293,13 +295,18 @@ app.post('/api/addClaim', function (req, res) {
            }
         }
         knex1.transaction(function (t) {
-            console.log("updating the Claim details");
             return knex1('reimbursement_details')
                 .transacting(t)
                 .update(modelData)
                 .where('Claim_Id', '=', claimid )
                 .then(function (response) {
-                    console.log("Updated claim details");
+                  var symbol;
+                  if(req.body.PaymentData.Amount_Type == "dollar" ){
+                    symbol = "$";
+                  }
+                  else {
+                    symbol = "₹";
+                  }
                     if(req.body.selectedRow.length != 0) {
                       var To_Name = req.body.selectedRow[i].Email_Id;
                       var claimid = req.body.selectedRow[i].Claim_Id;
@@ -319,10 +326,10 @@ app.post('/api/addClaim', function (req, res) {
                       var paidDate = req.body.PaymentData.Paid_Date;
                     }
                       if (req.body.PaymentData.Status == null || req.body.PaymentData.Status == 'Submitted') {
-                          var text = '<p>Hi</p><p>Your request for reimbursement of an amount of <b>INR '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>';
+                          var text = '<p>Hi</p><p>Your request for reimbursement of an amount of <b>'+symbol+' '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>';
                       }
                       else if (req.body.PaymentData.Status == 'Accept') {
-                        var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount <b> INR '+ approvedAmount + '</b>';
+                        var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount <b> '+symbol+' '+ approvedAmount + '</b>';
                         if ( comment !== null && comment !== undefined && comment.length > 0 ) {
                             text += ' with comment <b>'+comment+'</b>. </p><p>Regards,<br>Accounts Team</p>';
                         } else {
@@ -330,11 +337,12 @@ app.post('/api/addClaim', function (req, res) {
                         }
                       }
                       else if (req.body.PaymentData.Status == 'Paid') {
-                        var text = '<p>Hi</p><p> <b>An amount of INR '+approvedAmount+'</b> has been paid/disbursed on <b> '+paidDate+' </b>against your reimursement claim with <b> claim no:'+claimid+' </b> for an amount of  <b> INR '+claimAmount+' </b>. Kindly acknowledge receipt.</p><p>Regards<br>Accounts Team</p>';
+                        var text = '<p>Hi</p><p> <b>An amount of '+symbol+' '+approvedAmount+'</b> has been paid/disbursed on <b> '+paidDate+' </b>against your reimursement claim with <b> claim no:'+claimid+' </b> for an amount of  <b> '+symbol+' '+claimAmount+' </b>. Kindly acknowledge receipt.</p><p>Regards<br>Accounts Team</p>';
                       }
                       else {
                         var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> is on hold with comments as <b> '+comment+' </b>. Kindly contact us for further information.<p>Regards<br>Accounts Team</p>';
                       }
+
                       var nodemailer = require('nodemailer');
                       var transporter = nodemailer.createTransport(
 
@@ -350,7 +358,7 @@ app.post('/api/addClaim', function (req, res) {
                             },
                             auth: {
                                 user: 'reimbursements@affineanalytics.com',
-                                pass: 'Affine$123'
+                                pass: 'test$123'
                             }
                       });
 
@@ -367,6 +375,7 @@ app.post('/api/addClaim', function (req, res) {
                           console.log(error);
                           res.send( { Error : "error" } );
                         } else {
+                          console.log(To_Name);
                           console.log('Email sent: ' + info.response);
                           res.status(200).send( { Status : "Mail sent successfully" } );
                         }
@@ -422,11 +431,7 @@ app.get('/claimDetails/:data', function (req, res) {
    })
 });
 
-
 app.post('/sendMail', function(req,res) {
-  console.log("check");
-  console.log(req.body);
-
   var To_Name = req.body.PaymentData.Employee_Email;
   var claimid = req.body.Claim_Id;
   var comment = req.body.PaymentData.Comment;
@@ -435,11 +440,19 @@ app.post('/sendMail', function(req,res) {
   var claimAmount = req.body.PaymentData.Claim_Amount;
   var paidDate = req.body.PaymentData.Paid_Date;
 
+  var symbol;
+  if(req.body.PaymentData.Amount_Type == "dollar"  ){
+    symbol = "$";
+  }
+  else {
+    symbol = "₹";
+  }
+
   if (req.body.PaymentData.Status == null) {
-      var text = '<p>Hi</p><p>Your request for reimbursement of an amount of <b>INR '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>';
+      var text = '<p>Hi</p><p>Your request for reimbursement of an amount of <b> '+symbol+'  '+claimAmount+' </b> has been received. Please note <b> claim no:'+claimid+' </b> for reference.</p><p>Regards<br>Accounts Team</p>';
   }
   else if (req.body.PaymentData.Status == 'Accept') {
-    var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount <b> INR '+ approvedAmount + '</b>';
+    var text = '<p>Hi</p><p>Your reimbursement claim with <b> claim no:'+claimid+' </b> has been accepted on <b>'+approvedDate+'</b> for an amount <b> '+symbol+' '+ approvedAmount + '</b>';
     if ( comment !== null && comment !== undefined && comment.length > 0 ) {
         text += ' with comment <b>'+comment+'</b>. </p><p>Regards,<br>Accounts Team</p>';
     } else {
@@ -447,13 +460,12 @@ app.post('/sendMail', function(req,res) {
     }
   }
   else if (req.body.PaymentData.Status == 'Paid') {
-    var text = '<p>Hi</p><p> <b>An amount of INR '+approvedAmount+'</b> has been paid/disbursed on <b> '+paidDate+' </b>against your reimursement claim with <b> claim no:'+claimid+' </b> for an amount of  <b> INR '+claimAmount+' </b>. Kindly acknowledge receipt.</p><p>Regards<br>Accounts Team</p>';
+    var text = '<p>Hi</p><p> <b>An amount of '+symbol+' '+approvedAmount+'</b> has been paid/disbursed on <b> '+paidDate+' </b>against your reimursement claim with <b> claim no:'+claimid+' </b> for an amount of  <b> '+symbol+' '+claimAmount+' </b>. Kindly acknowledge receipt.</p><p>Regards<br>Accounts Team</p>';
   }
   else {
     var text = '<p>Hi</p><p>Your reimbursement claim with <b>  claim no:'+claimid+' </b> is on hold with comments as <b> '+comment+' </b>. Kindly contact us for further information.<p>Regards<br>Accounts Team</p>';
   }
 
-  console.log(To_Name);
   var nodemailer = require('nodemailer');
   var transporter = nodemailer.createTransport(
 
@@ -469,7 +481,7 @@ app.post('/sendMail', function(req,res) {
         },
         auth: {
             user: 'reimbursements@affineanalytics.com',
-            pass: 'Affine$123'
+            pass: 'test$123'
         }
   });
 
@@ -486,6 +498,7 @@ app.post('/sendMail', function(req,res) {
       console.log(error);
       res.send( { Error : "error" } );
     } else {
+      console.log(To_Name);
       console.log('Email sent: ' + info.response);
       res.status(200).send( { Status : "Mail sent successfully" } );
     }

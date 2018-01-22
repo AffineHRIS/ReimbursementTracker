@@ -18,7 +18,6 @@ import { DataTable, DataTableResource } from 'angular-4-data-table';
 export class BasicComponent implements OnInit {
 
     ReimbursementDetails: any = [];
-
     claimList : any = [];
     claimValues : any =[];
     multipleData :any = {};
@@ -54,6 +53,8 @@ export class BasicComponent implements OnInit {
     empSet : any = [];
     dropdownSettings = {};
     test :any;
+
+
     @ViewChild(DataTable) claimsTable: DataTable;
 
     constructor(
@@ -62,16 +63,13 @@ export class BasicComponent implements OnInit {
         private reimbService: reimbursementService,
         private EmployeeDetail : EmployeeIdNameService
     ) {
-
         this.claimResource.count().then(count => this.claimCount = count);
     }
-
     @ViewChild('f') form: any;
-
     ngOnInit(): void {
 
         var date = new Date(), y = date.getFullYear(), m = date.getMonth();
-        var firstDay = new Date(y, m-2, 2);
+        var firstDay = new Date(y, m-1, 2);
         var lastDay = new Date();
         this.From_Claims = new Date(firstDay).toISOString().slice(0, 10);
         this.To_Claims = new Date(lastDay).toISOString().slice(0, 10);
@@ -133,12 +131,32 @@ export class BasicComponent implements OnInit {
             this.ReimbursementDetails.Employee_Name = "";
             this.ReimbursementDetails.Employee_Email = "";
             if ( this.employeeDetailRecord !== undefined ) {
+                var empId = employeeData;
+                var resEmpId = empId.match(/inc/i);
+                var symbol;
+
+                if(resEmpId){
+                    this.ReimbursementDetails.Amount_Type = "dollar";
+                }
+                else {
+                    this.ReimbursementDetails.Amount_Type = "indian";
+                }
                 this.value = true;
                 this.ReimbursementDetails.Employee_Name = this.employeeDetailRecord[0].Employee_Name;
                 this.ReimbursementDetails.Employee_Email = this.employeeDetailRecord[0].Email_Id;
 
             } else {
                 this.value = false;
+                var empId = employeeData;
+                var resEmpId = empId.match(/inc/i);
+                var symbol;
+
+                if(resEmpId){
+                    this.ReimbursementDetails.Amount_Type = "dollar";
+                }
+                else {
+                    this.ReimbursementDetails.Amount_Type = "indian";
+                }
             }
 
         });
@@ -303,10 +321,8 @@ export class BasicComponent implements OnInit {
     showClaim(claimId) : void {
          if(this.claimsTable.selectedRows.length >=1) {
              alert("Please uncheck selected claims and than claim id");
-
          }
          else {
-             console.log(claimId);
              this.SumOfApprovedAmount = "";
              this.whenMultiple = false;
              this.whenAccept = true;
@@ -318,11 +334,14 @@ export class BasicComponent implements OnInit {
              this.reimbService.getClaim(claimId.Claim_Id).then(claimvalues => {
                  this.ReimbursementDetails = claimvalues[0];
                  this.employeeDetail(this.ReimbursementDetails.Employee_Id);
-                 console.log(this.ReimbursementDetails);
+
+                 this.ReimbursementDetails.Claim_Id = claimId.Claim_Id;
+                 console.log(claimId);
+                 console.log("checkkkk");
+
                  this.submitButton = true;
                  this.saveButton = false;
                  this.addReimbursementForm = false;
-
                  if(this.claimsTable.selectedRows.length >= 1){
                      alert("Un check the selected Claims");
                  }
@@ -357,10 +376,13 @@ export class BasicComponent implements OnInit {
     }
 
     save(model : any) {
-        console.log(model);
+        model["Claim_Id"] = this.ReimbursementDetails.Claim_Id;
 
         var modelData = Object.assign({}, model);
         var TableData = [];
+
+        console.log("modelData:");
+        console.log(modelData);
         this.multipleData.PaymentData = modelData;
         for(var i=0; i < this.claimsTable.selectedRows.length; i++){
             TableData.push(this.claimsTable.selectedRows[i].item)
@@ -382,8 +404,6 @@ export class BasicComponent implements OnInit {
                     let body = response.json();
                     if(this.multipleData.PaymentData.Status == null ) {
                         if(this.multipleData.PaymentData.Employee_Email!=null) {
-
-                            console.log(body.data)
                             this.sendMail(body.data);
                         }
                     }
@@ -392,7 +412,6 @@ export class BasicComponent implements OnInit {
                     setTimeout(()=> {    //<<<---    using ()=> syntax
                         this.SuccessSave = "";
                     },4000);
-
                     this.addReimbursementForm = true;
                 },
                 (error) => {
@@ -408,6 +427,7 @@ export class BasicComponent implements OnInit {
     refresh(selectedItems:any): void {
         //this.OnItemDeSelect(selectedItems)
         //this.router.navigate(['/basic']);
-        location.reload(true);
+        //location.reload(true);
+        window.open("/basic","_self")
     }
 }

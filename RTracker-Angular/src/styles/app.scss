@@ -8,6 +8,7 @@
 html, body {
 	background-color: #e2e2e2;
 }
+
 .c-btn[_ngcontent-c5], .c-btn{
     width: 100%;
     box-shadow: 0px 1px 5px #959595;
@@ -15,4 +16,9 @@ html, body {
     cursor: pointer;
     display: flex;
     margin-top: 6px !important;
+}
+
+.radio-text {
+	font-weight: bold;
+    font-size: 16px;
 }
