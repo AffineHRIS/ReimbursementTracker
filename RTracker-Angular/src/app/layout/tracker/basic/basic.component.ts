@@ -6,6 +6,7 @@ import { reimbursementService, EmployeeIdNameService } from '../../../shared';
 import { Globals } from '../../../shared';
 import { utils, write, WorkBook } from 'xlsx';
 import { saveAs } from 'file-saver';
+import { CurrencyPipe } from '@angular/common';
 
 import { DataTable, DataTableResource } from 'angular-4-data-table';
 
@@ -180,6 +181,13 @@ export class BasicComponent implements OnInit {
         var sum = ApprovedAmount.reduce((a, b) => a + b, 0)
 
         this.SumOfApprovedAmount = sum;
+    }
+
+    checkAmountType(type) {
+        console.log(type)
+        if(type == "indian") {
+            console.log(type);
+        }
     }
 
     addClaim() {
@@ -428,6 +436,8 @@ export class BasicComponent implements OnInit {
         //this.OnItemDeSelect(selectedItems)
         //this.router.navigate(['/basic']);
         //location.reload(true);
-        window.open("/basic","_self")
+        window.open("/ReimbursementTracker","_self")
     }
+
+
 }

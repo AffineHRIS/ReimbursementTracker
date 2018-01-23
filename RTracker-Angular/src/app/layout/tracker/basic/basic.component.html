@@ -254,6 +254,11 @@
                                     <data-table-column
                                       property="Claim_Amount"
                                       header="Claim Amount">
+                                      <ng-template #dataTableCell let-item="item">
+                                           {{ item.Claim_Amount | currency:'USD':true:'1.2-2' }}
+                                         <!-- <span *ngIf="item.Amount_Type == indian; else {{item.Claim_Amount}}" >   </span> -->
+                                         <!-- <span *ngIf="item.Amount_Type == dollar"> {{ item.Claim_Amount | currency:'USD':true:'1.2-2' }} </span> -->
+                                       </ng-template>
                                     </data-table-column>
                                     <data-table-column
                                       property="Approved_Amount"
