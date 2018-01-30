@@ -169,7 +169,7 @@ app.post('/claimDetails', function (req, res) {
           on a.Employee_Id = b.Employee_Id ORDER BY Claim_Id DESC`
     }
     else {
-      var sqlQuery = `SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
+      var sqlQuery = `SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Amount_Type,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
           ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
           ( select * from rtracker.reimbursement_details WHERE Date_Of_Receipt between '`+From+`' and '`+ To +`') a
           left join
@@ -301,7 +301,7 @@ app.post('/api/addClaim', function (req, res) {
                 .where('Claim_Id', '=', claimid )
                 .then(function (response) {
                   var symbol;
-                  if(req.body.PaymentData.Amount_Type == "dollar" ){
+                  if(req.body.PaymentData.Amount_Type == "USD" ){
                     symbol = "$";
                   }
                   else {
@@ -441,7 +441,7 @@ app.post('/sendMail', function(req,res) {
   var paidDate = req.body.PaymentData.Paid_Date;
 
   var symbol;
-  if(req.body.PaymentData.Amount_Type == "dollar"  ){
+  if(req.body.PaymentData.Amount_Type == "USD"  ){
     symbol = "$";
   }
   else {

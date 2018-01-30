@@ -25,7 +25,7 @@
                                 <div class="col-md-3">
                                     <h6 class="message"> {{ SuccessSave }} </h6> <h6 class="message"> {{ SuccessMail }} </h6>
                                 </div>
-                                <div class="col-3">
+                              <div class="col-3">
                                     <button class="btn btn-default export-excel affine-blue" (click)="fileDownload(claimsTable.selectedRows)">Download <i class="fa fa-file-excel-o"></i></button>
                                     <button class="btn btn-default pull-right affine-blue" (click)="addClaim()" *ngIf ="claimsTable.selectedRows.length >=1">  Paid Mail <i class="fa fa-plus"> </i></button>
                                     <button class="btn btn-default pull-right affine-blue" (click)="addClaim()" *ngIf ="claimsTable.selectedRows.length ===0"> Add Claims <i class="fa fa-plus"> </i></button>
@@ -84,8 +84,8 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Amount Type <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="radio" name="Amount_Type" [(ngModel)]="ReimbursementDetails.Amount_Type" #AmountType="ngModel" value="indian"> <span class="radio-text" required> Rupees </span>
-                                                        <input type="radio" name="Amount_Type" [(ngModel)]="ReimbursementDetails.Amount_Type" #AmountType="ngModel" value="dollar"><span class="radio-text" required> Dollar </span>
+                                                        <input type="radio" name="Amount_Type" [(ngModel)]="ReimbursementDetails.Amount_Type" #AmountType="ngModel" value="INR"> <span class="radio-text" required> Rupees </span>
+                                                        <input type="radio" name="Amount_Type" [(ngModel)]="ReimbursementDetails.Amount_Type" #AmountType="ngModel" value="USD"><span class="radio-text" required> Dollar </span>
 
                                                     </div>
                                                 </div>
@@ -255,7 +255,7 @@
                                       property="Claim_Amount"
                                       header="Claim Amount">
                                       <ng-template #dataTableCell let-item="item">
-                                           {{ item.Claim_Amount | currency:'USD':true:'1.2-2' }}
+                                         {{ item.Claim_Amount | currency:item.Amount_Type:true:'1.2-2' }}
                                          <!-- <span *ngIf="item.Amount_Type == indian; else {{item.Claim_Amount}}" >   </span> -->
                                          <!-- <span *ngIf="item.Amount_Type == dollar"> {{ item.Claim_Amount | currency:'USD':true:'1.2-2' }} </span> -->
                                        </ng-template>
@@ -263,6 +263,9 @@
                                     <data-table-column
                                       property="Approved_Amount"
                                       header="Approved Amount">
+                                      <ng-template #dataTableCell let-item="item">
+                                         {{ item.Approved_Amount | currency:item.Amount_Type:true:'1.2-2' }}
+                                       </ng-template>
                                     </data-table-column>
                                     <data-table-column
                                       property="Status"

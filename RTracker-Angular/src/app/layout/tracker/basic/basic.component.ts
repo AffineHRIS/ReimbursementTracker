@@ -137,10 +137,10 @@ export class BasicComponent implements OnInit {
                 var symbol;
 
                 if(resEmpId){
-                    this.ReimbursementDetails.Amount_Type = "dollar";
+                    this.ReimbursementDetails.Amount_Type = "USD";
                 }
                 else {
-                    this.ReimbursementDetails.Amount_Type = "indian";
+                    this.ReimbursementDetails.Amount_Type = "INR";
                 }
                 this.value = true;
                 this.ReimbursementDetails.Employee_Name = this.employeeDetailRecord[0].Employee_Name;
@@ -153,10 +153,10 @@ export class BasicComponent implements OnInit {
                 var symbol;
 
                 if(resEmpId){
-                    this.ReimbursementDetails.Amount_Type = "dollar";
+                    this.ReimbursementDetails.Amount_Type = "USD";
                 }
                 else {
-                    this.ReimbursementDetails.Amount_Type = "indian";
+                    this.ReimbursementDetails.Amount_Type = "INR";
                 }
             }
 
@@ -191,6 +191,7 @@ export class BasicComponent implements OnInit {
     }
 
     addClaim() {
+        var tempData = [];
         if(this.claimsTable.selectedRows.length >= 1 ) {
             this.form.reset();
             this.whenPaid = false;
@@ -210,6 +211,10 @@ export class BasicComponent implements OnInit {
             this.form.reset();
             this.addReimbursementForm = false;
         }
+        for(var i=0; i < this.claimsTable.selectedRows.length; i++){
+            tempData.push(this.claimsTable.selectedRows[i].item.Claim_Id);
+        }
+        this.ReimbursementDetails.Claim_Id = tempData;
 
     }
 
