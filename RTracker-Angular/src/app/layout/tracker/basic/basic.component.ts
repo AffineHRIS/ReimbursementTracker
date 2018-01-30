@@ -49,6 +49,7 @@ export class BasicComponent implements OnInit {
     data : any = {}
     From_Claims :any;
     To_Claims : any;
+    Type : any;
     filterStatus : string = "";
     selectedItems : any = [];
     empSet : any = [];
@@ -78,6 +79,7 @@ export class BasicComponent implements OnInit {
         var data = {
             from :this.From_Claims,
             to: this.To_Claims,
+            type:this.Type,
             emp_list : this.selectedItems,
         }
 
@@ -303,6 +305,7 @@ export class BasicComponent implements OnInit {
         var data = {
             from :this.From_Claims,
             to: this.To_Claims,
+            type:this.Type,
             emp_list : this.selectedItems,
         }
         this.getClaims(data)
@@ -313,6 +316,7 @@ export class BasicComponent implements OnInit {
         var data = {
             from :this.From_Claims,
             to: this.To_Claims,
+            type:this.Type,
             emp_list : this.selectedItems,
         }
         this.EmployeeDetail.sendEmail(modelData).subscribe(
@@ -406,6 +410,7 @@ export class BasicComponent implements OnInit {
         var data = {
             from :this.From_Claims,
             to: this.To_Claims,
+            type:this.Type,
             emp_list : this.selectedItems,
         }
 
@@ -443,6 +448,4 @@ export class BasicComponent implements OnInit {
         //location.reload(true);
         window.open("/ReimbursementTracker","_self")
     }
-
-
 }

@@ -186,14 +186,13 @@
                           </div>
 
                           <div class="row" [hidden]="noClaims" style="background:#f7f7f7">
-                            <div class="col-md-3">
-                                <label class="search-label"> Search : </label>
-                                <input type="text" class="form-control search-input" list="EmployeeId" multiple id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Name, Status" (keyup)="searchValue($event)"/>
+                            <div class="col-md-2">
+                                <input type="text" class="form-control search-input" style="width:100%" list="EmployeeId" multiple id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Name, Status" (keyup)="searchValue($event)"/>
                             </div>
-                            <div class="col-9">
+                            <div class="col-10">
                                 <form novalidate #f="ngForm" (ngSubmit)="filter(f.value)">
                                     <div class="row">
-                                        <div class="col-md-3">
+                                        <div class="col-2">
                                             <angular2-multiselect class="form-control" [data]="empSet" [(ngModel)]="selectedItems" name=[(ngModel)]
                                                 [settings]="dropdownSettings"
                                                 (onSelect)="onItemSelect($event)"
@@ -202,15 +201,21 @@
                                                 (onDeSelectAll)="onDeSelectAll($event)">
                                             </angular2-multiselect>
                                         </div>
-                                        <div class="col-md-4">
-                                            <label class="search-label pull-right"> From : </label>
-                                            <input type="date" style="width:180px;float:right" class="form-control search-input pull-right" name="From_Claims" [(ngModel)]="From_Claims" #From="ngModel"/>
+                                        <div class="col-md-3">
+                                            <label class="search-label no-pad"> From : </label><input type="date" style="width:160px;float:right" class="form-control search-input pull-right" name="From_Claims" [(ngModel)]="From_Claims" #From="ngModel"/>
                                         </div>
-                                        <div class="col-3">
-                                            <label class="search-label"> To : </label>
-                                            <input style="width:150px" type="date" class="form-control search-input" name="To_Claims" [(ngModel)]="To_Claims" #To="ngModel" />
+                                        <div class="col-3 no-pad">
+                                            <label class="search-label no-pad"> To : </label>
+                                            <input style="width:160px" type="date" class="form-control search-input" name="To_Claims" [(ngModel)]="To_Claims" #To="ngModel" />
                                         </div>
-                                        <div class="col-md-2 ">
+                                        <div class="col-2 no-pad">
+                                            <label class="search-label no-pad"> Amount : </label>
+                                            <select class="form-control pull-right" style="width:80px;margin-top:6px" name="Type" [(ngModel)]="Type" #type="ngModel">
+                                              <option value="USD"> USD </option>
+                                              <option value="INR"> INR </option>
+                                              </select>
+                                        </div>
+                                        <div class="col-md-2">
                                             <button type="submit" class="btn btn-default export-excel pull-right">Filter <i class="fa fa-filter"></i></button>
                                         </div>
                                     </div>

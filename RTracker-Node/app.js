@@ -152,6 +152,7 @@ app.get('/employeeIdName/:data', function (req, res) {
 app.post('/claimDetails', function (req, res) {
     var From = req.body.from;
     var To = req.body.to;
+    var Type = req.body.type;
     var emp_list = req.body.emp_list;
     var list_of_emp = [];
 
@@ -159,14 +160,37 @@ app.post('/claimDetails', function (req, res) {
         list_of_emp.push(val.id );
     });
     var emp_res = "'"+list_of_emp.join("','")+"'";
-    if (list_of_emp.length >= 1){
+    if (list_of_emp.length == 0 && Type!=undefined){
+      var sqlQuery = `SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Amount_Type,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
+          ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
+          ( select * from rtracker.reimbursement_details WHERE (Date_Of_Receipt between '`+From+`' and '`+ To +`')) a
+          left join
+          (select * from rtracker.employee_details
+          group by Employee_Id) b
+          on a.Employee_Id = b.Employee_Id
+          where Amount_Type='`+Type+`'
+          ORDER BY Claim_Id DESC`
+    }
+    else if (list_of_emp.length >= 1 && Type!=undefined ){
       var sqlQuery = `SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Amount_Type,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
           ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
           ( select * from rtracker.reimbursement_details WHERE (Date_Of_Receipt between '`+From+`' and '`+ To +`') AND Employee_Id IN (`+emp_res+`)) a
           left join
           (select * from rtracker.employee_details
           group by Employee_Id) b
-          on a.Employee_Id = b.Employee_Id ORDER BY Claim_Id DESC`
+          on a.Employee_Id = b.Employee_Id
+          where Amount_Type='`+Type+`'
+          ORDER BY Claim_Id DESC`
+    }
+    else if (list_of_emp.length >= 1 && Type == undefined ){
+      var sqlQuery = `SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Amount_Type,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
+          ,a.Approved_Date,a.Expense_Type,a.Project_Name,a.Created_At,a.Modified_At,b.Employee_Name, b.Email_Id FROM
+          ( select * from rtracker.reimbursement_details WHERE (Date_Of_Receipt between '`+From+`' and '`+ To +`') AND Employee_Id IN (`+emp_res+`)) a
+          left join
+          (select * from rtracker.employee_details
+          group by Employee_Id) b
+          on a.Employee_Id = b.Employee_Id
+          ORDER BY Claim_Id DESC`
     }
     else {
       var sqlQuery = `SELECT a.Claim_Id,a.Employee_Id,a.Claim_Amount,a.Amount_Type,a.Expense_Details,a.Status,a.Comment,a.Date_Of_Receipt,a.Approved_Amount
@@ -175,8 +199,11 @@ app.post('/claimDetails', function (req, res) {
           left join
           (select * from rtracker.employee_details
           group by Employee_Id) b
-          on a.Employee_Id = b.Employee_Id ORDER BY Claim_Id DESC`
+          on a.Employee_Id = b.Employee_Id
+          ORDER BY Claim_Id DESC`
     }
+    console.log(Type);
+    console.log(sqlQuery);
   con.query(sqlQuery, function(err, rows, fields) {
     if (!err){
       var response = [];
