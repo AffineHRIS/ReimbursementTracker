@@ -77,7 +77,7 @@ app.post('/authenticate', function (req, res) {
     } else {
       if ( results.length > 0 ) {
         bcrypt.compare(password, results[0].password, function(err, ress) {
-          console.log(ress);
+          // console.log(ress);
           if ( ress ) {
             con.query('SELECT Employee_Name FROM rtracker.employee_details WHERE Employee_Id = ?', [results[0].username], function (error1, results1, fields1) {
               if ( error1 ) {
@@ -202,8 +202,8 @@ app.post('/claimDetails', function (req, res) {
           on a.Employee_Id = b.Employee_Id
           ORDER BY Claim_Id DESC`
     }
-    console.log(Type);
-    console.log(sqlQuery);
+    // console.log(Type);
+    // console.log(sqlQuery);
   con.query(sqlQuery, function(err, rows, fields) {
     if (!err){
       var response = [];
@@ -227,7 +227,7 @@ app.post('/api/addClaim', function (req, res) {
     // Adding claims data based on PaymentData value
     if(req.body.PaymentData.Status == null) {
         var modelData = {
-          Employee_Id : req.body.PaymentData.Employee_Id,
+          Employee_Id : req.body.PaymentData.Employee_Id.toUpperCase(),
           Amount_Type : req.body.PaymentData.Amount_Type,
           Claim_Amount : req.body.PaymentData.Claim_Amount,
           Expense_Type : req.body.PaymentData.Expense_Type,
@@ -270,20 +270,20 @@ app.post('/api/addClaim', function (req, res) {
     else {
       var modelData = []
       var insertRowToDatabase = function( i ) {
-        console.log("else condition");
-        console.log(req.body);
+        // console.log("else condition");
+        // console.log(req.body);
         if(req.body.selectedRow.length == 0) {
 
           var claimid = req.body.PaymentData.Claim_Id;
-          console.log("selected row length 0");
-          console.log(claimid);
+          // console.log("selected row length 0");
+          // console.log(claimid);
           var dor = req.body.PaymentData.Date_Of_Receipt;
           dor = dor.replace('T',' ').replace('Z', '');
           var apd = req.body.PaymentData.Approved_Date;
           apd = dor.replace('T',' ').replace('Z', '');
 
           var modelData = {
-              Employee_Id : req.body.PaymentData.Employee_Id,
+              Employee_Id : req.body.PaymentData.Employee_Id.toUpperCase(),
               Amount_Type : req.body.PaymentData.Amount_Type,
               Claim_Amount : req.body.PaymentData.Claim_Amount,
               Expense_Type : req.body.PaymentData.Expense_Type,
@@ -306,7 +306,7 @@ app.post('/api/addClaim', function (req, res) {
           apd = dor.replace('T',' ').replace('Z', '');
 
           var modelData = {
-              Employee_Id : req.body.selectedRow[i].Employee_Id,
+              Employee_Id : req.body.selectedRow[i].Employee_Id.toUpperCase(),
               Amount_Type : req.body.PaymentData.Amount_Type,
               Claim_Amount : req.body.selectedRow[i].Claim_Amount,
               Expense_Type : req.body.selectedRow[i].Expense_Type,
@@ -375,7 +375,7 @@ app.post('/api/addClaim', function (req, res) {
 
                          {
                           type: 'smtp',
-                          host: 'smtp.office365.com',
+                          host: 'outlook-emeawest.office365.com',
                           port: 587,
                           //secure: true, // use SSL
                           secure: false, //disable SSL
@@ -386,7 +386,8 @@ app.post('/api/addClaim', function (req, res) {
                             auth: {
                                 user: 'reimbursements@affineanalytics.com',
                                 pass: 'test$123'
-                            }
+                            },
+                            ciphers: 'SSLv3'
                       });
 
                       var mailOptions = {
@@ -402,7 +403,7 @@ app.post('/api/addClaim', function (req, res) {
                           console.log(error);
                           res.send( { Error : "error" } );
                         } else {
-                          console.log(To_Name);
+                          // console.log(To_Name);
                           console.log('Email sent: ' + info.response);
                           res.status(200).send( { Status : "Mail sent successfully" } );
                         }
@@ -525,7 +526,7 @@ app.post('/sendMail', function(req,res) {
       console.log(error);
       res.send( { Error : "error" } );
     } else {
-      console.log(To_Name);
+      // console.log(To_Name);
       console.log('Email sent: ' + info.response);
       res.status(200).send( { Status : "Mail sent successfully" } );
     }
@@ -552,7 +553,7 @@ app.get('/employeeIdList/', function (req, res) {
 });
 
 app.post('/api/updateEmployeeData', function (req, res) {
-    console.log("Requested loading employee data %s", req.body.File_Name);
+    console.log("Requested loading employee data: %s", req.body.File_Name);
     var fileName = req.body.File_Name;
 
     dataUploader.loadData( fileName, req, res, knex1 );
@@ -570,12 +571,12 @@ app.post('/api/changePassword', function (req, res) {
         .timeout(10000, {cancel: true})
         .map(function (row) { return row; })
         .then(function(userDetails = []){
-            console.log( userDetails[0].password );
+            // console.log( userDetails[0].password );
 
             if ( userDetails.length ) {
                 bcrypt.compare(cp, userDetails[0].password, function(err, ress) {
 
-                    console.log( ress );
+                    // console.log( ress );
 
                     if ( ress ) {
                         var salt = bcrypt.genSaltSync(10);
@@ -588,7 +589,7 @@ app.post('/api/changePassword', function (req, res) {
                             last_password_changed_at: knex1.fn.now()
                         })
                         .then(function(response){
-                            console.log(response);
+                            // console.log(response);
                             res.setHeader('Content-Type', 'application/json');
                             res.status(200).send({
                                 result: 'success',

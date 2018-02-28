@@ -1,6 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+// import { NgbModule, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FileSelectDirective } from 'ng2-file-upload';
@@ -12,8 +12,8 @@ import { HeaderComponent, SidebarComponent } from '../shared';
 @NgModule({
     imports: [
         CommonModule,
-        NgbModule.forRoot(),
-        NgbDropdownModule.forRoot(),
+        // NgbModule.forRoot(),
+        // NgbDropdownModule.forRoot(),
         LayoutRoutingModule,
         TranslateModule,
         FormsModule,

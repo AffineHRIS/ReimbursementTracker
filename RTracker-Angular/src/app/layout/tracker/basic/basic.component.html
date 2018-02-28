@@ -55,7 +55,7 @@
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Id <span class="pull-right"> : </span> </label>
                                                     <div class="col-md-6">
-                                                        <input type="text" class="form-control" list="EmployeeId" name="Employee_Id" [(ngModel)]="ReimbursementDetails.Employee_Id" #EmployeeId="ngModel"  placeholder="Employee Id" (blur)="employeeDetail($event.target.value)" required />
+                                                        <input type="text" class="form-control text-uppercase" list="EmployeeId" name="Employee_Id" [(ngModel)]="ReimbursementDetails.Employee_Id" #EmployeeId="ngModel"  placeholder="Employee Id" (blur)="employeeDetail($event.target.value)" required />
                                                         <datalist id="EmployeeId">
                                                             <option *ngFor="let coun of empList" value="{{ coun.Employee_Id }}">
                                                                 {{ coun.Map_Education_Boards_Name }}

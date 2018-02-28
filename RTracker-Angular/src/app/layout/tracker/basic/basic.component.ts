@@ -278,12 +278,26 @@ export class BasicComponent implements OnInit {
 
     }
 
+    formatEmployeeIds( dataList: any ): any {
+        var formattedList = dataList;
+        if ( dataList.length > 0 ) {
+            formattedList = dataList.map(obj => {
+                obj.Employee_Id = obj.Employee_Id.toUpperCase();
+                return obj;
+            });
+        }
+        return formattedList;
+    }
+
     getClaims(model): void {
         var modelData = Object.assign({}, model);
         this.reimbService.getClaimDetails(modelData).subscribe(
             (response) =>{
                 let body = response.json();
                 if ( body[0].data !== undefined ) {
+
+                    body[0].data = this.formatEmployeeIds( body[0].data );
+
                     this.claimList = body[0].data;
                     this.origDetails = body[0].data;
                     this.filterStatus = body[0].msg;
@@ -398,6 +412,7 @@ export class BasicComponent implements OnInit {
         var modelData = Object.assign({}, model);
         var TableData = [];
 
+        modelData.Employee_Id = modelData.Employee_Id.toUpperCase();
         console.log("modelData:");
         console.log(modelData);
         this.multipleData.PaymentData = modelData;
