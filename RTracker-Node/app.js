@@ -375,7 +375,7 @@ app.post('/api/addClaim', function (req, res) {
 
                          {
                           type: 'smtp',
-                          host: 'outlook-emeawest.office365.com',
+                          host: 'smtp.outlook.office365.com',
                           port: 587,
                           //secure: true, // use SSL
                           secure: false, //disable SSL
