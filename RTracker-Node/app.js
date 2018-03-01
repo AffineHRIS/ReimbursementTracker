@@ -222,8 +222,23 @@ app.post('/claimDetails', function (req, res) {
   });
 });
 
+
 app.post('/api/addClaim', function (req, res) {
+
+  var returnResult = function( emailSentStatus ) {
     var result = {};
+    result['data'] = req.body.selectedRow;
+    result['result'] = 'success';
+    result['message'] = 'Claim details updated successfully!';
+    result['email'] = emailSentStatus ? 'Email sent successfully.' : 'Failed to send an email.';
+
+    console.log( result['email'] );
+    console.log( result['message'] );
+
+    res.setHeader('Content-Type', 'application/json');
+    res.status(200).send( result );
+  }
+
     // Adding claims data based on PaymentData value
     if(req.body.PaymentData.Status == null) {
         var modelData = {
@@ -268,7 +283,7 @@ app.post('/api/addClaim', function (req, res) {
         });
     }
     else {
-      var modelData = []
+      var modelData = [], emailSent = true;
       var insertRowToDatabase = function( i ) {
         // console.log("else condition");
         // console.log(req.body);
@@ -371,23 +386,20 @@ app.post('/api/addClaim', function (req, res) {
                       }
 
                       var nodemailer = require('nodemailer');
-                      var transporter = nodemailer.createTransport(
-
-                         {
-                          type: 'smtp',
-                          host: 'smtp.outlook.office365.com',
-                          port: 587,
-                          //secure: true, // use SSL
-                          secure: false, //disable SSL
-                          requireTLS: true,//Force TLS
-                          tls: {
-                              rejectUnauthorized: false
-                            },
-                            auth: {
-                                user: 'reimbursements@affineanalytics.com',
-                                pass: 'test$123'
-                            },
-                            ciphers: 'SSLv3'
+                      var transporter = nodemailer.createTransport({
+                        type: 'SMTP',
+                        host: 'smtp-mail.outlook.com',
+                        port: 587,
+                        secure: false, // disable SSL
+                        requireTLS: true, // Force TLS
+                        tls: {
+                          rejectUnauthorized: false
+                        },
+                        auth: {
+                          user: 'reimbursements@affineanalytics.com',
+                          pass: 'test$123'
+                        },
+                        ciphers: 'SSLv3'
                       });
 
                       var mailOptions = {
@@ -398,14 +410,17 @@ app.post('/api/addClaim', function (req, res) {
                         html: text
                       };
 
+                      console.log("Sending email...");
                       transporter.sendMail(mailOptions, function(error, info){
                         if (error) {
                           console.log(error);
-                          res.send( { Error : "error" } );
+                          emailSent = false;
+                          // res.send( { Error : "error" } );
                         } else {
+                          emailSent = true;
                           // console.log(To_Name);
-                          console.log('Email sent: ' + info.response);
-                          res.status(200).send( { Status : "Mail sent successfully" } );
+                          console.log('Email sent successfully: ' + info.response);
+                          // res.status(200).send( { Status : "Mail sent successfully" } );
                         }
                       });
                 })
@@ -415,21 +430,13 @@ app.post('/api/addClaim', function (req, res) {
         .then(function (success) {
           if(req.body.selectedRow.length > 0 ) {
             if ( req.body.selectedRow.length - 1 === i ) {
-              result['data'] =req.body.selectedRow;
-              result['result'] = 'success';
-              result['message'] = 'Claim details updated successfully!';
-              res.setHeader('Content-Type', 'application/json');
-              res.status(200).send( result );
+              returnResult( emailSent );
             } else {
               insertRowToDatabase( i + 1 );
             }
           }
           else {
-            result['data'] =req.body.selectedRow;
-            result['result'] = 'success';
-            result['message'] = 'Claim details updated successfully!';
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).send( result );
+            returnResult( emailSent );
           }
         })
         .catch(function (error) {
