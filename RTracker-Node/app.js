@@ -272,6 +272,7 @@ app.post('/api/addClaim', function (req, res) {
           .catch(t.rollback)
         })
         .then(function (success) {
+          var result = {};
           result['data'] = req.body;
           result['result'] = 'success';
           result['message'] = 'Claim details added successfully!';
