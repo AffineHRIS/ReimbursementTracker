@@ -286,13 +286,9 @@ app.post('/api/addClaim', function (req, res) {
     else {
       var modelData = [], emailSent = true;
       var insertRowToDatabase = function( i ) {
-        // console.log("else condition");
-        // console.log(req.body);
         if(req.body.selectedRow.length == 0) {
 
           var claimid = req.body.PaymentData.Claim_Id;
-          // console.log("selected row length 0");
-          // console.log(claimid);
           var dor = req.body.PaymentData.Date_Of_Receipt;
           dor = dor.replace('T',' ').replace('Z', '');
           var apd = req.body.PaymentData.Approved_Date;

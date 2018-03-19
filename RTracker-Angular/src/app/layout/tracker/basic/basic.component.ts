@@ -412,7 +412,7 @@ export class BasicComponent implements OnInit {
         var modelData = Object.assign({}, model);
         var TableData = [];
 
-        modelData.Employee_Id = modelData.Employee_Id.toUpperCase();
+      //  modelData.Employee_Id = modelData.Employee_Id.toUpperCase();
         console.log("modelData:");
         console.log(modelData);
         this.multipleData.PaymentData = modelData;
