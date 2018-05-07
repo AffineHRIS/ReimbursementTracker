@@ -102,6 +102,10 @@ export class BasicComponent implements OnInit {
         this.claimResource.query(params).then(claims => this.claims = claims);
     }
 
+    allowEnterMail() {
+      this.value= false;
+    }
+
 
     statusFind(value):void {
         if(value == "Accept") {

@@ -75,8 +75,11 @@
                                             <div class="form-group" *ngIf="!whenMultiple">
                                                 <div class="row">
                                                     <label class="col-md-5"> Employee Email <span class="pull-right"> : </span> </label>
-                                                    <div class="col-md-6">
+                                                    <div class="col-md-5">
                                                         <input type="text" [attr.readonly]="value ? 'readonly' : null" class="form-control" name="Employee_Email" [(ngModel)]="ReimbursementDetails.Employee_Email" #EmployeeEmail="ngModel"  placeholder="Employee Email" required/>
+                                                    </div>
+                                                    <div class="col-md-1">
+                                                        <i class="fa fa-remove" (click)="allowEnterMail()"> </i>
                                                     </div>
                                                 </div>
                                             </div>
