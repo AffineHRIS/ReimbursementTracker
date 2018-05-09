@@ -193,7 +193,7 @@
                                 <input type="text" class="form-control search-input" style="width:100%" list="EmployeeId" multiple id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Name, Status" (keyup)="searchValue($event)"/>
                             </div>
                             <div class="col-10">
-                                <form novalidate #f="ngForm" (ngSubmit)="filter(f.value)">
+                                <form novalidate #f="ngForm" (ngSubmit)="filter()">
                                     <div class="row">
                                         <div class="col-2">
                                             <angular2-multiselect class="form-control" [data]="empSet" [(ngModel)]="selectedItems" name=[(ngModel)]
