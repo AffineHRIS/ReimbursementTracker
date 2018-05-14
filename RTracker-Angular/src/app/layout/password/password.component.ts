@@ -56,7 +56,7 @@ export class PasswordComponent implements OnInit {
             console.log("Submitted!");
 
             model["username"] = sessionStorage.getItem('username');
-
+            model.last_password_changed_at = new Date();
             this.passwordService.changePassword(model)
             .subscribe(
                 (response) => {

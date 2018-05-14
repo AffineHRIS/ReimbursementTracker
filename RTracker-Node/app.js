@@ -590,7 +590,7 @@ app.post('/api/changePassword', function (req, res) {
                         .where('id', userDetails[0].id)
                         .update({
                             password: hash,
-                            last_password_changed_at: knex1.fn.now()
+                            updated_at: new Date()
                         })
                         .then(function(response){
                             // console.log(response);

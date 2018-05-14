@@ -1,4 +1,14 @@
 $sky-blue : #24AEE4;
+$green : #94ca53;
+$purple : #8781bd;
+.affine-green {
+  background-color: $green;
+  color: #fff
+}
+.affine-purple {
+  background-color: $purple;
+  color: #fff
+}
 .affine-blue {
   background-color: $sky-blue;
   color: #fff
@@ -121,7 +131,6 @@ div.horizontal-pipe-line {
     font-size: 12px;
     margin: 8px 0;
     border-radius: 0;
-    float:left
 }
 
 .filter-icon {

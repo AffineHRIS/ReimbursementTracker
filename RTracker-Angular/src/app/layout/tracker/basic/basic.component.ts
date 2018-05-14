@@ -55,15 +55,18 @@ export class BasicComponent implements OnInit {
     empSet : any = [];
     dropdownSettings = {};
     test :any;
-
-
+    paidCondition : boolean = false;
+    flag : boolean = false;
+    alertCondition : boolean = true;
+    public loading = false;
     @ViewChild(DataTable) claimsTable: DataTable;
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private reimbService: reimbursementService,
-        private EmployeeDetail : EmployeeIdNameService
+        private EmployeeDetail : EmployeeIdNameService,
+
     ) {
         this.claimResource.count().then(count => this.claimCount = count);
     }
@@ -181,12 +184,30 @@ export class BasicComponent implements OnInit {
 
     approvedAmount() {
         var ApprovedAmount = [];
-        for(var i=0; i < this.claimsTable.selectedRows.length; i++){
+        this.flag = true;
+        this.paidCondition = false;
+        this.alertCondition = true;
+        for(var i=0; i < this.claimsTable.selectedRows.length; i++) {
+            this.paidCondition = true;
             ApprovedAmount.push(this.claimsTable.selectedRows[i].item.Approved_Amount)
+            if(this.claimsTable.selectedRows[i].item.Status == 'Accept' && this.flag ) {
+              this.paidCondition = true;
+              this.alertCondition = true;
+            }
+            else {
+                this.flag = false;
+                this.paidCondition = false;
+                this.alertCondition = false;
+            }
         }
         var sum = ApprovedAmount.reduce((a, b) => a + b, 0)
 
         this.SumOfApprovedAmount = sum;
+    }
+
+    conditionTest() {
+        this.paidCondition = true;
+        this.alertCondition = true;
     }
 
     checkAmountType(type) {
@@ -294,6 +315,7 @@ export class BasicComponent implements OnInit {
     }
 
     getClaims(model): void {
+        this.loading = true;
         var modelData = Object.assign({}, model);
         this.reimbService.getClaimDetails(modelData).subscribe(
             (response) =>{
@@ -308,13 +330,14 @@ export class BasicComponent implements OnInit {
                     if ( body[0].data[0].Status == null ) {
                         body[0].data[0].Status = "Submitted";
                     }
-
                     this.noClaims = this.claimList.length <= 0;
+                    this.loading = false;
                 }
             },
             (error) => {
                 alert(error);
                 console.log(error);
+                this.loading = false;
             }
         );
     }

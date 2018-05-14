@@ -2,9 +2,12 @@
 <div class="tracker-section">
     <div class="row">
         <div class="col-6">
-            <h6 class="text-muted-header">Employee Reimbursement Tracker</h6>
+            <h6 class="text-muted-header"> Employee Reimbursement Tracker </h6>
         </div>
-        <div class="col-6">
+        <div class="col-md-5">
+            <h5 [hidden]="alertCondition" class="alert-h5 pull-right"> Please select only accept status to paid mail. </h5>
+        </div>
+        <div class="col-1">
             <i class="fa fa-refresh fa-1x affine-blue-text-noline pull-right" (click)="refresh(selectedItems)"></i>
         </div>
     </div>
@@ -20,14 +23,14 @@
                             <div class="row">
                                 <div class="col-6">
                                     <label class="search-label">Selected: {{ claimsTable.selectedRows.length }} </label>
-                                    <label class="search-label" *ngIf="claimsTable.selectedRows.length >=1; else approvedAmount()"> Approved Amount: {{ SumOfApprovedAmount }}</label>
+                                    <label class="search-label" *ngIf="claimsTable.selectedRows.length; else approvedAmount()"> Approved Amount: {{ SumOfApprovedAmount }}</label>
                                 </div>
                                 <div class="col-md-3">
                                     <h6 class="message"> {{ SuccessSave }} </h6> <h6 class="message"> {{ SuccessMail }} </h6>
                                 </div>
                               <div class="col-3">
-                                    <button class="btn btn-default export-excel affine-blue" (click)="fileDownload(claimsTable.selectedRows)">Download <i class="fa fa-file-excel-o"></i></button>
-                                    <button class="btn btn-default pull-right affine-blue" (click)="addClaim()" *ngIf ="claimsTable.selectedRows.length >=1">  Paid Mail <i class="fa fa-plus"> </i></button>
+                                    <button class="btn btn-default export-excel affine-green" (click)="fileDownload(claimsTable.selectedRows)">Download <i class="fa fa-file-excel-o"></i></button>
+                                    <button class="btn btn-default pull-right affine-blue" (click)="addClaim()" *ngIf ="paidCondition">  Paid Mail <i class="fa fa-plus"> </i></button>
                                     <button class="btn btn-default pull-right affine-blue" (click)="addClaim()" *ngIf ="claimsTable.selectedRows.length ===0"> Add Claims <i class="fa fa-plus"> </i></button>
                                 </div>
                             </div>
@@ -189,10 +192,7 @@
                           </div>
 
                           <div class="row" [hidden]="noClaims" style="background:#f7f7f7">
-                            <div class="col-md-2">
-                                <input type="text" class="form-control search-input" style="width:100%" list="EmployeeId" multiple id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Name, Status" (keyup)="searchValue($event)"/>
-                            </div>
-                            <div class="col-10">
+                            <div class="col-12">
                                 <form novalidate #f="ngForm" (ngSubmit)="filter()">
                                     <div class="row">
                                         <div class="col-2">
@@ -205,24 +205,29 @@
                                             </angular2-multiselect>
                                         </div>
                                         <div class="col-md-3">
-                                            <label class="search-label no-pad"> From : </label><input type="date" style="width:160px;float:right" class="form-control search-input pull-right" name="From_Claims" [(ngModel)]="From_Claims" #From="ngModel"/>
+                                            <label class="search-label"> From : </label><input type="date"  class="form-control search-input pull-right" name="From_Claims" [(ngModel)]="From_Claims" #From="ngModel"/>
                                         </div>
-                                        <div class="col-3 no-pad">
-                                            <label class="search-label no-pad"> To : </label>
-                                            <input style="width:160px" type="date" class="form-control search-input" name="To_Claims" [(ngModel)]="To_Claims" #To="ngModel" />
+                                        <div class="col-3">
+                                            <label class="search-label"> To : </label>
+                                            <input type="date" class="form-control search-input" name="To_Claims" [(ngModel)]="To_Claims" #To="ngModel" />
                                         </div>
-                                        <div class="col-2 no-pad">
-                                            <label class="search-label no-pad"> Amount : </label>
+                                        <div class="col-2">
+                                            <label class="search-label"> Amount : </label>
                                             <select class="form-control pull-right" style="width:80px;margin-top:6px" name="Type" [(ngModel)]="Type" #type="ngModel">
                                               <option value="USD"> USD </option>
                                               <option value="INR"> INR </option>
                                               </select>
                                         </div>
                                         <div class="col-md-2">
-                                            <button type="submit" class="btn btn-default export-excel pull-right">Filter <i class="fa fa-filter"></i></button>
+                                            <button type="submit" class="btn btn-default export-excel pull-right affine-purple"> Filter <i class="fa fa-filter"></i></button>
                                         </div>
                                     </div>
                                 </form>
+                                <hr class="cus-hr" />
+
+                            </div>
+                            <div class="col-md-12" >
+                                <input type="text" class="form-control search-input pull-right" style="margin:0px" list="EmployeeId" multiple id="inputName" [(ngModel)]="inputName" placeholder="Search by Emp Id, Name, Status" (keyup)="searchValue($event)"/>
                             </div>
                               <div class="col-12">
                                   <data-table
@@ -298,4 +303,7 @@
 
 		</div>
 	</div>
+</div>
+<div class="my-container">
+    <ngx-loading [show]="loading" [config]="{ backdropBorderRadius: '14px' }"></ngx-loading>
 </div>
