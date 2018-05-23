@@ -394,7 +394,7 @@ app.post('/api/addClaim', function (req, res) {
                         },
                         auth: {
                           user: 'reimbursements@affineanalytics.com',
-                          pass: 'test$123'
+                          pass: 'Affine$123'
                         },
                         ciphers: 'SSLv3'
                       });
@@ -513,7 +513,7 @@ app.post('/sendMail', function(req,res) {
         },
         auth: {
             user: 'reimbursements@affineanalytics.com',
-            pass: 'test$123'
+            pass: 'Affine$123'
         }
   });
 

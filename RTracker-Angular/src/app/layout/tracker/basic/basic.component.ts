@@ -109,7 +109,6 @@ export class BasicComponent implements OnInit {
       this.value= false;
     }
 
-
     statusFind(value):void {
         if(value == "Accept") {
             this.whenAccept = false;
@@ -122,6 +121,16 @@ export class BasicComponent implements OnInit {
             this.whenComment = false;
             this.whenHold = true;
             this.whenPaid = true;
+        }
+        else if(value == "Paid") {
+            if(this.claimsTable.selectedRows.length > 0) {
+                this.whenHold = true;
+                this.whenPaid = false;
+            }
+            else {
+                this.whenHold = false;
+                this.whenPaid = false;
+            }
         }
         else {
             this.whenAccept = false;
@@ -190,7 +199,7 @@ export class BasicComponent implements OnInit {
         for(var i=0; i < this.claimsTable.selectedRows.length; i++) {
             this.paidCondition = true;
             ApprovedAmount.push(this.claimsTable.selectedRows[i].item.Approved_Amount)
-            if(this.claimsTable.selectedRows[i].item.Status == 'Accept' && this.flag ) {
+            if(this.claimsTable.selectedRows[i].item.Status == 'Accept' && this.flag || this.claimsTable.selectedRows[i].item.Status == 'Paid' ) {
               this.paidCondition = true;
               this.alertCondition = true;
             }
@@ -419,7 +428,7 @@ export class BasicComponent implements OnInit {
                      else if(this.ReimbursementDetails.Status == "Paid") {
                          this.whenAccept = false;
                          this.whenComment = false;
-                         this.whenHold = true;
+                         this.whenHold = false;
                          this.whenPaid = false;
                      }
                      else {
