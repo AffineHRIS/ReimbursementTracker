@@ -199,7 +199,7 @@ export class BasicComponent implements OnInit {
         for(var i=0; i < this.claimsTable.selectedRows.length; i++) {
             this.paidCondition = true;
             ApprovedAmount.push(this.claimsTable.selectedRows[i].item.Approved_Amount)
-            if(this.claimsTable.selectedRows[i].item.Status == 'Accept' && this.flag || this.claimsTable.selectedRows[i].item.Status == 'Paid' ) {
+            if((this.claimsTable.selectedRows[i].item.Status == 'Accept' && this.flag ) || ( this.claimsTable.selectedRows[i].item.Status == 'Paid' && this.flag)  ) {
               this.paidCondition = true;
               this.alertCondition = true;
             }

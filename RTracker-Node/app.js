@@ -514,7 +514,8 @@ app.post('/sendMail', function(req,res) {
         auth: {
             user: 'reimbursements@affineanalytics.com',
             pass: 'Affine$123'
-        }
+        },
+        ciphers: 'SSLv3'
   });
 
   var mailOptions = {
