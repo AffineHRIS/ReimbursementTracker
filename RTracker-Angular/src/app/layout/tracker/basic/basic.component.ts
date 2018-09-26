@@ -497,6 +497,6 @@ export class BasicComponent implements OnInit {
         //this.OnItemDeSelect(selectedItems)
         //this.router.navigate(['/basic']);
         //location.reload(true);
-        window.open("/ReimbursementTracker","_self")
+        window.open("/reimbursement","_self")
     }
 }

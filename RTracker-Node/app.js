@@ -394,7 +394,7 @@ app.post('/api/addClaim', function (req, res) {
                         },
                         auth: {
                           user: 'reimbursements@affineanalytics.com',
-                          pass: 'Affine$123'
+                          pass: 'Reimb#123'
                         },
                         ciphers: 'SSLv3'
                       });
@@ -402,6 +402,7 @@ app.post('/api/addClaim', function (req, res) {
                       var mailOptions = {
                         from: 'reimbursements@affineanalytics.com',
                         to: To_Name,
+                        cc : 'reimbursements@affineanalytics.com',
                         subject: 'Reimbursement claim:'+claimid,
                         text: 'Status update for your claim',
                         html: text
@@ -513,7 +514,7 @@ app.post('/sendMail', function(req,res) {
         },
         auth: {
             user: 'reimbursements@affineanalytics.com',
-            pass: 'Affine$123'
+            pass: 'Reimb#123'
         },
         ciphers: 'SSLv3'
   });
@@ -521,6 +522,7 @@ app.post('/sendMail', function(req,res) {
   var mailOptions = {
     from: 'reimbursements@affineanalytics.com',
     to: To_Name,
+    cc : 'reimbursements@affineanalytics.com',
     subject: 'Reimbursement claim:'+claimid,
     text: 'Status update for your claim',
     html: text
